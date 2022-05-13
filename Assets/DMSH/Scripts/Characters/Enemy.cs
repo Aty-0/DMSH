@@ -65,13 +65,13 @@ public class Enemy : MovableObject
 
     public override void OnReachedFirstPoint()
     {
-        Debug.Log($"{name} OnReachedFirstPoint");
+        //Debug.Log($"{name} OnReachedFirstPoint");
         ignoreHits = false;
     }
 
     public override void OnReachedLastPoint()
     {
-        Debug.Log($"{name} OnReachedLastPoint");
+        //Debug.Log($"{name} OnReachedLastPoint");
         if (onLastPointWillDestroy)
         {
             Kill();
