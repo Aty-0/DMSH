@@ -78,7 +78,6 @@ public class PathSystem : MonoBehaviour
 
         spawnerTimer.EndEvent += SpawnObject;
         if (objectPrefab != null)
-            for (int i = 0; i <= objectCount && !spawnerTimer.isEnded; i++)
                 spawnerTimer.StartTimer();   
     }
 
@@ -230,8 +229,8 @@ public class PathSystem : MonoBehaviour
             if (previousObject && holdDistanceBetweenObjects)
             {
                 float distanceBetweenCurrentObjects = Vector3.Distance(currentObject.transform.position, previousObject.transform.position);
-                reduceSpeed = Mathf.Clamp(reduceSpeed, 1.0f, Mathf.Clamp(distanceBetweenCurrentObjects, 0.0f, distanceBetweenObjects)); //TODO: distance movement
-                augmentSpeed = Mathf.Clamp(augmentSpeed, distanceBetweenCurrentObjects, distanceBetweenObjects + 1.0f);
+                reduceSpeed = Mathf.Clamp(reduceSpeed, 1.0f, Mathf.Clamp(distanceBetweenCurrentObjects, 0.0f, 2.0f / distanceBetweenObjects));
+                augmentSpeed = Mathf.Clamp(augmentSpeed, distanceBetweenCurrentObjects, distanceBetweenObjects);
 
                 //FIX ME 
                 //Not work correctly for object except first and last
