@@ -56,13 +56,14 @@ MonoBehaviour:
   _pathSystem: {fileID: 0}
   shotFrequency: 0.05
   weaponEnabled: 0
+  canUseWeapon: 1
   ignoreHits: 0
   onLastPointWillDestroy: 0
   _bulletPrefab: {fileID: 207413880224101742, guid: 97eb3fb14d8798f44954fb57b1d6ed3f, type: 3}
   _spriteRenderer: {fileID: 0}
   _isDead: 0
   _lifes: 1
-  _maxHealth: 0
+  _maxHealth: 5
   _health: 0
   _reduceHealth: 1.5
   _playerController: {fileID: 0}
