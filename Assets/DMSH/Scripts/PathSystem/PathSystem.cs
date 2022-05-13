@@ -78,6 +78,7 @@ public class PathSystem : MonoBehaviour
 
         spawnerTimer.EndEvent += SpawnObject;
         if (objectPrefab != null)
+            for (int i = 1; i <= objectCount && !spawnerTimer.isEnded; i++)
                 spawnerTimer.StartTimer();   
     }
 
