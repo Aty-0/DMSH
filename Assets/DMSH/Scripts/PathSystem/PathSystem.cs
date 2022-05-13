@@ -46,6 +46,7 @@ public class PathSystem : MonoBehaviour
     protected void Start()
     {
         movablePathObjectsList.Removed += OnMovablePathObjectsListElementRemoved;
+
         stageSystem = FindObjectOfType<StageSystem>();
         Debug.Assert(stageSystem != null, "No stage system in scene");
 
@@ -56,11 +57,10 @@ public class PathSystem : MonoBehaviour
 
     private void SpawnObject()
     {
-        //TODO
-        //Spawn it to path system parent if we can
         MovableObject movableObject = Instantiate(objectPrefab, pathPointsList[0].transform.position, Quaternion.identity);
         movableObject.pathSystem = this;
         movableObject.name = movableObject.name + movablePathObjectsList.Count; 
+        movableObject.transform.parent = transform.parent;
         movablePathObjectsList.Add(movableObject);
         spawnerTimer.ResetTimer();
     }
@@ -76,14 +76,10 @@ public class PathSystem : MonoBehaviour
             Debug.LogException(new NullReferenceException());
         }
 
-        Debug.Log("Spawn some objects");
-
         spawnerTimer.EndEvent += SpawnObject;
-
         if (objectPrefab != null)
             for (int i = 0; i <= objectCount && !spawnerTimer.isEnded; i++)
-                spawnerTimer.StartTimer();
-     
+                spawnerTimer.StartTimer();   
     }
 
     #region Utils
