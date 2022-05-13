@@ -151,6 +151,7 @@ public class PathSystem : MonoBehaviour
 
     #region DEBUG_DEFINES
 #if PATH_SYSTEM_DEBUG_MOVEMENT
+    [Header("Debug")]
     [SerializeField]
     private Vector2 _dbgObjectVec;
     [SerializeField]
