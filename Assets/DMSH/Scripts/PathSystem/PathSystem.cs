@@ -12,12 +12,12 @@ using UnityEngine;
 //Give him god mode or destroy it [DONE] 
 //Run events for enemy who reached point [DONE]
 //Distance between objects for fix stacking [DONE]
-//Wait timer for enemy
+//Dynamic creation by count (Spawner) [DONE]
+
 //Slip movement
 
-//Current:
-//Dynamic creation by count (Spawner)
-
+//Now:
+//Wait timer for enemy
 
 public class PathSystem : MonoBehaviour
 {
