@@ -91,7 +91,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PlayerInput _playerInput;
 
     [Header("Cheats & Debug")]
-    public bool debugLog = false;
     [SerializeField] private bool _debug_gui;
     [SerializeField] private bool _debug_god;
     [SerializeField] private bool _debug_inf_boost;

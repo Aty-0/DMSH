@@ -11,21 +11,20 @@ public class LogMessage
 
 public class LogHandler : MonoBehaviour
 {
-    private const int MAX_MESSAGES_COUNT = 200;
+    public bool             drawLogMessages = false;
 
     [SerializeField] private Queue _logQueue = new Queue();
     [SerializeField] private string _logBuffer;
-    [SerializeField] private PlayerController _playerController;
     [SerializeField] private GUIStyle _style;
+
+    private const int MAX_MESSAGES_COUNT = 200;
 
     public static bool      drawConsole = false;
     private List<LogMessage> _consoleMessageBuffer = new List<LogMessage>();
     private static Vector2  _scrollPosition = new Vector2(0.0f, 0.0f);
     
-    private void Start()
+    protected void Start()
     {
-        _playerController = FindObjectOfType<PlayerController>();
-
         StartCoroutine(TimerToClear());
     }
 
@@ -50,12 +49,12 @@ public class LogHandler : MonoBehaviour
         }
     }
 
-    private void OnEnable()
+    protected void OnEnable()
     {
         Application.logMessageReceived += HandleLog;
     }
 
-    private void OnDisable()
+    protected void OnDisable()
     {
         Application.logMessageReceived -= HandleLog;
     }
@@ -92,7 +91,7 @@ public class LogHandler : MonoBehaviour
 
     }
 
-    private void OnGUI()
+    protected void OnGUI()
     {
         if (drawConsole)
         {
@@ -138,7 +137,7 @@ public class LogHandler : MonoBehaviour
         }
         else
         {
-            if (_playerController.debugLog)
+            if(drawLogMessages)
                 GUILayout.Label(_logBuffer, _style, GUILayout.Height(500));
         }
     }
