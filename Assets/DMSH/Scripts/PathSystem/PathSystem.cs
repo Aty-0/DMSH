@@ -90,8 +90,9 @@ public class PathSystem : MonoBehaviour
 
     public void OnMovablePathObjectsListElementRemoved()
     {
-        //If all enemy is dead we are passed this scenario list
-        if(!movablePathObjectsList.Any())
+        //If all enemy is dead
+        //We are pass this scenario list
+        if (!movablePathObjectsList.Any() && ((spawnerTimer == null) ? true : spawnerTimer.isEnded))
             stageSystem.AddedPass();
     }
 
