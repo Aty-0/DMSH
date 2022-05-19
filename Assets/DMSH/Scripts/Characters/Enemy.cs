@@ -20,15 +20,16 @@ public class Enemy : MovableObject
     [Header("Weapon")]
     public float            shotFrequency = 0.05f;
     public bool             weaponEnabled = false;
+    public Bullet           bulletPrefab;
+    public bool             canUseWeapon = true; 
 
-    [SerializeField] protected bool canUseWeapon = true;
-    [SerializeField] protected bool ignoreHits = false;
-    [SerializeField] protected bool onLastPointWillDestroy = false;
-
-    [SerializeField] protected Bullet _bulletPrefab;
 
     [Header("Enemy")]
+    public bool ignoreHits = false;
+
     [SerializeField] protected SpriteRenderer _spriteRenderer;
+    [SerializeField] protected bool weakType = false; 
+    [SerializeField] protected bool onLastPointWillDestroy = false;
     [SerializeField] protected bool _isDead = false;
     [SerializeField] protected int _lifes = 1;
     [SerializeField] protected float _maxHealth = 0.0f;
@@ -38,7 +39,7 @@ public class Enemy : MovableObject
     [Header("Misc")] 
     [SerializeField] protected PlayerController _playerController;
     [SerializeField] protected ParticleSystem   _deathParticle;
-    [SerializeField] protected Coroutine _shotCoroutine;
+    [SerializeField] protected Coroutine        _shotCoroutine;
 
     protected void Start()
     {
