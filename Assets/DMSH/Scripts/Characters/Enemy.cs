@@ -65,16 +65,14 @@ public class Enemy : MovableObject
 
     public override void OnReachedFirstPoint()
     {
-        //Debug.Log($"{name} OnReachedFirstPoint");
         ignoreHits = false;
     }
 
     public override void OnReachedLastPoint()
     {
-        //Debug.Log($"{name} OnReachedLastPoint");
         if (onLastPointWillDestroy)
         {
-            Kill();
+            Kill(false);
             return;
         }
 
@@ -98,15 +96,12 @@ public class Enemy : MovableObject
     }
 
     private IEnumerator Shot()
-    {
-        //FIXME
-        //Why it's create sometimes two bullets per one shot?
-
+    {        
         while (weaponEnabled && canUseWeapon && !_isDead)
         {
             OnShot();
             Vector2 final_pos = new Vector2(rigidBody2D.position.x, rigidBody2D.position.y - boxCollider2D.size.y);
-            Instantiate(_bulletPrefab, final_pos, Quaternion.identity);
+            Instantiate(bulletPrefab, final_pos, Quaternion.identity);
             yield return new WaitForSeconds(shotFrequency);
         }
     }
@@ -114,7 +109,7 @@ public class Enemy : MovableObject
     //TODO
     //Sounds
 
-    public void Kill()
+    public void Kill(bool givePlayerScore)
     {
         _lifes  = 0;
         _health = 0;
@@ -122,7 +117,7 @@ public class Enemy : MovableObject
 
         OnDieCompletely();
 
-        if(!onLastPointWillDestroy)
+        if(givePlayerScore)
             _playerController.Score += 1000;
 
         if (_deathParticle)
@@ -159,7 +154,7 @@ public class Enemy : MovableObject
             OnDie();
 
             if (_lifes == 0)
-                Kill();
+                Kill(true);
         }
         else
         {
@@ -169,18 +164,20 @@ public class Enemy : MovableObject
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //TODO
-        //Check by gameobject type
-
-        switch(collision.gameObject.tag)
+        Component[] components = collision.gameObject.GetComponents<Component>();
+        foreach (Component component in components)
         {
-            case "Player":
-                _playerController.Damage();
-                break;
-            case "Bullet":
-                Damage();
-                break;
-        }            
+            switch (component)
+            {
+                case PlayerController p:
+                    if (weakType)
+                        Kill(false);
+                    break;
+                case Bullet b:
+                    Damage();
+                    break;
+            }
+        }
     }
 
     protected virtual void EnemyStart()
