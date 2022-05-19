@@ -11,17 +11,16 @@ public class LogMessage
 
 public class LogHandler : MonoBehaviour
 {
-    public bool             drawLogMessages = false;
-
-    [SerializeField] private Queue _logQueue = new Queue();
-    [SerializeField] private string _logBuffer;
-    [SerializeField] private GUIStyle _style;
-
     private const int MAX_MESSAGES_COUNT = 200;
 
-    public static bool      drawConsole = false;
-    private List<LogMessage> _consoleMessageBuffer = new List<LogMessage>();
-    private static Vector2  _scrollPosition = new Vector2(0.0f, 0.0f);
+    public bool             drawLogMessages = false;
+    public bool             drawConsole = false;
+
+    [SerializeField] private GUIStyle _style;
+    [SerializeField] private Queue _logQueue = new Queue();
+    [SerializeField] private string _tempMessagesBuffer;
+    [SerializeField] private List<LogMessage> _consoleMessageBuffer = new List<LogMessage>();
+    [SerializeField] private Vector2  _scrollPosition = new Vector2(0.0f, 0.0f);
     
     protected void Start()
     {
@@ -30,7 +29,7 @@ public class LogHandler : MonoBehaviour
 
     private void Clear()
     {
-        _logBuffer = null;
+        _tempMessagesBuffer = null;
         _logQueue.Clear();
     }
 
@@ -38,7 +37,6 @@ public class LogHandler : MonoBehaviour
     {
         Clear();
     }
-
 
     IEnumerator TimerToClear()
     {
@@ -61,20 +59,18 @@ public class LogHandler : MonoBehaviour
 
     private void HandleLog(string logString, string stackTrace, LogType type)
     {
-        _logBuffer = logString;
-        string newString = "\n [" + type + "] : " + _logBuffer;
-
+        _tempMessagesBuffer = logString;
+        string newString = "\n [" + type + "] : " + _tempMessagesBuffer;
         _logQueue.Enqueue(newString);
-
         if (type == LogType.Exception)
         {
             newString = "\n" + stackTrace;
             _logQueue.Enqueue(newString);
         }
 
-        _logBuffer = string.Empty;
+        _tempMessagesBuffer = string.Empty;
         foreach (string mylog in _logQueue)
-            _logBuffer += mylog;
+            _tempMessagesBuffer += mylog;
         
         _scrollPosition.y = Mathf.Infinity;
 
@@ -114,10 +110,7 @@ public class LogHandler : MonoBehaviour
                         case LogType.Log:
                             style.normal.textColor = new Color(192, 192, 192);
                             break;
-                        case LogType.Error:
-                            style.normal.textColor = Color.red;
-                            break;
-                        case LogType.Assert:
+                        case LogType.Error: case LogType.Assert: case LogType.Exception:
                             style.normal.textColor = Color.red;
                             break;
                         case LogType.Warning:
@@ -125,7 +118,7 @@ public class LogHandler : MonoBehaviour
                             break;
                     }
 
-                    GUILayout.Label(message.Message, style);
+                    GUILayout.Label($"[{message.Type}] {message.Message}", style);
 
                     if(message.StackTrace != string.Empty)
                         GUILayout.Label(message.StackTrace, style);
@@ -138,7 +131,7 @@ public class LogHandler : MonoBehaviour
         else
         {
             if(drawLogMessages)
-                GUILayout.Label(_logBuffer, _style, GUILayout.Height(500));
+                GUILayout.Label(_tempMessagesBuffer, _style, GUILayout.Height(500));
         }
     }
 
