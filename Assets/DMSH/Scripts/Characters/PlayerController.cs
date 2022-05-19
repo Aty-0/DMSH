@@ -316,7 +316,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnConsoleCall(InputValue input)
     {
-        LogHandler.drawConsole = !LogHandler.drawConsole;
         if(logHandler)
             logHandler.drawConsole = !logHandler.drawConsole;
     }
