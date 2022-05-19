@@ -26,6 +26,7 @@ public class PathSystem : MonoBehaviour
 
     [Header("Spawner")]
     public int objectCount = 0;
+    public int spawnedObjectCount = 0;
     public MovableObject objectPrefab = null;
     public Timer spawnerTimer = null;
 
@@ -52,34 +53,36 @@ public class PathSystem : MonoBehaviour
 
         //Set to object what's path system he use
         foreach (var move_object in movablePathObjectsList)
-            move_object.pathSystem = this;
+            if(move_object != null)
+                move_object.pathSystem = this;
     }
 
     private void SpawnObject()
     {
+        spawnedObjectCount++;
         MovableObject movableObject = Instantiate(objectPrefab, pathPointsList[0].transform.position, Quaternion.identity);
         movableObject.pathSystem = this;
-        movableObject.name = movableObject.name + movablePathObjectsList.Count; 
+        movableObject.name = $"{movableObject.name}{spawnedObjectCount}"; 
         movableObject.transform.parent = transform.parent;
         movablePathObjectsList.Add(movableObject);
-        spawnerTimer.ResetTimer();
+        if (spawnedObjectCount == objectCount)
+            spawnerTimer.EndTimer();
+        else
+            spawnerTimer.ResetTimer();
     }
 
     public void EnableSpawner()
     {
-        if (objectCount == 0)
-            return;
-
-        if (pathPointsList[0] == null)
+        if (objectCount != 0)
         {
-            Debug.LogError($"First point is null in Path System {this.name}");
-            Debug.LogException(new NullReferenceException());
+            spawnerTimer = GetComponent<Timer>();
+            Debug.Assert(pathPointsList[0] != null);
+            Debug.Assert(spawnerTimer != null);
+            spawnerTimer.EndEvent += SpawnObject;
+            if (objectPrefab != null)
+                for (int i = 1; i <= objectCount && !spawnerTimer.isEnded; i++)
+                    spawnerTimer.StartTimer();
         }
-
-        spawnerTimer.EndEvent += SpawnObject;
-        if (objectPrefab != null)
-            for (int i = 1; i <= objectCount && !spawnerTimer.isEnded; i++)
-                spawnerTimer.StartTimer();   
     }
 
     #region Utils
