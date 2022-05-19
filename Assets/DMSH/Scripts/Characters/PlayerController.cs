@@ -148,7 +148,6 @@ public class PlayerController : MonoBehaviour
         _playerInput        = GetComponent<PlayerInput>();
         logHandler          = GetComponent<LogHandler>();        
         _stageSystem        = FindObjectOfType<StageSystem>();
-
         _stageSystem.onTimerStart.Add(ShowStageStatus);
         _stageSystem.onTimerEnd.Add(CloseStageStatus);
 
@@ -262,9 +261,6 @@ public class PlayerController : MonoBehaviour
     {
         while (Time.timeScale < 1.0f)
         {
-            //FIX ME 
-            //If we are use boost multiple times
-            //Time.timeScale restore get faster 
             Time.fixedDeltaTime = 0.02F * Time.timeScale;
             Time.timeScale += _boost_speed;
 
@@ -413,8 +409,6 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        //FIXME
-        //_death_audio_source.isPlaying it's dumb idea to fix double damage when player is got collision with two bullets
         if (collision.gameObject.tag != "Bullet" || _death_audio_source.isPlaying)
             return;
 
@@ -455,9 +449,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            //TODO
-            //Maybe it's good idea to destroy bullets in spawn point radius
-
             //Destroy all bullet cuz we are can teleport player into bullet 
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
                 if(bullet.collisionDestoryBullet)
