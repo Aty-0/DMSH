@@ -45,6 +45,11 @@ public class Timer : MonoBehaviour
     {
         StopCoroutine(_tickCoroutine);
     }
+    
+    public void EndTimer()
+    {
+        _isEnded = true;
+    }
 
     public void ResetTimer()
     {
