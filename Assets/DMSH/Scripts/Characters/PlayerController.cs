@@ -409,11 +409,23 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.tag != "Bullet" || _death_audio_source.isPlaying)
-            return;
-
-        Debug.Log($"Player got damage from { collision.gameObject.name } at position { collision.gameObject.transform.position } with tag { collision.gameObject.tag }");
-        Damage();
+        if (!_death_audio_source.isPlaying)
+        {
+            Component[] components = collision.gameObject.GetComponents<Component>();
+            foreach (Component component in components)
+            {
+                switch (component)
+                {
+                    case Enemy b:
+                        Damage();
+                        break;
+                    case Bullet b:
+                        if (b.isEnemyBullet)
+                            Damage();                        
+                        break;
+                }
+            }
+        }
     }
 
     public void Damage()
