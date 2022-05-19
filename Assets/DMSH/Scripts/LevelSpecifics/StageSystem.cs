@@ -42,7 +42,7 @@ public class StageSystem : MonoBehaviour
 
     protected void Start()
     {
-        Debug.Log($"Stage system is started...");
+        Debug.Log($"[StageSystem] Stage system is started...");
         //Disable all scenario packs
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("ScenarioPack"))
             go.SetActive(false);
@@ -57,8 +57,8 @@ public class StageSystem : MonoBehaviour
     {
         if (currentStage != null)
         {
-            Debug.Log($"Added pass {_stageListID} {_listPassed}");
             _listPassed++;
+            Debug.Log($"[StageSystem] Added pass {currentStage.stageObjects.Count} {_stageListID} {_listPassed}");
             //If all scenario lists passed we are passed this stage
             if (_listPassed == currentStage.stageObjects.Count)
                 StagePassed();
@@ -67,7 +67,7 @@ public class StageSystem : MonoBehaviour
 
     private void StagePassed()
     {
-        Debug.Log($"Stage passed {_stageListID}");
+        Debug.Log($"[StageSystem] Stage passed {_stageListID}");
 
         currentStage.isDone = true;
 
@@ -90,9 +90,19 @@ public class StageSystem : MonoBehaviour
                     action?.Invoke();
     }
 
+    public void AddToStage(GameObject go)
+    {
+        Debug.Log($"[StageSystem] Add {go.name} {currentStage.stageObjects.Count}");
+        go.SetActive(true);
+        currentStage.stageObjects.Add(go);
+        PathSystem ps = go.GetComponentInChildren<PathSystem>();
+        ps?.EnableSpawner();
+        Debug.Log($"[StageSystem] Added {currentStage.stageObjects.Count}");
+    }
+
     public void OnTimerEnd()
     {      
-        Debug.Log($"Try to start another stage Current: {_stageListID}");
+        Debug.Log($"[StageSystem] Try to start another stage Current: {_stageListID}");
         //Invoke action when timer is ended
         foreach (int skip in skipStageTimerEvents)
             if (_stageListID != skip)
@@ -101,7 +111,7 @@ public class StageSystem : MonoBehaviour
 
         foreach (Stage st in stagesList)
         {
-            Debug.Log($"{stagesList.IndexOf(st)} {st.stageObjects.Count}");
+            Debug.Log($"[StageSystem] Index: {stagesList.IndexOf(st)} StageObjects Count:{st.stageObjects.Count}");
             //TODO
             //If last stage is done we are show player the result screen
             //But for now we are need to switch to main menu
@@ -115,14 +125,8 @@ public class StageSystem : MonoBehaviour
             foreach (GameObject go in st.stageObjects)
             {
                 if(go == null)
-                {
-                    Debug.LogError("Can't activate object because it is null");
                     continue;
-                }
-                go.SetActive(true);
-
-                PathSystem ps = go.GetComponentInChildren<PathSystem>();
-                ps?.EnableSpawner();
+                AddToStage(go);
             }
 
             currentStage = st;
