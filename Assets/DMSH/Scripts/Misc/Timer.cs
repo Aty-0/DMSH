@@ -8,8 +8,8 @@ public class Timer : MonoBehaviour
 {
     public bool isEnded
     {
-        private set { }
-        get { return _isEnded; }
+        private set => _isEnded = value;
+        get => _isEnded; 
     }
 
     [Header("Time")]
