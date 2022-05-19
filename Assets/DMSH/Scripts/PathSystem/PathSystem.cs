@@ -205,7 +205,7 @@ public class PathSystem : MonoBehaviour
         MovableObject currentObject = null;
         MovableObject previousObject = null;
 
-        foreach (var move_object in movablePathObjectsList)
+        foreach (var move_object in movablePathObjectsList.ToList())
         {
             currentObject = move_object;
             if (move_object == null)
