@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour
     [Header("Global")]
     public GameObject RespawnPoint;
     public int        MaxScore = 0;
+    public LogHandler logHandler;
 
     #region Public Values
     public int Life
@@ -145,6 +146,7 @@ public class PlayerController : MonoBehaviour
         _rigidbody2D        = GetComponent<Rigidbody2D>();
         _boxcollider2D      = GetComponent<BoxCollider2D>();
         _playerInput        = GetComponent<PlayerInput>();
+        logHandler          = GetComponent<LogHandler>();        
         _stageSystem        = FindObjectOfType<StageSystem>();
 
         _stageSystem.onTimerStart.Add(ShowStageStatus);
@@ -319,6 +321,8 @@ public class PlayerController : MonoBehaviour
     private void OnConsoleCall(InputValue input)
     {
         LogHandler.drawConsole = !LogHandler.drawConsole;
+        if(logHandler)
+            logHandler.drawConsole = !logHandler.drawConsole;
     }
 
     public void ShowDeathScreen()
