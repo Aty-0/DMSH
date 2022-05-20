@@ -46,6 +46,14 @@ public class LogHandler : MonoBehaviour
             PlayerController player = FindObjectOfType<PlayerController>();
             player.Kill();
         }));
+        consoleCommandsList.Add(new Tuple<string, Action>("GodMode", () => {
+            PlayerController player = FindObjectOfType<PlayerController>();
+            player.CheatGod = !player.CheatGod;
+        }));
+        consoleCommandsList.Add(new Tuple<string, Action>("InfBoost", () => {
+            PlayerController player = FindObjectOfType<PlayerController>();
+            player.CheatInfBoost = !player.CheatInfBoost;
+        }));
         consoleCommandsList.Add(new Tuple<string, Action>("KillAllEnemy", () => {
             foreach (Enemy enemy in FindObjectsOfType<Enemy>())
                 enemy.Kill(true);
@@ -115,6 +123,34 @@ public class LogHandler : MonoBehaviour
 
     protected void OnGUI()
     {
+        if (Event.current.type == EventType.KeyDown)
+        {
+            if (Event.current.keyCode == KeyCode.BackQuote && Event.current.isKey)
+            {
+                _command = string.Empty;
+                drawConsole = !drawConsole;
+            }
+
+            if (Event.current.keyCode == KeyCode.Return && Event.current.isKey && drawConsole)
+            {
+                //TODO
+                //Need find better way to get function by name
+                foreach (Tuple<string, Action> item in consoleCommandsList)
+                {
+                    if (_command == item.Item1)
+                    {
+                        item.Item2?.Invoke();
+                        _command = string.Empty;
+                        break;
+                    }
+
+                    if (consoleCommandsList.IndexOf(item) == consoleCommandsList.Count - 1)
+                        Debug.LogError("No such command found!");
+
+                }
+            }
+        }
+
         if (drawConsole)
         {
             GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
@@ -148,28 +184,6 @@ public class LogHandler : MonoBehaviour
                 GUILayout.EndScrollView();
             }
             GUILayout.EndArea();
-
-            if (Event.current.type == EventType.KeyDown) 
-            {
-                if (Event.current.keyCode == KeyCode.Return && Event.current.isKey)
-                {
-                    //TODO
-                    //Need find better way to get function by name
-                    foreach (Tuple<string, Action> item in consoleCommandsList)
-                    {
-                        if (_command == item.Item1)
-                        {
-                            item.Item2?.Invoke();
-                            _command = string.Empty;
-                            break;
-                        }
-
-                        if (consoleCommandsList.IndexOf(item)  == consoleCommandsList.Count - 1)
-                            Debug.LogError("No such command found!");
-
-                    }
-                }
-            }
 
             GUILayout.BeginArea(new Rect(0, Screen.height - 25, Screen.width, 100));
             _command = GUILayout.TextField(_command);

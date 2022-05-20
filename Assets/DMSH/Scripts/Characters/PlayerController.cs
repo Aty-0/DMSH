@@ -311,12 +311,6 @@ public class PlayerController : MonoBehaviour
         ShowPauseScreen();
     }
 
-    private void OnConsoleCall(InputValue input)
-    {
-        if(logHandler)
-            logHandler.drawConsole = !logHandler.drawConsole;
-    }
-
     public void ShowDeathScreen()
     {
         //Disable all sounds in scene
