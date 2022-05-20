@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    [Header("Main")]
     public bool isDone = false; 
     public List<GameObject> toSpawn = new List<GameObject>();
     public Timer timer;
-
-    [SerializeField]
-    private StageSystem _stageSystem;
+    [Header("Misc")]
+    [SerializeField] private StageSystem _stageSystem;
 
     protected void Start()
     {
