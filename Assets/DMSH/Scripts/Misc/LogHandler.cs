@@ -30,6 +30,11 @@ public class LogHandler : MonoBehaviour
     {
         StartCoroutine(TimerToClear());
 
+        consoleCommandsList.Add(new Tuple<string, Action>("Help", () => {
+            Debug.Log("Command List:\n");
+            foreach (Tuple<string, Action> item in consoleCommandsList)
+            { Debug.Log($"{item.Item1}"); }
+        }));
         consoleCommandsList.Add(new Tuple<string, Action>("Clear", () => { _consoleMessageBuffer.Clear(); }));
         consoleCommandsList.Add(new Tuple<string, Action>("TestLog", () => { Debug.Log("Hi"); }));
         consoleCommandsList.Add(new Tuple<string, Action>("TestAssert", () => { Debug.Assert(false, "Assert Hi"); }));
