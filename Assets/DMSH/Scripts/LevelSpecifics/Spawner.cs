@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    public bool isDone = false; 
     public List<GameObject> toSpawn = new List<GameObject>();
     public Timer timer;
 
@@ -28,8 +29,12 @@ public class Spawner : MonoBehaviour
 
     public void Spawn()
     {
-        foreach (GameObject go in toSpawn)        
-            if (!go.active)            
-                _stageSystem.AddToStage(go);                   
+        if (!isDone)
+        {
+            foreach (GameObject go in toSpawn)
+                if (!go.activeSelf)
+                    _stageSystem.AddToStage(go);
+            isDone = true;
+        }
     }
 }
