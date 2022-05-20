@@ -130,7 +130,7 @@ public class LogHandler : MonoBehaviour
             {
                 _command = string.Empty;
                 drawConsole = !drawConsole;
-
+              
                 if (drawConsole)
                 {
                     _savedTimeScale = Time.timeScale;
@@ -140,6 +140,8 @@ public class LogHandler : MonoBehaviour
                 {
                     Time.timeScale = _savedTimeScale;
                 }
+
+                GUI.FocusControl("UICommandTextField");
             }
 
             if (Event.current.keyCode == KeyCode.Return && Event.current.isKey && drawConsole)
@@ -150,6 +152,7 @@ public class LogHandler : MonoBehaviour
                 {
                     if (_command == item.Item1)
                     {
+                        Debug.Log($"~{_command}");
                         item.Item2?.Invoke();
                         _command = string.Empty;
                         break;
@@ -197,10 +200,9 @@ public class LogHandler : MonoBehaviour
             GUILayout.EndArea();
 
             GUILayout.BeginArea(new Rect(0, Screen.height - 25, Screen.width, 100));
+            GUI.SetNextControlName("UICommandTextField");
             _command = GUILayout.TextField(_command);
             GUILayout.EndArea();
-
-
         }
         else
         {
