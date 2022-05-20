@@ -49,15 +49,6 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
-                },
-                {
-                    "name": "ConsoleCall",
-                    "type": "Button",
-                    "id": "78502595-e3c6-4650-84eb-a48d0a0fd7e4",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "",
-                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -203,17 +194,6 @@
                     "action": "MoveV",
                     "isComposite": false,
                     "isPartOfComposite": true
-                },
-                {
-                    "name": "",
-                    "id": "1416be41-2b85-4c28-8799-3ad113879402",
-                    "path": "<Keyboard>/backquote",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "",
-                    "action": "ConsoleCall",
-                    "isComposite": false,
-                    "isPartOfComposite": false
                 }
             ]
         },
