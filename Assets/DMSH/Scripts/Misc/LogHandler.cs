@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class LogMessage
 {
     public string StackTrace = string.Empty;
@@ -15,10 +14,14 @@ public class LogHandler : MonoBehaviour
 {
     private const int MAX_MESSAGES_COUNT = 200;
 
+    [Header("Commands")]
     public List<Tuple<string, Action>> consoleCommandsList = new List<Tuple<string, Action>>();
+
+    [Header("Draw")]
     public bool             drawLogMessages = false;
     public bool             drawConsole = false;
 
+    [Header("Misc")]
     [SerializeField] private GUIStyle _style;
     [SerializeField] private Queue _logQueue = new Queue();
     [SerializeField] private string _tempMessagesBuffer;

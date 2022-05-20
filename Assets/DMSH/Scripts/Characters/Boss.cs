@@ -7,7 +7,7 @@ public class Boss : Enemy
 {
     public string bossName = "NoName";
 
-    [Header("Boss UI")]
+    [Header("UI")]
     [SerializeField] private GameObject _bossUI;
     [SerializeField] private Text   _bossName;
     [SerializeField] private Text   _bossLifes;

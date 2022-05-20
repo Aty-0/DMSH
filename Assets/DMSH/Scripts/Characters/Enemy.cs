@@ -24,7 +24,6 @@ public class Enemy : MovableObject
     public bool             canUseWeapon = true;
     public bool             ignoreHits = false;
 
-
     [Header("Enemy")]
     [SerializeField] protected SpriteRenderer _spriteRenderer;
     [SerializeField] protected bool weakType = false; 

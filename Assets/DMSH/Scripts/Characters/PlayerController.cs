@@ -5,9 +5,6 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-//TODO 
-//Add the IMovableObject 
-
 public class PlayerController : MonoBehaviour
 {
     [Header("Global")]

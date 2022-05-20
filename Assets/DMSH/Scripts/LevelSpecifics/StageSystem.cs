@@ -19,26 +19,26 @@ public class Stage
 
 public class StageSystem : MonoBehaviour
 {
+    [Header("Stages")]
     public List<Stage> stagesList = new List<Stage>();
+
+    [Header("Current Stage")]
     public Timer timer;
+    [SerializeField] private int _stageListID = 0;
+    [SerializeField] private int _listPassed = 0;
+    public Stage currentStage = null;
 
     /// <summary>
     /// Custom timer events 
     /// </summary>
+    [Header("Events")]
     public List<Action> onTimerStart = new List<Action>();
     public List<Action> onTimerEnd = new List<Action>();
-
     //TODO
     //It's should be not here
     public List<int> skipStageTimerEvents = new List<int>();
-    
-    [SerializeField]
-    private int _stageListID = 0;
 
-    [SerializeField]
-    private int _listPassed = 0;
 
-    public Stage currentStage = null;
 
     protected void Start()
     {
