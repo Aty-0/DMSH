@@ -21,31 +21,38 @@ using UnityEngine;
 
 public class PathSystem : MonoBehaviour
 {
-    //How much we need points for make curve
-    public static readonly int      PATH_CURVE_LINE_STEPS = 20;
+    //How much we need points for curve
+    public static readonly int          PATH_CURVE_LINE_STEPS = 20;
 
     [Header("Spawner")]
-    public int objectCount = 0;
-    public int spawnedObjectCount = 0;
-    public MovableObject objectPrefab = null;
-    public Timer spawnerTimer = null;
+    public int                          objectCount = 0;
+    public int                          spawnedObjectCount = 0;
+    public MovableObject                objectPrefab = null;
+    public Timer                        spawnerTimer = null;
 
     [Header("PathSystem")]
-    public ObservedList<MovableObject> movablePathObjectsList = new ObservedList<MovableObject>();
-    public List<PathPoint>          pathPointsList = new List<PathPoint>();
-    public bool                     loop = true;
+    public ObservedList<MovableObject>  movablePathObjectsList = new ObservedList<MovableObject>();
+    public List<PathPoint>              pathPointsList = new List<PathPoint>();
+    public bool                         loop = true;
 
     [Header("Misc")]
-    public bool                     holdDistanceBetweenObjects = true;
-    public float                    distanceAccuracy = 0.01f;
-    public float                    distanceBetweenObjects = 2.0f;
-    public StageSystem              stageSystem = null;
+    public bool                         holdDistanceBetweenObjects = true;
+    public float                        distanceAccuracy = 0.01f;
+    public float                        distanceBetweenObjects = 2.0f;
+    public StageSystem                  stageSystem = null;
 
     [Header("Editor")]
-    public Color                    lineColor = Color.green;
+    public Color                        lineColor = Color.green;
+
+    [Header("Actions")]
+    public List<Action>                 onMovableObjectsAdded   = new List<Action>();
+    public List<Action>                 onMovableObjectsChanged   = new List<Action>();
+    public List<Action>                 onMovableObjectsRemoved = new List<Action>();
 
     protected void Start()
     {
+        movablePathObjectsList.Updated += UpdateElementChangedCallback;
+        movablePathObjectsList.Added += UpdateElementAddedCallback;
         movablePathObjectsList.Removed += OnMovablePathObjectsListElementRemoved;
 
         stageSystem = FindObjectOfType<StageSystem>();
@@ -86,6 +93,25 @@ public class PathSystem : MonoBehaviour
     }
 
     #region Utils
+    public void UpdateElementChangedCallback()
+    {
+        foreach (Action action in onMovableObjectsChanged)
+            action?.Invoke();
+    }
+
+    public void UpdateElementRemovedCallback()
+    {
+        foreach (Action action in onMovableObjectsRemoved)
+            action?.Invoke();
+    }
+
+    public void UpdateElementAddedCallback()
+    {
+        foreach (Action action in onMovableObjectsAdded)
+            action?.Invoke();
+    }
+
+
     public void DetachObject(MovableObject movableObject)
     {
         movablePathObjectsList.Remove(movableObject);
@@ -96,7 +122,10 @@ public class PathSystem : MonoBehaviour
         //If all enemy is dead
         //We are pass this scenario list
         if (!movablePathObjectsList.Any() && ((spawnerTimer == null) ? true : spawnerTimer.isEnded))
+        {
+            UpdateElementRemovedCallback();
             stageSystem.AddedPass();
+        }
     }
 
     public bool CheckPointOnValid(int index)
