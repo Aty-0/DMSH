@@ -11,6 +11,7 @@ public class ObservedList<T> : IList<T>
     [SerializeField] private List<T> _list = new List<T>();
 
     public event ChangedDelegate Changed;
+    public event Action Added;
     public event Action Updated;
     public event Action Removed;
 
@@ -27,6 +28,7 @@ public class ObservedList<T> : IList<T>
     public void Add(T item)
     {
         _list.Add(item);
+        Added?.Invoke();
         Updated?.Invoke();
     }
 
@@ -66,6 +68,7 @@ public class ObservedList<T> : IList<T>
     public void Insert(int index, T item)
     {
         _list.Insert(index, item);
+        Added?.Invoke();
         Updated?.Invoke();
     }
 
@@ -93,6 +96,7 @@ public class ObservedList<T> : IList<T>
     public void InsertRange(int index, IEnumerable<T> collection)
     {
         _list.InsertRange(index, collection);
+        Added?.Invoke();
         Updated?.Invoke();
     }
 
