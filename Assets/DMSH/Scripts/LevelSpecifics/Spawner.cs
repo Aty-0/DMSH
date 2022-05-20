@@ -10,16 +10,18 @@ public class Spawner : MonoBehaviour
     public Timer timer;
     [Header("Misc")]
     [SerializeField] private StageSystem _stageSystem;
+    [Tooltip("If we are attach spawner to point")]
+    [SerializeField] private PathSystem _pathSystem;
 
     protected void Start()
     {
-        timer = GetComponent<Timer>();
-
-        if(timer != null)
+        _stageSystem    = FindObjectOfType<StageSystem>();
+        timer           = GetComponent<Timer>();
+        if(timer)
             timer.EndEvent += Spawn;
-
-        _stageSystem = FindObjectOfType<StageSystem>();
-        Debug.Assert(_stageSystem != null);
+        _pathSystem = GetComponentInParent<PathSystem>();
+        if(_pathSystem)
+            _pathSystem.onElementRemoved.Add(Spawn);
     }
 
     public void StartTimer()
