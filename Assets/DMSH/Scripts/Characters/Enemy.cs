@@ -71,7 +71,7 @@ public class Enemy : MovableObject
     {
         if (onLastPointWillDestroy)
         {
-            Kill(false);
+            Kill(false, false);
             return;
         }
 
@@ -111,7 +111,7 @@ public class Enemy : MovableObject
     //TODO
     //Sounds
 
-    public void Kill(bool givePlayerScore)
+    public void Kill(bool givePlayerScore, bool playParticle = true)
     {
         _lifes  = 0;
         _health = 0;
@@ -122,9 +122,8 @@ public class Enemy : MovableObject
         if(givePlayerScore)
             _playerController.Score += 1000;
 
-        if (_deathParticle)
+        if (_deathParticle && playParticle)
         {
-            Debug.Log($"{name} Enemy died with particles");
             _pathSystem.DetachObject(this);
             _spriteRenderer.enabled = false;
             _boxCollider2D.enabled = false;
@@ -137,7 +136,6 @@ public class Enemy : MovableObject
         }
         else
         {
-            Debug.Log($"{name} Enemy died without particles");
             Destroy(gameObject);
         }
     }
