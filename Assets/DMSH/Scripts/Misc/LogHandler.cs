@@ -28,6 +28,7 @@ public class LogHandler : MonoBehaviour
     [SerializeField] private string _command;
     [SerializeField] private List<LogMessage> _consoleMessageBuffer = new List<LogMessage>();
     [SerializeField] private Vector2  _scrollPosition = new Vector2(0.0f, 0.0f);
+    [SerializeField] private float _savedTimeScale;
     
     protected void Start()
     {
@@ -129,6 +130,16 @@ public class LogHandler : MonoBehaviour
             {
                 _command = string.Empty;
                 drawConsole = !drawConsole;
+
+                if (drawConsole)
+                {
+                    _savedTimeScale = Time.timeScale;
+                    Time.timeScale = 0.0f;
+                }
+                else
+                {
+                    Time.timeScale = _savedTimeScale;
+                }
             }
 
             if (Event.current.keyCode == KeyCode.Return && Event.current.isKey && drawConsole)
