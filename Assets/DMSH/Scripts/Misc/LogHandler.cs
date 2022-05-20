@@ -124,7 +124,7 @@ public class LogHandler : MonoBehaviour
 
     protected void OnGUI()
     {
-        if (Event.current.type == EventType.KeyDown)
+        if (Event.current.type == EventType.KeyUp)
         {
             if (Event.current.keyCode == KeyCode.BackQuote && Event.current.isKey)
             {
