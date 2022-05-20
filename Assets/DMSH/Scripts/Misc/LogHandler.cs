@@ -1,6 +1,8 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
 
 public class LogMessage
 {
@@ -13,18 +15,34 @@ public class LogHandler : MonoBehaviour
 {
     private const int MAX_MESSAGES_COUNT = 200;
 
+    public List<Tuple<string, Action>> consoleCommandsList = new List<Tuple<string, Action>>();
     public bool             drawLogMessages = false;
     public bool             drawConsole = false;
 
     [SerializeField] private GUIStyle _style;
     [SerializeField] private Queue _logQueue = new Queue();
     [SerializeField] private string _tempMessagesBuffer;
+    [SerializeField] private string _command;
     [SerializeField] private List<LogMessage> _consoleMessageBuffer = new List<LogMessage>();
     [SerializeField] private Vector2  _scrollPosition = new Vector2(0.0f, 0.0f);
     
     protected void Start()
     {
         StartCoroutine(TimerToClear());
+
+        consoleCommandsList.Add(new Tuple<string, Action>("Clear", () => { _consoleMessageBuffer.Clear(); }));
+        consoleCommandsList.Add(new Tuple<string, Action>("TestLog", () => { Debug.Log("Hi"); }));
+        consoleCommandsList.Add(new Tuple<string, Action>("TestAssert", () => { Debug.Assert(false, "Assert Hi"); }));
+        consoleCommandsList.Add(new Tuple<string, Action>("TestException", () => { Debug.LogException(new NotImplementedException()); }));
+        consoleCommandsList.Add(new Tuple<string, Action>("KillPlayer", () => {
+            PlayerController player = FindObjectOfType<PlayerController>();
+            player.Kill();
+        }));
+        consoleCommandsList.Add(new Tuple<string, Action>("KillAllEnemy", () => {
+            foreach (Enemy enemy in FindObjectsOfType<Enemy>())
+                enemy.Kill(true);
+        }));
+
     }
 
     private void Clear()
@@ -93,12 +111,7 @@ public class LogHandler : MonoBehaviour
         {
             GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
 
-            GUILayout.BeginHorizontal();
-            if (GUI.Button(new Rect(0, 0, 70, 30), "Clear"))
-                _consoleMessageBuffer.Clear();
-            GUILayout.EndHorizontal();
-
-            GUILayout.BeginArea(new Rect(0, 50, Screen.width, Screen.height - 70));
+            GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height - 25));
             {
                 _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, false, false, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height));
 
@@ -127,6 +140,34 @@ public class LogHandler : MonoBehaviour
                 GUILayout.EndScrollView();
             }
             GUILayout.EndArea();
+
+            if (Event.current.type == EventType.KeyDown) 
+            {
+                if (Event.current.keyCode == KeyCode.Return && Event.current.isKey)
+                {
+                    //TODO
+                    //Need find better way to get function by name
+                    foreach (Tuple<string, Action> item in consoleCommandsList)
+                    {
+                        if (_command == item.Item1)
+                        {
+                            item.Item2?.Invoke();
+                            _command = string.Empty;
+                            break;
+                        }
+
+                        if (consoleCommandsList.IndexOf(item)  == consoleCommandsList.Count - 1)
+                            Debug.LogError("No such command found!");
+
+                    }
+                }
+            }
+
+            GUILayout.BeginArea(new Rect(0, Screen.height - 25, Screen.width, 100));
+            _command = GUILayout.TextField(_command);
+            GUILayout.EndArea();
+
+
         }
         else
         {
