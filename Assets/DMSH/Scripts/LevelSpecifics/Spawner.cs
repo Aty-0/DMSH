@@ -21,7 +21,7 @@ public class Spawner : MonoBehaviour
             timer.EndEvent += Spawn;
         _pathSystem = GetComponentInParent<PathSystem>();
         if(_pathSystem)
-            _pathSystem.onElementRemoved.Add(Spawn);
+            _pathSystem.onMovableObjectsRemoved.Add(Spawn);
     }
 
     public void StartTimer()
