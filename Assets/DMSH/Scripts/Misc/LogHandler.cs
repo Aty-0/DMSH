@@ -22,7 +22,8 @@ public class LogHandler : MonoBehaviour
     public bool             drawConsole = false;
 
     [Header("Misc")]
-    [SerializeField] private GUIStyle _style;
+    [SerializeField] private Font _font;
+    [SerializeField] private int _fontSize;
     [SerializeField] private Queue _logQueue = new Queue();
     [SerializeField] private string _tempMessagesBuffer;
     [SerializeField] private string _command;
@@ -165,34 +166,37 @@ public class LogHandler : MonoBehaviour
             }
         }
 
+        GUIStyle textStyle = new GUIStyle(GUI.skin.label);
+        textStyle.font = _font;
+        textStyle.fontSize = _fontSize;
+
         if (drawConsole)
         {
             GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
 
-            GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height - 25));
+            GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height - 35));
             {
-                _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, false, false, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height));
+                _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, false, false, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height - 35));
 
                 foreach (LogMessage message in _consoleMessageBuffer)
                 {
-                    GUIStyle style = _style;
                     switch (message.Type)
                     {
                         case LogType.Log:
-                            style.normal.textColor = new Color(192, 192, 192);
+                            textStyle.normal.textColor = new Color(192, 192, 192);
                             break;
                         case LogType.Error: case LogType.Assert: case LogType.Exception:
-                            style.normal.textColor = Color.red;
+                            textStyle.normal.textColor = Color.red;
                             break;
                         case LogType.Warning:
-                            style.normal.textColor = Color.yellow;
+                            textStyle.normal.textColor = Color.yellow;
                             break;
                     }
 
-                    GUILayout.Label($"[{message.Type}] {message.Message}", style);
+                    GUILayout.Label($"[{message.Type}] {message.Message}", textStyle);
 
                     if(message.StackTrace != string.Empty)
-                        GUILayout.Label(message.StackTrace, style);
+                        GUILayout.Label(message.StackTrace, textStyle);
                 }
 
                 GUILayout.EndScrollView();
@@ -201,13 +205,19 @@ public class LogHandler : MonoBehaviour
 
             GUILayout.BeginArea(new Rect(0, Screen.height - 25, Screen.width, 100));
             GUI.SetNextControlName("UICommandTextField");
-            _command = GUILayout.TextField(_command);
+            GUIStyle textFieldStyle = new GUIStyle(GUI.skin.textField);
+            textFieldStyle.normal.background = null;
+            textFieldStyle.font = _font;
+            textFieldStyle.fontSize = _fontSize;
+            textFieldStyle.onNormal.background = null;
+
+            _command = GUILayout.TextField(_command, textFieldStyle);
             GUILayout.EndArea();
         }
         else
         {
             if(drawLogMessages)
-                GUILayout.Label(_tempMessagesBuffer, _style, GUILayout.Height(500));
+                GUILayout.Label(_tempMessagesBuffer, textStyle, GUILayout.Height(500));
         }
     }
 
