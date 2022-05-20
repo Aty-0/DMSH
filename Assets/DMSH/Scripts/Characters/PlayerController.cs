@@ -135,6 +135,10 @@ public class PlayerController : MonoBehaviour
     private bool isDead = false;
     private int lastScreenWidth = 0;
     private int lastScreenHeight = 0;
+    private Coroutine _uiStagePassCoroutine = null;
+    private Coroutine _uiStageClearCoroutine = null;
+    private Coroutine _slowMotionCoroutine = null;
+    private Coroutine _shotCoroutine = null;
 
     protected void Start()
     {
@@ -158,10 +162,6 @@ public class PlayerController : MonoBehaviour
         GenerateInvisibleWalls();
         UpdateSettings();
     }
-
-    private Coroutine _uiStagePassCoroutine = null;
-    private Coroutine _uiStageClearCoroutine = null;
-
     public void ShowStageStatus()
     {
         _uiStagePassCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(_uiStagePass));
@@ -254,7 +254,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private IEnumerator DoBoostSlowMotion()
+    private IEnumerator DoSlowMotion()
     {
         while (Time.timeScale < 1.0f)
         {
@@ -282,7 +282,7 @@ public class PlayerController : MonoBehaviour
 
         Boost--;
         Time.timeScale = 0.05f;
-        StartCoroutine(DoBoostSlowMotion());
+        _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
     }
 
     private void OnUseBoost(InputValue input)
@@ -293,7 +293,7 @@ public class PlayerController : MonoBehaviour
     private void OnShot(InputValue input)
     {
         WeaponEnabled = input.isPressed;
-        StartCoroutine(Shot());
+        _shotCoroutine = StartCoroutine(Shot());
     }
 
     private void OnMoveH(InputValue input)
@@ -333,6 +333,9 @@ public class PlayerController : MonoBehaviour
     {
         WeaponEnabled = false;
 
+        if(_shotCoroutine != null)
+            StopCoroutine(_shotCoroutine);
+
         //Disable or play all sounds in scene
         //foreach (AudioSource s in FindObjectsOfType<AudioSource>())
         //    if(_pause_screen.activeSelf == false)
@@ -344,7 +347,8 @@ public class PlayerController : MonoBehaviour
             _saved_time_scale = Time.timeScale;
 
         //If we have enabled boost
-        StopCoroutine(DoBoostSlowMotion());
+        if(_slowMotionCoroutine != null)
+            StopCoroutine(_slowMotionCoroutine);
 
         //Enable pause menu
         _pause_screen.SetActive(!_pause_screen.activeSelf);
@@ -353,7 +357,7 @@ public class PlayerController : MonoBehaviour
         //Enable boost if we are exit from pause menu and
         //if we hasnt enable boost in game we are skip the loop because loop work if Time.timeScale < 1.0f
         if (_pause_screen.activeSelf == false)
-            StartCoroutine(DoBoostSlowMotion());
+            _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
 
         _playerInput.currentActionMap.Disable();
         _playerInput.SwitchCurrentActionMap(_pause_screen.activeSelf == false ? "Player" : "Pause");
@@ -420,14 +424,18 @@ public class PlayerController : MonoBehaviour
 
     public void Kill()
     {
+        if (_slowMotionCoroutine != null)
+            StopCoroutine(_slowMotionCoroutine);
+
+        WeaponEnabled = false;
+        if (_shotCoroutine != null)
+            StopCoroutine(_shotCoroutine);
+
         Life = PLAYER_MIN_LIFE;
         isDead = true;
         _sprite_renderer.enabled = false;
         _boxcollider2D.enabled = false;
         _rigidbody2D.isKinematic = true;
-        WeaponEnabled = false;
-        //TODO
-        //Maybe we should change actions list
         _playerInput.enabled = false;
         //Show death screen 
         ShowDeathScreen();
