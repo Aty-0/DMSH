@@ -427,6 +427,21 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    public void Kill()
+    {
+        Life = PLAYER_MIN_LIFE;
+        isDead = true;
+        _sprite_renderer.enabled = false;
+        _boxcollider2D.enabled = false;
+        _rigidbody2D.isKinematic = true;
+        WeaponEnabled = false;
+        //TODO
+        //Maybe we should change actions list
+        _playerInput.enabled = false;
+        //Show death screen 
+        ShowDeathScreen();
+    }
+
     public void Damage()
     {
         //Play player death sound 
@@ -446,23 +461,12 @@ public class PlayerController : MonoBehaviour
         //If life equal MIN_LIFE we are disable player components for move and body 
         //If we are still alive we are teleport player to spawn point
         if (Life == PLAYER_MIN_LIFE)
-        {
-            isDead = true;
-            _sprite_renderer.enabled = false;
-            _boxcollider2D.enabled = false;
-            _rigidbody2D.isKinematic = true;
-            WeaponEnabled = false;
-            //TODO
-            //Maybe we should change actions list
-            _playerInput.enabled = false;
-            //Show death screen 
-            ShowDeathScreen();
-        }
+            Kill();
         else
         {
             //Destroy all bullet cuz we are can teleport player into bullet 
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
-                if(bullet.collisionDestoryBullet)
+                if (bullet.collisionDestoryBullet)
                     Destroy(bullet.gameObject);
 
             //Set spawn point position to player 
