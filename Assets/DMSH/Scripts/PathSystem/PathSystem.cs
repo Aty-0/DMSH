@@ -37,6 +37,7 @@ public class PathSystem : MonoBehaviour
 
     [Header("Misc")]
     public bool                         holdDistanceBetweenObjects = true;
+    public bool                         catchUpNextObject = false; //At the moment working weird
     public float                        distanceAccuracy = 0.01f;
     public float                        distanceBetweenObjects = 2.0f;
     public StageSystem                  stageSystem = null;
@@ -261,11 +262,15 @@ public class PathSystem : MonoBehaviour
             float augmentSpeed = 1.0f;
             float speed = 0.0f;
          
-            if (previousObject && holdDistanceBetweenObjects)
+            if (previousObject)
             {
                 float distanceBetweenCurrentObjects = Vector3.Distance(currentObject.transform.position, previousObject.transform.position);
-                reduceSpeed = Mathf.Clamp(reduceSpeed, 1.0f, Mathf.Clamp(distanceBetweenCurrentObjects, 0.0f, 2.0f / distanceBetweenObjects));
-                augmentSpeed = Mathf.Clamp(augmentSpeed, distanceBetweenCurrentObjects, distanceBetweenObjects);
+
+                if(holdDistanceBetweenObjects)
+                    reduceSpeed = Mathf.Clamp(reduceSpeed, 1.0f, Mathf.Clamp(distanceBetweenCurrentObjects, 0.0f, 2.0f / distanceBetweenObjects));
+
+                if(catchUpNextObject)
+                    augmentSpeed = Mathf.Clamp(augmentSpeed, distanceBetweenCurrentObjects, distanceBetweenObjects);
 
                 //FIX ME 
                 //Not work correctly for object except first and last
