@@ -54,7 +54,7 @@ MonoBehaviour:
   _boxCollider2D: {fileID: 0}
   _moveOffset: {x: 0, y: 0, z: 0}
   _pathSystem: {fileID: 0}
-  shotFrequency: 0.05
+  shotFrequency: 0.5
   weaponEnabled: 0
   bulletPrefab: {fileID: 207413880224101742, guid: 97eb3fb14d8798f44954fb57b1d6ed3f, type: 3}
   canUseWeapon: 1
@@ -232,6 +232,50 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
       propertyPath: playOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: ShapeModule.type
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: ShapeModule.arc.mode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: ShapeModule.arc.value
+      value: 360
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: ShapeModule.radius.value
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: ShapeModule.radiusThickness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: EmissionModule.rateOverTime.scalar
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: InitialModule.startLifetime.scalar
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: InitialModule.startColor.maxColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3558240109870916710, guid: 8b7c0b4af1608794e99d3a572edee00d, type: 3}
+      propertyPath: InitialModule.startColor.minMaxState
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
