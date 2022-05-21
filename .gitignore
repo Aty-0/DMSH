@@ -7,6 +7,7 @@
 [Ll]ocal[Cc]ache/
 [Oo]bj/
 [Tt]emp/
+[Ll]ogs/
 [Uu]nityGenerated/
 # file on crash reports
 sysinfo.txt
@@ -26,6 +27,8 @@ sysinfo.txt
 *.user
 *.userprefs
 *.pidb
+*.log
+
 .DS_Store
 
 ###
