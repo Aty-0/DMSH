@@ -96,9 +96,6 @@ public class Enemy : MovableObject
 
     private IEnumerator Shot()
     {
-        //FIXME
-        //Why it's create sometimes two bullets per one shot?
-
         while (weaponEnabled && canUseWeapon && !_isDead)
         {
             OnShot();
@@ -127,10 +124,6 @@ public class Enemy : MovableObject
             _pathSystem.DetachObject(this);
             _spriteRenderer.enabled = false;
             _boxCollider2D.enabled = false;
-
-            //FIX ME
-            //Sometimes it not works
-            //Or it's particle problem ?
             ParticleSystemRenderer pr = _deathParticle.GetComponent<ParticleSystemRenderer>();            
             pr.material.color = _spriteRenderer.color;
             _deathParticle.Play();
