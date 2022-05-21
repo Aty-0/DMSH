@@ -131,6 +131,8 @@ public class Enemy : MovableObject
             //FIX ME
             //Sometimes it not works
             //Or it's particle problem ?
+            ParticleSystemRenderer pr = _deathParticle.GetComponent<ParticleSystemRenderer>();            
+            pr.material.color = _spriteRenderer.color;
             _deathParticle.Play();
             Destroy(gameObject, _deathParticle.main.duration);
         }
