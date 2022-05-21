@@ -1,6 +1,7 @@
 public static class GlobalSettings
 {
-    public static bool MusicPlay = false;
-    public static bool MainMenuAwakeAnimation = true;
+    public static bool  musicPlay = false;
+    public static bool  mainMenuAwakeAnimation = true;
+    public static int   gameActive = 1;
 }
 

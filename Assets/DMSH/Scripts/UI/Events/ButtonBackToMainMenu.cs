@@ -10,6 +10,7 @@ public class ButtonBackToMainMenu : MonoBehaviour
     public void ButtonBackToMainMenuEvent()
     {
         Time.timeScale = 1.0f;
+        GlobalSettings.gameActive = 1;
         SceneManager.LoadScene(scene.scenePath);
     }
 }

@@ -196,7 +196,7 @@ public class PlayerController : MonoBehaviour
 
     protected void FixedUpdate()
     {
-        _rigidbody2D.MovePosition(_rigidbody2D.position + (_move * _speed) * Time.fixedDeltaTime);
+        _rigidbody2D.MovePosition(_rigidbody2D.position + ((_move * _speed) * Time.fixedDeltaTime * GlobalSettings.gameActive));
     }
 
     protected void Update()
@@ -321,12 +321,13 @@ public class PlayerController : MonoBehaviour
         _death_screen.SetActive(!_death_screen.activeSelf);
 
         //Stop game world
-        Time.timeScale = _death_screen.activeSelf == false ? 1.0f : 0.0f;
+        GlobalSettings.gameActive = 0;
+        Time.timeScale = 1.0f;
+        //Time.timeScale = _death_screen.activeSelf == false ? 1.0f : 0.0f;
 
         //Show some results
         _current_score.text += GetNumberWithZeros(Score);
         _max_score.text += GetNumberWithZeros(MaxScore);
-
     }
 
     public void ShowPauseScreen()
@@ -352,7 +353,8 @@ public class PlayerController : MonoBehaviour
 
         //Enable pause menu
         _pause_screen.SetActive(!_pause_screen.activeSelf);
-        Time.timeScale = _pause_screen.activeSelf == false ? _saved_time_scale : 0.0f;
+        GlobalSettings.gameActive = System.Convert.ToInt32(!_pause_screen.activeSelf);
+        Time.timeScale = _pause_screen.activeSelf == false ? _saved_time_scale : 1.0f;
 
         //Enable boost if we are exit from pause menu and
         //if we hasnt enable boost in game we are skip the loop because loop work if Time.timeScale < 1.0f
@@ -397,7 +399,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-            GUI.Label(new Rect(200, 120, 500, 500), $"MusicPlay: {GlobalSettings.MusicPlay}");
+            GUI.Label(new Rect(200, 120, 500, 500), $"MusicPlay: {GlobalSettings.musicPlay}");
         }      
     }
 
@@ -498,6 +500,6 @@ public class PlayerController : MonoBehaviour
     //Or something related to gameplay
     public void UpdateSettings()
     {
-        _music_audio_source.enabled = GlobalSettings.MusicPlay;
+        _music_audio_source.enabled = GlobalSettings.musicPlay;
     }
 }

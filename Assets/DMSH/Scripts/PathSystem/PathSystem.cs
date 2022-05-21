@@ -288,7 +288,7 @@ public class PathSystem : MonoBehaviour
                 //}
             }
             
-            speed = move_object.speed * augmentSpeed * reduceSpeed * Time.deltaTime; //Calculate speed 
+            speed = move_object.speed * augmentSpeed * reduceSpeed * Time.deltaTime * GlobalSettings.gameActive; //Calculate speed 
 
             //What's mode we need to use 
             if (point.useCurve)

@@ -60,7 +60,7 @@ public class Timer : MonoBehaviour
         StartEvent?.Invoke();
         while (_currentTime >= 0)
         {
-            _currentTime -= tick;
+            _currentTime -= tick * GlobalSettings.gameActive;
 
             UpdateEvent?.Invoke();
             yield return new WaitForSeconds(tick);

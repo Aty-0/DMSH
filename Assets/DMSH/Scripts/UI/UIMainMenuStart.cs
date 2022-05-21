@@ -8,7 +8,7 @@ public class UIMainMenuStart : MonoBehaviour
     public float speed = 10.0f;
     protected void Start()
     {
-        if (GlobalSettings.MainMenuAwakeAnimation)
+        if (GlobalSettings.mainMenuAwakeAnimation)
             StartCoroutine(BasicAnimationsPack.SmoothAwakeText(FindObjectsOfType<Text>(), speed));
         
     }
