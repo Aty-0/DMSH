@@ -259,7 +259,7 @@ public class PlayerController : MonoBehaviour
         while (Time.timeScale < 1.0f)
         {
             Time.fixedDeltaTime = 0.02F * Time.timeScale;
-            Time.timeScale += _boost_speed;
+            Time.timeScale += GlobalSettings.gameActive * _boost_speed;
 
             foreach (AudioSource s in FindObjectsOfType<AudioSource>())
                 if(s.gameObject.tag != "NotGenericSound")
