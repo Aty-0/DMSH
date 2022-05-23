@@ -154,11 +154,12 @@ public class LogHandler : MonoBehaviour
                         Debug.Log($"~{_command}");
                         item.Item2?.Invoke();
                         _command = string.Empty;
+                        _scrollPosition.y = Mathf.Infinity;
                         break;
                     }
 
                     if (consoleCommandsList.IndexOf(item) == consoleCommandsList.Count - 1)
-                        Debug.LogError("No such command found!");
+                        Debug.LogError($"{_command} - no such command found!");
 
                 }
             }
