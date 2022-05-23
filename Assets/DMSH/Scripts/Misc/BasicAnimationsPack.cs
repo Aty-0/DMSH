@@ -8,11 +8,11 @@ public static class BasicAnimationsPack
 {
     public static IEnumerator SmoothAwakeText(Text text, float speed = 15.0f, float seconds = 0.01f)
     {
+        float alphaOnStart = text.color.a;
+        float alpha = 0.0f;
         text.color = new Color(text.color.r, text.color.g, text.color.b, 0.0f);
         text.gameObject.SetActive(true);
-
-        float alpha = 0.0f;
-        while (alpha <= 255.0f)
+        while (alpha <= alphaOnStart)
         {
             alpha += speed * Time.deltaTime;
             text.color = new Color(text.color.r, text.color.g, text.color.b, alpha);
