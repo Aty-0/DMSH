@@ -33,40 +33,6 @@ public static class BasicAnimationsPack
         text.gameObject.SetActive(false);
     }
 
-    public static IEnumerator SmoothAwakeText(Text[] textArray, float speed = 15.0f, float seconds = 0.01f)
-    {
-        foreach (Text text in textArray)
-        {
-            text.color = new Color(text.color.r, text.color.g, text.color.b, 0.0f);
-            text.gameObject.SetActive(true);
-
-            float alpha = 0.0f;
-            while (alpha <= 255.0f)
-            {
-                alpha += speed * Time.deltaTime;
-                text.color = new Color(text.color.r, text.color.g, text.color.b, alpha);
-                yield return new WaitForSeconds(seconds);
-            }
-        }
-    }
-
-    public static IEnumerator SmoothFadeText(Text[] textArray, float speed = 35.0f, float seconds = 0.01f)
-    {
-        foreach (Text text in textArray)
-        {
-            float alpha = text.color.a;
-
-            while (alpha >= 0.0f)
-            {
-                alpha -= speed * Time.deltaTime;
-                text.color = new Color(text.color.r, text.color.g, text.color.b, alpha);
-                yield return new WaitForSeconds(seconds);
-            }
-
-            text.gameObject.SetActive(false);
-        }
-    }
-
     public static IEnumerator SmoothResize(Transform transform, float resize_to = 1.15f, float intensive = 40.0f, float seconds = 0.001f)
     {
         Vector3 resize_vec = new Vector3(resize_to, resize_to, resize_to);
