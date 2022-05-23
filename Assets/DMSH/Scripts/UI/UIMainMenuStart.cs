@@ -5,11 +5,11 @@ using UnityEngine.UI;
 
 public class UIMainMenuStart : MonoBehaviour
 {
-    public float speed = 10.0f;
+    public float speed = 10.0f; //11
     protected void Start()
     {
         if (GlobalSettings.mainMenuAwakeAnimation)
-            StartCoroutine(BasicAnimationsPack.SmoothAwakeText(FindObjectsOfType<Text>(), speed));
-        
+            foreach(Text text in FindObjectsOfType<Text>())
+                StartCoroutine(BasicAnimationsPack.SmoothAwakeText(text, speed));      
     }
 }
