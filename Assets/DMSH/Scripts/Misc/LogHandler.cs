@@ -178,7 +178,7 @@ public class LogHandler : MonoBehaviour
 
             GUILayout.BeginArea(new Rect(0, 0, Screen.width, Screen.height - 35));
             {
-                _scrollPosition = GUILayout.BeginScrollView(_scrollPosition, false, false, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height - 35));
+                _scrollPosition = GUILayout.BeginScrollView(_scrollPosition + new Vector2(0, 35), false, false, GUILayout.Width(Screen.width), GUILayout.Height(Screen.height - 35));
 
                 foreach (LogMessage message in _consoleMessageBuffer)
                 {
