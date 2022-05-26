@@ -5,9 +5,10 @@ using UnityEngine;
 
 public class LogMessage
 {
-    public string StackTrace = string.Empty;
-    public string Message = string.Empty;
-    public LogType Type = LogType.Log;
+    public string   messageStackTrace = string.Empty;
+    public string   messageText       = string.Empty;
+    public LogType  messageType       = LogType.Log;
+    public string   messageSendTime   = string.Empty;
 }
 
 public class LogHandler : MonoBehaviour
@@ -110,11 +111,13 @@ public class LogHandler : MonoBehaviour
         
         _scrollPosition.y = Mathf.Infinity;
 
-        LogMessage logMessage = new LogMessage();
-        logMessage.Type = type;
-        logMessage.Message = logString;
+        LogMessage logMessage  = new LogMessage();
+        logMessage.messageType = type;
+        logMessage.messageText = logString;
+        logMessage.messageSendTime = DateTime.Now.ToString();
+
         if (type == LogType.Exception)
-            logMessage.StackTrace = stackTrace;
+            logMessage.messageStackTrace = stackTrace;
 
         if (_consoleMessageBuffer.Count > MAX_MESSAGES_COUNT)
             _consoleMessageBuffer.RemoveAt(0);
@@ -179,7 +182,7 @@ public class LogHandler : MonoBehaviour
 
                 foreach (LogMessage message in _consoleMessageBuffer)
                 {
-                    switch (message.Type)
+                    switch (message.messageType)
                     {
                         case LogType.Log:
                             textStyle.normal.textColor = new Color(192, 192, 192);
@@ -192,10 +195,10 @@ public class LogHandler : MonoBehaviour
                             break;
                     }
 
-                    GUILayout.Label($"[{message.Type}] {message.Message}", textStyle);
+                    GUILayout.Label($"[{message.messageSendTime}] [{message.messageType}] {message.messageText}", textStyle);
 
-                    if(message.StackTrace != string.Empty)
-                        GUILayout.Label(message.StackTrace, textStyle);
+                    if(message.messageStackTrace != string.Empty)
+                        GUILayout.Label(message.messageStackTrace, textStyle);
                 }
 
                 GUILayout.EndScrollView();
