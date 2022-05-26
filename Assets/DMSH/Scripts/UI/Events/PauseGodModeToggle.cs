@@ -3,8 +3,8 @@ using UnityEngine.UI;
 
 public class PauseGodModeToggle : MonoBehaviour
 {
-    [SerializeField] PlayerController _controller;
-    [SerializeField] Toggle _toggle;
+    [SerializeField] private PlayerController _controller;
+    [SerializeField] private Toggle _toggle;
 
     private void Start()
     {
