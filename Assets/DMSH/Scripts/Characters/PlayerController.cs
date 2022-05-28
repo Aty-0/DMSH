@@ -102,13 +102,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Text _fps_counter_text;
     [SerializeField] private Text _max_score;
     [SerializeField] private Text _current_score;
-
+    [SerializeField] private Text _chapterName;
 
     [Header("Stage")]
     [SerializeField] private StageSystem _stageSystem;
-  
-    [SerializeField] private Text       _uiStagePass;
-    [SerializeField] private Text       _uiStageClear;
 
     [Header("UI Screens")]
     [SerializeField] private GameObject _pause_screen;
@@ -135,8 +132,7 @@ public class PlayerController : MonoBehaviour
     private bool isDead = false;
     private int lastScreenWidth = 0;
     private int lastScreenHeight = 0;
-    private Coroutine _uiStagePassCoroutine = null;
-    private Coroutine _uiStageClearCoroutine = null;
+    private Coroutine _showChapterNameCoroutine = null;
     private Coroutine _slowMotionCoroutine = null;
     private Coroutine _shotCoroutine = null;
 
@@ -147,10 +143,11 @@ public class PlayerController : MonoBehaviour
         _rigidbody2D        = GetComponent<Rigidbody2D>();
         _boxcollider2D      = GetComponent<BoxCollider2D>();
         _playerInput        = GetComponent<PlayerInput>();
-        logHandler          = GetComponent<LogHandler>();        
+        logHandler          = GetComponent<LogHandler>();
         _stageSystem        = FindObjectOfType<StageSystem>();
-        _stageSystem.onTimerStart.Add(ShowStageStatus);
-        _stageSystem.onTimerEnd.Add(CloseStageStatus);
+
+        _stageSystem.onTimerStart.Add(ShowChapterName);
+        _stageSystem.onTimerEnd.Add(RemoveChapterName);
 
         _cheat_gui_style.fontSize = 13;
         _cheat_gui_style.normal.textColor = new Color(255, 0, 0);
@@ -162,22 +159,20 @@ public class PlayerController : MonoBehaviour
         GenerateInvisibleWalls();
         UpdateSettings();
     }
-    public void ShowStageStatus()
+    public void ShowChapterName()
     {
-        _uiStagePassCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(_uiStagePass));
-        if (Life == PLAYER_MAX_LIFE)
-            _uiStageClearCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(_uiStageClear));       
+        Debug.Log("ShowChapterName()");
+        _chapterName.gameObject.SetActive(true);
+        _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(_chapterName));
+        _chapterName.text = $"Chapter {_stageSystem.CurrentStageIndex} {_stageSystem.currentStage.name}";
     }
 
-    public void CloseStageStatus()
+    public void RemoveChapterName()
     {
-        StopCoroutine(_uiStagePassCoroutine);
-        if(_uiStageClearCoroutine != null)
-            StopCoroutine(_uiStageClearCoroutine);
-
-        _uiStagePassCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(_uiStagePass));
-        if (Life == PLAYER_MAX_LIFE)
-            _uiStageClearCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(_uiStageClear));
+        Debug.Log("RemoveChapterName()");
+        if(_showChapterNameCoroutine != null)
+            StopCoroutine(_showChapterNameCoroutine);
+        _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(_chapterName, 15));
     }
 
     private void GenerateInvisibleWalls()
