@@ -8,14 +8,13 @@ public static class BasicAnimationsPack
 {
     public static IEnumerator SmoothAwakeText(Text text, float speed = 15.0f, float seconds = 0.01f)
     {
-        float alphaOnStart = text.color.a;
+        float alphaOnStart = text.color.a;        
         float alpha = 0.0f;
         text.color = new Color(text.color.r, text.color.g, text.color.b, 0.0f);
         text.gameObject.SetActive(true);
         while (alpha <= alphaOnStart)
         {
-            alpha += speed * Time.deltaTime;
-            text.color = new Color(text.color.r, text.color.g, text.color.b, alpha);
+            text.color = Color.Lerp(text.color, new Color(text.color.r, text.color.g, text.color.b, alphaOnStart), Time.deltaTime * speed);
             yield return new WaitForSeconds(seconds);
         }
     }
@@ -25,8 +24,7 @@ public static class BasicAnimationsPack
         float alpha = text.color.a;
         while (alpha >= 0.0f)
         {
-            alpha -= speed * Time.deltaTime;
-            text.color = new Color(text.color.r, text.color.g, text.color.b, alpha);
+            text.color = Color.Lerp(text.color, new Color(text.color.r, text.color.g, text.color.b, 0.0f), Time.deltaTime * speed);
             yield return new WaitForSeconds(seconds);
         }
 
