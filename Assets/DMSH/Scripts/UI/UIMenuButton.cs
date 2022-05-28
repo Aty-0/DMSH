@@ -18,8 +18,16 @@ public class UIMenuButton : Button, IDragHandler, IBeginDragHandler, IEndDragHan
     {
         _text = GetComponentInChildren<Text>();
         _text.color = colors.normalColor;
-    }
 
+        transform.localScale = Vector3.one;
+
+        if (_colorCoroutine != null)
+            StopCoroutine(_colorCoroutine);
+
+        if (_scaleCoroutine != null)
+            StopCoroutine(_scaleCoroutine);
+    }
+    
     protected Vector3 GetDragDirection(Vector3 dragVector)
     {
         Vector2 draggedDir = Vector2.zero;
