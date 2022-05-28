@@ -5,9 +5,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-//FIXME
-//Initialize the input system on enable
-[AddComponentMenu("UI/DMSH/UIMenuButton ", 0)]
+[AddComponentMenu("UI/DMSH/UIMenuButton", 0)]
 public class UIMenuButton : Button, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     private Text _text;    
