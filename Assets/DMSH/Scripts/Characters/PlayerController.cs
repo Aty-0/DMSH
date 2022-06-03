@@ -123,7 +123,8 @@ public class PlayerController : MonoBehaviour
     [Header("Walls")]
     [SerializeField] private GameObject[] _walls_list = new GameObject[4];
     [SerializeField] private Image        _ui_some_image;
-
+    [SerializeField] private GameObject     _background;
+    
     [Header("Sound")]
     [SerializeField] private AudioSource _weapon_audio_source;
     [SerializeField] private AudioSource _death_audio_source;
@@ -196,21 +197,16 @@ public class PlayerController : MonoBehaviour
 
     protected void Update()
     {
-        if (lastScreenWidth != Screen.width || lastScreenHeight != Screen.height)
+        if (lastScreenWidth != Screen.width || lastScreenHeight != Screen.height) 
             OnResolutionScreenChange();
+
         _fps_counter_text.text = $"FPS:{(int)(1f / Time.unscaledDeltaTime)}";
     }
 
-    //TODO
-    //Need to restretch background
     private void UpdateInvisibleWallsPosition()
     {
-        Vector3 ViewportToWorldPointX = Camera.main.ViewportToWorldPoint(new Vector2(1, 0));
-        Vector3 ViewportToWorldPointY = Camera.main.ViewportToWorldPoint(new Vector2(0, 1));
-
-        ViewportToWorldPointX.y = 0;
-        ViewportToWorldPointY.x = 0;
-
+        Vector3 ViewportToWorldPointX = new Vector2(Camera.main.ViewportToWorldPoint(new Vector2(1, 0)).x , 0);
+        Vector3 ViewportToWorldPointY = new Vector2(0, Camera.main.ViewportToWorldPoint(new Vector2(0, 1)).y);
 
         _walls_list[0].transform.position = ViewportToWorldPointY;
         _walls_list[1].transform.position = -ViewportToWorldPointY;
@@ -220,14 +216,20 @@ public class PlayerController : MonoBehaviour
         //FIX ME 
         //Sometimes player can bypass invisible walls when this function is called
         //It's collision bug but we need to avoid this
+        //It's very very bad fix for this problem
+        if(gameObject.transform.position.x > _walls_list[2].transform.position.x  || gameObject.transform.position.x < _walls_list[3].transform.position.x ||
+            gameObject.transform.position.y > _walls_list[0].transform.position.y || gameObject.transform.position.y < _walls_list[1].transform.position.y)
+                gameObject.transform.position = RespawnPoint.transform.position;
 
-
-        //it's very dumb but that fix problem
-        if(this.gameObject.transform.position.x > _walls_list[2].transform.position.x 
-            || this.gameObject.transform.position.x < _walls_list[3].transform.position.x ||
-            this.gameObject.transform.position.y > _walls_list[0].transform.position.y
-            || this.gameObject.transform.position.y < _walls_list[1].transform.position.y)
-                this.gameObject.transform.position = RespawnPoint.transform.position;
+        //I guess it's not correct way to implement background restretch
+        if (_background)
+        {
+            _background.transform.position = (_walls_list[3].transform.position + _walls_list[2].transform.position) + new Vector3(2.4f, 0, 0);
+            _background.transform.localScale = new Vector3(
+                Vector3.Distance(_walls_list[3].transform.position, _walls_list[2].transform.position) / 10, //X
+                Vector3.Distance(_walls_list[0].transform.position, _walls_list[1].transform.position), //Y
+                1);
+        }
 
         RespawnPoint.transform.position = new Vector2(-ViewportToWorldPointX.x / 1000, -ViewportToWorldPointY.y / 1.2f);
     }
