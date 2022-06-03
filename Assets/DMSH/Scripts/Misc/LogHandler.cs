@@ -137,6 +137,9 @@ public class LogHandler : MonoBehaviour
 
     protected void OnGUI()
     {
+        GUIStyle textStyle = new GUIStyle(GUI.skin.label);
+        textStyle.font = _font;
+        textStyle.fontSize = _fontSize;
         if (Event.current.type == EventType.KeyUp)
         {
             if (Event.current.keyCode == KeyCode.Escape && Event.current.isKey)
@@ -181,10 +184,6 @@ public class LogHandler : MonoBehaviour
                 }
             }
         }
-
-        GUIStyle textStyle = new GUIStyle(GUI.skin.label);
-        textStyle.font = _font;
-        textStyle.fontSize = _fontSize;
 
         if (drawConsole)
         {
