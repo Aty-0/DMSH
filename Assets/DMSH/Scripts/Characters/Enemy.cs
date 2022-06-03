@@ -94,9 +94,9 @@ public class Enemy : MovableObject
             StopCoroutine(_shotCoroutine);
     }
 
-    private IEnumerator Shot()
+    private IEnumerator Shot() 
     {
-        while (weaponEnabled && canUseWeapon && !_isDead)
+        while (GlobalSettings.gameActiveBool && (weaponEnabled && canUseWeapon && !_isDead))
         {
             OnShot();
             Vector2 final_pos = new Vector2(rigidBody2D.position.x, rigidBody2D.position.y - boxCollider2D.size.y);

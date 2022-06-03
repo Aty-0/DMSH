@@ -282,13 +282,17 @@ public class PlayerController : MonoBehaviour
 
     private void OnUseBoost(InputValue input)
     {
-        UseBoost();
+        if (GlobalSettings.gameActiveBool)
+            UseBoost();
     }
 
     private void OnShot(InputValue input)
     {
-        WeaponEnabled = input.isPressed;
-        _shotCoroutine = StartCoroutine(Shot());
+        if (GlobalSettings.gameActiveBool)
+        {
+            WeaponEnabled = input.isPressed;
+            _shotCoroutine = StartCoroutine(Shot());
+        }
     }
 
     private void OnMoveH(InputValue input)
@@ -346,7 +350,7 @@ public class PlayerController : MonoBehaviour
         if(_slowMotionCoroutine != null)
             StopCoroutine(_slowMotionCoroutine);
 
-        //Enable pause menu
+        //Enable or disable pause menu
         _pause_screen.SetActive(!_pause_screen.activeSelf);
         GlobalSettings.gameActive = System.Convert.ToInt32(!_pause_screen.activeSelf);
         Time.timeScale = _pause_screen.activeSelf == false ? _saved_time_scale : 1.0f;
