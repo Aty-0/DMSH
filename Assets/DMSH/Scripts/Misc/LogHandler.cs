@@ -139,6 +139,9 @@ public class LogHandler : MonoBehaviour
     {
         if (Event.current.type == EventType.KeyUp)
         {
+            if (Event.current.keyCode == KeyCode.Escape && Event.current.isKey)
+                drawConsole = false;
+     
             if (Event.current.keyCode == KeyCode.BackQuote && Event.current.isKey)
             {
                 _command = string.Empty;
