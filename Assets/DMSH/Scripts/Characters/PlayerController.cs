@@ -235,7 +235,7 @@ public class PlayerController : MonoBehaviour
         {
             _background.transform.position = (_walls_list[3].transform.position + _walls_list[2].transform.position) + new Vector3(2.4f, 0, 0);
             _background.transform.localScale = new Vector3(
-                Vector3.Distance(_walls_list[3].transform.position, _walls_list[2].transform.position) / 10, //X
+                Vector3.Distance(_walls_list[3].transform.position, _walls_list[2].transform.position) / 9.85f, //X
                 Vector3.Distance(_walls_list[0].transform.position, _walls_list[1].transform.position), //Y
                 1);
         }
