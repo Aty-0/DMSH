@@ -1,3 +1,5 @@
+using System;
+
 public static class GlobalSettings
 {
     public static bool  musicPlay = false;
