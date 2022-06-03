@@ -166,7 +166,7 @@ public class LogHandler : MonoBehaviour
                 //Need find better way to get function by name
                 foreach (Tuple<string, Action> item in consoleCommandsList)
                 {
-                    if (_command == item.Item1)
+                    if (_command.IndexOf(item.Item1, StringComparison.OrdinalIgnoreCase) >= 0)
                     {
                         Debug.Log($"~{_command}");
                         item.Item2?.Invoke();
