@@ -232,8 +232,14 @@ public class LogHandler : MonoBehaviour
         }
         else
         {
-            if(drawLogMessages)
+            if (drawLogMessages)
+            {
                 GUILayout.Label(_tempMessagesBuffer, textStyle, GUILayout.Height(500));
+
+                GUILayout.BeginArea(new Rect(Screen.width - 100, 0, 500, 500));
+                GUILayout.Label($"{GlobalSettings.gameActive}", textStyle);
+                GUILayout.EndArea();
+            }
         }
     }
 
