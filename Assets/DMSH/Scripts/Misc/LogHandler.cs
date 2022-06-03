@@ -38,9 +38,16 @@ public class LogHandler : MonoBehaviour
         StartCoroutine(TimerToClear());
 
         consoleCommandsList.Add(new Tuple<string, Action>("Help", () => {
-            Debug.Log("Command List:\n");
+            Debug.Log($"Command List:{consoleCommandsList.Count}\n");
             foreach (Tuple<string, Action> item in consoleCommandsList)
             { Debug.Log($"{item.Item1}"); }
+        }));
+        consoleCommandsList.Add(new Tuple<string, Action>("tmessages", () => {
+            drawLogMessages = !drawLogMessages;
+        }));
+        consoleCommandsList.Add(new Tuple<string, Action>("dgui", () => {
+            PlayerController player = FindObjectOfType<PlayerController>();
+            player.DebugGUI = !player.DebugGUI;
         }));
         consoleCommandsList.Add(new Tuple<string, Action>("tc", () => { _Resume = !_Resume; }));
         consoleCommandsList.Add(new Tuple<string, Action>("Clear", () => { _consoleMessageBuffer.Clear(); }));
