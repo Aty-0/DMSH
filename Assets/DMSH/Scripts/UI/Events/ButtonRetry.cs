@@ -9,6 +9,7 @@ public class ButtonRetry : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         GlobalSettings.gameActive = 1;
+        Cursor.visible = false;
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

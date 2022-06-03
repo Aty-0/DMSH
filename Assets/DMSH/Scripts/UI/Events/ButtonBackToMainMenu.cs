@@ -11,6 +11,7 @@ public class ButtonBackToMainMenu : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         GlobalSettings.gameActive = 1;
+        Cursor.visible = true;
         SceneManager.LoadScene(scene.scenePath);
     }
 }

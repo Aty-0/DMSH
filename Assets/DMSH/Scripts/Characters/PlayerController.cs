@@ -168,6 +168,8 @@ public class PlayerController : MonoBehaviour
         UpdateHUD();
         GenerateInvisibleWalls();
         UpdateSettings();
+
+        Cursor.visible = false;
     }
     public void ShowChapterName()
     {
@@ -323,6 +325,8 @@ public class PlayerController : MonoBehaviour
 
     public void ShowDeathScreen()
     {
+        Cursor.visible = true;
+
         //Disable all sounds in scene
         foreach (AudioSource s in FindObjectsOfType<AudioSource>())
             s.Stop();
@@ -363,6 +367,8 @@ public class PlayerController : MonoBehaviour
 
         //Enable or disable pause menu
         _pause_screen.SetActive(!_pause_screen.activeSelf);
+        Cursor.visible = _pause_screen.activeSelf;
+
         GlobalSettings.gameActive = System.Convert.ToInt32(!_pause_screen.activeSelf);
         Time.timeScale = _pause_screen.activeSelf == false ? _saved_time_scale : 1.0f;
 
