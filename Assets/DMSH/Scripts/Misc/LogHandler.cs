@@ -31,6 +31,7 @@ public class LogHandler : MonoBehaviour
     [SerializeField] private List<LogMessage> _consoleMessageBuffer = new List<LogMessage>();
     [SerializeField] private Vector2  _scrollPosition = new Vector2(0.0f, 0.0f);
     [SerializeField] private int _savedGameActiveState;
+    [SerializeField] private bool _Resume = true;
     
     protected void Start()
     {
@@ -41,6 +42,7 @@ public class LogHandler : MonoBehaviour
             foreach (Tuple<string, Action> item in consoleCommandsList)
             { Debug.Log($"{item.Item1}"); }
         }));
+        consoleCommandsList.Add(new Tuple<string, Action>("tc", () => { _Resume = !_Resume; }));
         consoleCommandsList.Add(new Tuple<string, Action>("Clear", () => { _consoleMessageBuffer.Clear(); }));
         consoleCommandsList.Add(new Tuple<string, Action>("TestLog", () => { Debug.Log("Hi"); }));
         consoleCommandsList.Add(new Tuple<string, Action>("TestAssert", () => { Debug.Assert(false, "Assert Hi"); }));
@@ -135,13 +137,15 @@ public class LogHandler : MonoBehaviour
                 _command = string.Empty;
                 drawConsole = !drawConsole;
 
-                if(drawConsole)
-                    _savedGameActiveState = GlobalSettings.gameActive;
-
-                if (_savedGameActiveState == 1 && !drawConsole)
-                    GlobalSettings.gameActive = 1;
-                else
-                    GlobalSettings.gameActive = 0;
+                if (_Resume)
+                {
+                    if (drawConsole)
+                        _savedGameActiveState = GlobalSettings.gameActive;
+                    if (_savedGameActiveState == 1 && !drawConsole)
+                        GlobalSettings.gameActive = 1;
+                    else
+                        GlobalSettings.gameActive = 0;
+                }
 
                 GUI.FocusControl("UICommandTextField");
             }
