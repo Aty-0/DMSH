@@ -233,11 +233,11 @@ public class PlayerController : MonoBehaviour
         //I guess it's not correct way to implement background restretch
         if (_background)
         {
-            _background.transform.position = (_walls_list[3].transform.position + _walls_list[2].transform.position) + new Vector3(2.4f, 0, 0);
             _background.transform.localScale = new Vector3(
-                Vector3.Distance(_walls_list[3].transform.position, _walls_list[2].transform.position) / 9.85f, //X
+                (Vector3.Distance(_walls_list[3].transform.position, _walls_list[2].transform.position) / Vector3.Distance(_walls_list[0].transform.position, _walls_list[1].transform.position)) + _ui_some_image.rectTransform.sizeDelta.x * 2, //X
                 Vector3.Distance(_walls_list[0].transform.position, _walls_list[1].transform.position), //Y
                 1);
+            _background.transform.position = new Vector3(-ViewportToWorldPointX.x * _ui_some_image.rectTransform.sizeDelta.x * 9.2f, 0, 0);
         }
 
         RespawnPoint.transform.position = new Vector2(-ViewportToWorldPointX.x / 1000, -ViewportToWorldPointY.y / 1.2f);
