@@ -64,6 +64,15 @@ public class PlayerController : MonoBehaviour
             _debug_inf_boost = value;
         }
     }
+
+    public bool DebugGUI
+    {
+        get => _debug_gui;
+        set
+        {
+            _debug_gui = value;
+        }
+    }
     #endregion
 
     [Header("Constants")]
