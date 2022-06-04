@@ -16,7 +16,7 @@ public class Boss : Enemy
     protected override void EnemyStart()
     {
         _playerController = (PlayerController)FindObjectOfType(typeof(PlayerController));
-        _playerController.MaxScore += 1000 + (int)(_lifes * ((_health / 1.5f) * 1000) + _lifes * 10000);
+        _playerController.maxScore += 1000 + (int)(_lifes * ((_health / 1.5f) * 1000) + _lifes * 10000);
 
         Debug.Log("Enable boss ui...");
         _bossUI.SetActive(!_bossUI.activeSelf);

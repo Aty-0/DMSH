@@ -5,13 +5,8 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : MovableObject
 {
-    [Header("Global")]
-    public GameObject RespawnPoint;
-    public int        MaxScore = 0;
-    public LogHandler logHandler;
-
     #region Public Values
     public int Life
     {
@@ -49,37 +44,59 @@ public class PlayerController : MonoBehaviour
 
     public bool CheatGod
     {
-        get => _debug_god;
+        get => _cheatGod;
         set
         {
-            _debug_god = value;
+            _cheatGod = value;
         }
     }
 
     public bool CheatInfBoost
     {
-        get => _debug_inf_boost;
+        get => _cheatInfiniteBoost;
         set
         {
-            _debug_inf_boost = value;
+            _cheatInfiniteBoost = value;
         }
     }
 
     public bool DebugGUI
     {
-        get => _debug_gui;
+        get => _debugGUI;
         set
         {
-            _debug_gui = value;
+            _debugGUI = value;
         }
     }
     #endregion
 
-    [Header("Constants")]
+    #region Constants
     public const int PLAYER_MAX_LIFE = 3;
     public const int PLAYER_MAX_BOOST = 5;
     public const int PLAYER_MIN_LIFE = -1;
     public const int UI_ZEROS_SCORE_TEXT = 8;
+    #endregion
+
+    [Header("Global")]
+    public SpriteRenderer   spriteRenderer;
+    public Camera           gameCamera;
+    public LogHandler       logHandler;
+    public GameObject       respawnPoint;
+    public int              maxScore = 0;
+    public PlayerInput      playerInput;
+    [SerializeField] private Vector2 _move;
+    [SerializeField] private bool    _isDead = false;
+
+    //TODO
+    //Create screen handler or something like that
+    private int       _lastScreenWidth = 0;
+    private int       _lastScreenHeight = 0;
+    private Coroutine _showChapterNameCoroutine = null;
+    private Coroutine _slowMotionCoroutine = null;
+    private Coroutine _shotCoroutine = null;
+
+    [Header("Stage")]
+    [SerializeField] private StageSystem _stageSystem;
 
     [Header("Statistics")]
     [SerializeField] private int _player_score = 0;
@@ -90,112 +107,102 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float _boost_speed = 0.05f;
     [SerializeField] private float _saved_time_scale = 0.0f;
 
-    [Header("Main")]
-    [SerializeField] private Camera _camera;
-    [SerializeField] private SpriteRenderer _sprite_renderer;
-    [SerializeField] private Rigidbody2D _rigidbody2D;
-    [SerializeField] private BoxCollider2D _boxcollider2D;
-    [SerializeField] private PlayerInput _playerInput;
-
     [Header("Cheats & Debug")]
-    [SerializeField] private bool _debug_gui;
-    [SerializeField] private bool _debug_god;
-    [SerializeField] private bool _debug_inf_boost;
-    [SerializeField] private GUIStyle _cheat_gui_style;
+    [SerializeField] private bool     _debugGUI;
+    [SerializeField] private GUIStyle _cheatGUIStyle;
+    [SerializeField] private bool     _cheatGod;
+    [SerializeField] private bool     _cheatInfiniteBoost;
 
     [Header("UI")]
-    [SerializeField] private Text _score_text;
-    [SerializeField] private Text _boost_gain_text;
-    [SerializeField] private Text _life_text;
-    [SerializeField] private Text _boost_text;
-    [SerializeField] private Text _fps_counter_text;
-    [SerializeField] private Text _max_score;
-    [SerializeField] private Text _current_score;
-    [SerializeField] private Text _chapterName;
-
-    [Header("Stage")]
-    [SerializeField] private StageSystem _stageSystem;
+    [SerializeField] private Text     _uiScoreText;
+    [SerializeField] private Text     _uiBoostGainText;
+    [SerializeField] private Text     _uiBoostText;
+    [SerializeField] private Text     _uiLifeText;
+    [SerializeField] private Text     _uiFpsCounterText;
+    [SerializeField] private Text     _uiChapterName;
+    [SerializeField] private Image    _uiSomeImage; //Image on the screen corner
 
     [Header("UI Screens")]
-    [SerializeField] private GameObject _pause_screen;
-    [SerializeField] private GameObject _death_screen;
-
-    [Header("Movement")]
-    [SerializeField] private Vector2 _move;
-    [SerializeField] private float _speed;
+    [SerializeField] private GameObject _uiPauseScreen;
+    [SerializeField] private GameObject _uiDeathScreen;
+    [SerializeField] private Text       _uiCurrentScoreText; //Only for death screen
+    [SerializeField] private Text       _uiMaxScoreText;
 
     [Header("Weapon")]
-    public bool WeaponEnabled;
-    [SerializeField] private Bullet _bulletprefab;
-    [SerializeField] private float  _shot_frequency = 0.1f;
+    public bool     weaponEnabled;
+    public Bullet   bulletprefab;
+    [SerializeField] private GameObject _shotPoint;     
+    [SerializeField] private float  _shotFrequency = 0.05f;
 
-    [Header("Walls")]
-    [SerializeField] private GameObject[] _walls_list = new GameObject[4];
-    [SerializeField] private Image        _ui_some_image;
+    [Header("Resizable")]
+    [SerializeField] private GameObject[]   _wallsList = new GameObject[4];
     [SerializeField] private GameObject     _background;
     
-    [Header("Sound")]
-    [SerializeField] private AudioSource _weapon_audio_source;
-    [SerializeField] private AudioSource _death_audio_source;
-    [SerializeField] private AudioSource _music_audio_source;
+    [Header("Sounds")]
+    [SerializeField] private AudioSource audioSourceWeapon;
+    [SerializeField] private AudioSource audioSourceDeath;
+    [SerializeField] private AudioSource audioSourceMusic;
 
-    private bool isDead = false;
-    private int lastScreenWidth = 0;
-    private int lastScreenHeight = 0;
-    private Coroutine _showChapterNameCoroutine = null;
-    private Coroutine _slowMotionCoroutine = null;
-    private Coroutine _shotCoroutine = null;
+    [Header("Particles")]
+    [SerializeField] protected ParticleSystem _deathParticle;
+
 
     protected void Start()
     {
-        _camera             = gameObject.GetComponentInParent(typeof(Camera)) as Camera;
-        _sprite_renderer    = GetComponent<SpriteRenderer>();
-        _rigidbody2D        = GetComponent<Rigidbody2D>();
-        _boxcollider2D      = GetComponent<BoxCollider2D>();
-        _playerInput        = GetComponent<PlayerInput>();
+        //Get all components
+        gameCamera          = GetComponentInParent(typeof(Camera)) as Camera;
+        spriteRenderer      = GetComponent<SpriteRenderer>();
+        rigidBody2D         = GetComponent<Rigidbody2D>();
+        boxCollider2D       = GetComponent<BoxCollider2D>();
+        playerInput         = GetComponent<PlayerInput>();
         logHandler          = GetComponent<LogHandler>();
         _stageSystem        = FindObjectOfType<StageSystem>();
 
+        //Set timer callback for stage system
         _stageSystem.onTimerStart.Add(ShowChapterName);
         _stageSystem.onTimerEnd.Add(RemoveChapterName);
 
-        _cheat_gui_style.fontSize = 13;
-        _cheat_gui_style.normal.textColor = new Color(255, 0, 0);
-
         //First initialize
-        _boost_gain_text.text = "100%";
-
         UpdateHUD();
         GenerateInvisibleWalls();
         UpdateSettings();
+        _uiBoostGainText.text = "100%";
 
+        //Set style for cheat gui
+        _cheatGUIStyle.fontSize = 13;
+        _cheatGUIStyle.normal.textColor = new Color(255, 0, 0);
+
+        //Don't show cursor when we are create the player 
         Cursor.visible = false;
     }
     public void ShowChapterName()
     {
         Debug.Log("ShowChapterName()");
-        _chapterName.gameObject.SetActive(true);
-        _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(_chapterName));
-        _chapterName.text = $"Chapter {_stageSystem.CurrentStageIndex} {_stageSystem.currentStage.name}";
+
+        _uiChapterName.gameObject.SetActive(true);
+        _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(_uiChapterName));
+        _uiChapterName.text = $"Chapter {_stageSystem.CurrentStageIndex} {_stageSystem.currentStage.name}";
     }
 
     public void RemoveChapterName()
     {
         Debug.Log("RemoveChapterName()");
+
         if(_showChapterNameCoroutine != null)
             StopCoroutine(_showChapterNameCoroutine);
-        _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(_chapterName, 15));
+
+        _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(_uiChapterName, 15));
     }
 
     private void GenerateInvisibleWalls()
     {
         for (int i = 0; i <= 3; i++)
         {
-            _walls_list[i] = new GameObject($"GeneratedInvisibleWall{i}");
-            var local_boxCollider2D = _walls_list[i].AddComponent<BoxCollider2D>();
-            local_boxCollider2D.size = Camera.main.ViewportToWorldPoint(i <= 1 ? new Vector2(1, 0) : new Vector2(0, 1)) * 2;
+            _wallsList[i] = new GameObject($"GeneratedInvisibleWall{i}");
+            var local_boxCollider2D = _wallsList[i].AddComponent<BoxCollider2D>();
+            local_boxCollider2D.size = gameCamera.ViewportToWorldPoint(i <= 1 ? new Vector2(1, 0) : new Vector2(0, 1)) * 2;
             local_boxCollider2D.size += i <= 1 ? new Vector2(0.0f, 0.1f) : new Vector2(0.1f, 0.0f);
-            _walls_list[i].layer = 8;
+            _wallsList[i].layer = 8; // wtf
         }
 
         UpdateInvisibleWallsPosition();
@@ -203,62 +210,65 @@ public class PlayerController : MonoBehaviour
 
     protected void FixedUpdate()
     {
-        _rigidbody2D.MovePosition(_rigidbody2D.position + ((_move * _speed) * Time.fixedDeltaTime * GlobalSettings.gameActive));
+        _rigidBody2D.MovePosition(_rigidBody2D.position + ((_move * _speed) * Time.fixedDeltaTime * GlobalSettings.gameActive));
     }
 
     protected void Update()
     {
-        if (lastScreenWidth != Screen.width || lastScreenHeight != Screen.height) 
+        if (_lastScreenWidth != Screen.width || _lastScreenHeight != Screen.height) 
             OnResolutionScreenChange();
 
-        _fps_counter_text.text = $"FPS:{(int)(1f / Time.unscaledDeltaTime)}";
+        _uiFpsCounterText.text = $"FPS:{(int)(1f / Time.unscaledDeltaTime)}";
     }
 
     private void UpdateInvisibleWallsPosition()
     {
-        Vector3 ViewportToWorldPointX = new Vector2(Camera.main.ViewportToWorldPoint(new Vector2(1, 0)).x , 0);
-        Vector3 ViewportToWorldPointY = new Vector2(0, Camera.main.ViewportToWorldPoint(new Vector2(0, 1)).y);
+        //Get viewport world points
+        Vector3 ViewportToWorldPointX = new Vector2(gameCamera.ViewportToWorldPoint(new Vector2(1, 0)).x , 0);
+        Vector3 ViewportToWorldPointY = new Vector2(0, gameCamera.ViewportToWorldPoint(new Vector2(0, 1)).y);
 
-        _walls_list[0].transform.position = ViewportToWorldPointY;
-        _walls_list[1].transform.position = -ViewportToWorldPointY;
-        _walls_list[2].transform.position = ViewportToWorldPointX - new Vector3(ViewportToWorldPointX.x * _ui_some_image.rectTransform.sizeDelta.x * 20.0f, 0, 0);
-        _walls_list[3].transform.position = -ViewportToWorldPointX;
+        _wallsList[0].transform.position = ViewportToWorldPointY;
+        _wallsList[1].transform.position = -ViewportToWorldPointY;
+        _wallsList[2].transform.position = ViewportToWorldPointX - new Vector3(ViewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 20.0f, 0, 0);
+        _wallsList[3].transform.position = -ViewportToWorldPointX;
 
         //FIX ME 
         //Sometimes player can bypass invisible walls when this function is called
         //It's collision bug but we need to avoid this
         //It's very very bad fix for this problem
-        if(gameObject.transform.position.x > _walls_list[2].transform.position.x  || gameObject.transform.position.x < _walls_list[3].transform.position.x ||
-            gameObject.transform.position.y > _walls_list[0].transform.position.y || gameObject.transform.position.y < _walls_list[1].transform.position.y)
-                gameObject.transform.position = RespawnPoint.transform.position;
+        if(gameObject.transform.position.x >  _wallsList[2].transform.position.x  || gameObject.transform.position.x < _wallsList[3].transform.position.x ||
+            gameObject.transform.position.y > _wallsList[0].transform.position.y || gameObject.transform.position.y <  _wallsList[1].transform.position.y)
+                gameObject.transform.position = respawnPoint.transform.position;
 
         //I guess it's not correct way to implement background restretch
         if (_background)
         {
             _background.transform.localScale = new Vector3(
-                (Vector3.Distance(_walls_list[3].transform.position, _walls_list[2].transform.position) / Vector3.Distance(_walls_list[0].transform.position, _walls_list[1].transform.position)) + _ui_some_image.rectTransform.sizeDelta.x * 2, //X
-                Vector3.Distance(_walls_list[0].transform.position, _walls_list[1].transform.position), //Y
+                (Vector3.Distance(_wallsList[3].transform.position, _wallsList[2].transform.position) / Vector3.Distance(_wallsList[0].transform.position, _wallsList[1].transform.position)) + _uiSomeImage.rectTransform.sizeDelta.x * 2, //X
+                Vector3.Distance(_wallsList[0].transform.position, _wallsList[1].transform.position), //Y
                 1);
-            _background.transform.position = new Vector3(-ViewportToWorldPointX.x * _ui_some_image.rectTransform.sizeDelta.x * 9.2f, 0, 0);
+            _background.transform.position = new Vector3(-ViewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 9.2f, 0, 5);
         }
 
-        RespawnPoint.transform.position = new Vector2(-ViewportToWorldPointX.x / 1000, -ViewportToWorldPointY.y / 1.2f);
+        //Set screen middle position for respawn point
+        respawnPoint.transform.position = new Vector2(-ViewportToWorldPointX.x / 1000, -ViewportToWorldPointY.y / 1.2f);
     }
 
     private void OnResolutionScreenChange()
     {
         UpdateInvisibleWallsPosition();
     }
+
     private IEnumerator Shot()
     {
-        while (WeaponEnabled)
+        while (weaponEnabled)
         {
-            Vector2 final_pos = new Vector2(_rigidbody2D.position.x, _rigidbody2D.position.y + _boxcollider2D.size.y);
-            Instantiate(_bulletprefab, final_pos, Quaternion.identity);
+            Vector3 final_pos = _shotPoint != null ? _shotPoint.transform.position : new Vector3(rigidBody2D.position.x, rigidBody2D.position.y + boxCollider2D.size.y, 0);
+            Instantiate(bulletprefab, final_pos, Quaternion.identity);
 
-            _weapon_audio_source.Play();
+            audioSourceWeapon.Play();
 
-            yield return new WaitForSeconds(_shot_frequency);
+            yield return new WaitForSeconds(_shotFrequency);
         }
     }
 
@@ -273,19 +283,19 @@ public class PlayerController : MonoBehaviour
                 if(s.gameObject.tag != "NotGenericSound")
                     s.pitch = Time.timeScale;
 
-            _boost_gain_text.text = $"{(int)(Time.timeScale * 100)}%";
+            _uiBoostGainText.text = $"{(int)(Time.timeScale * 100)}%";
 
             yield return new WaitForSeconds(.1f);
         }
 
-        _boost_gain_text.text = "100%";
+        _uiBoostGainText.text = "100%";
 
         Time.timeScale = 1.0f;
     }
 
     public void UseBoost()
     {
-        if ((Boost <= 0 && !_debug_inf_boost) || Time.timeScale < 1.0f)
+        if ((Boost <= 0 && !_cheatInfiniteBoost) || Time.timeScale < 1.0f)
             return;
 
         Boost--;
@@ -303,7 +313,7 @@ public class PlayerController : MonoBehaviour
     {
         if (GlobalSettings.gameActiveBool)
         {
-            WeaponEnabled = input.isPressed;
+            weaponEnabled = input.isPressed;
             _shotCoroutine = StartCoroutine(Shot());
         }
     }
@@ -329,24 +339,24 @@ public class PlayerController : MonoBehaviour
 
         //Disable all sounds in scene
         foreach (AudioSource s in FindObjectsOfType<AudioSource>())
-            s.Stop();
+            if (s.gameObject.tag != "NotGenericSound")
+                s.Stop();
 
         //Show death screen
-        _death_screen.SetActive(!_death_screen.activeSelf);
+        _uiDeathScreen.SetActive(!_uiDeathScreen.activeSelf);
 
         //Stop game world
         GlobalSettings.gameActive = 0;
         Time.timeScale = 1.0f;
-        //Time.timeScale = _death_screen.activeSelf == false ? 1.0f : 0.0f;
 
         //Show some results
-        _current_score.text += GetNumberWithZeros(Score);
-        _max_score.text += GetNumberWithZeros(MaxScore);
+        _uiCurrentScoreText.text += GetNumberWithZeros(Score);
+        _uiMaxScoreText.text += GetNumberWithZeros(maxScore);
     }
 
     public void ShowPauseScreen()
     {
-        WeaponEnabled = false;
+        weaponEnabled = false;
 
         if(_shotCoroutine != null)
             StopCoroutine(_shotCoroutine);
@@ -358,7 +368,7 @@ public class PlayerController : MonoBehaviour
  
 
         //Save the last time scale state
-        if (_pause_screen.activeSelf == false)
+        if (_uiPauseScreen.activeSelf == false)
             _saved_time_scale = Time.timeScale;
 
         //If we have enabled boost
@@ -366,62 +376,47 @@ public class PlayerController : MonoBehaviour
             StopCoroutine(_slowMotionCoroutine);
 
         //Enable or disable pause menu
-        _pause_screen.SetActive(!_pause_screen.activeSelf);
-        Cursor.visible = _pause_screen.activeSelf;
+        _uiPauseScreen.SetActive(!_uiPauseScreen.activeSelf);
+        Cursor.visible = _uiPauseScreen.activeSelf;
 
-        GlobalSettings.gameActive = System.Convert.ToInt32(!_pause_screen.activeSelf);
-        Time.timeScale = _pause_screen.activeSelf == false ? _saved_time_scale : 1.0f;
+        GlobalSettings.gameActive = System.Convert.ToInt32(!_uiPauseScreen.activeSelf);
+        Time.timeScale = _uiPauseScreen.activeSelf == false ? _saved_time_scale : 1.0f;
 
         //Enable boost if we are exit from pause menu and
         //if we hasnt enable boost in game we are skip the loop because loop work if Time.timeScale < 1.0f
-        if (_pause_screen.activeSelf == false)
+        if (_uiPauseScreen.activeSelf == false)
             _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
 
-        _playerInput.currentActionMap.Disable();
-        _playerInput.SwitchCurrentActionMap(_pause_screen.activeSelf == false ? "Player" : "Pause");
-        _playerInput.currentActionMap.Enable();
+        playerInput.currentActionMap.Disable();
+        playerInput.SwitchCurrentActionMap(_uiPauseScreen.activeSelf == false ? "Player" : "Pause");
+        playerInput.currentActionMap.Enable();
 
         UpdateSettings();
     }
 
-    //Basic debug ui
     private void OnGUI()
     {
-        //If someone wants to cheat :D
-        if (_debug_god)            
-            GUI.Label(new Rect(0, 60, 500, 500), "[God]", _cheat_gui_style);
+        if (_cheatGod)            
+            GUI.Label(new Rect(0, 60, 500, 500), "[God]", _cheatGUIStyle);
         
-        if (_debug_inf_boost)
-            GUI.Label(new Rect(0, 80, 500, 500), "[Infinity boost]", _cheat_gui_style);
+        if (_cheatInfiniteBoost)
+            GUI.Label(new Rect(0, 80, 500, 500), "[Infinity boost]", _cheatGUIStyle);
         
-        if (_debug_gui)
-        {
-            GUIStyle fps_style_label = new GUIStyle();
-            fps_style_label.fontSize = 20;
-            fps_style_label.normal.textColor = new Color(255, 0, 0);
-
-            ////////////////////////////////////////////////////////////////////////////////////////
-            GUI.Label(new Rect(100, 40, 500, 500), "FPS: " + (int)(1f / Time.unscaledDeltaTime), fps_style_label);
+        if (_debugGUI)
+        {            
             GUI.Label(new Rect(100, 80, 500, 500), "DeltaTime: " + Time.deltaTime);
-            ////////////////////////////////////////////////////////////////////////////////////////
-            GUI.Label(new Rect(100, 120, 500, 500), $"Position: {_rigidbody2D.position}");
-            GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {_rigidbody2D.velocity}");
-            GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {WeaponEnabled}");
-            //GUI.Label(new Rect(100, 220, 500, 500), $"Life: {Life}");
-            //GUI.Label(new Rect(100, 240, 500, 500), $"Score: {Score}");
-            //GUI.Label(new Rect(100, 260, 500, 500), $"Boost: {_player_boost}");
+            GUI.Label(new Rect(100, 120, 500, 500), $"Position: {rigidBody2D.position}");
+            GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {rigidBody2D.velocity}");
+            GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weaponEnabled}");
             GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
             GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
-
-
-
-            GUI.Label(new Rect(200, 120, 500, 500), $"MusicPlay: {GlobalSettings.musicPlay}");
+            GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActive}");
         }      
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!_death_audio_source.isPlaying)
+        if (!audioSourceDeath.isPlaying) 
         {
             Component[] components = collision.gameObject.GetComponents<Component>();
             foreach (Component component in components)
@@ -445,16 +440,18 @@ public class PlayerController : MonoBehaviour
         if (_slowMotionCoroutine != null)
             StopCoroutine(_slowMotionCoroutine);
 
-        WeaponEnabled = false;
+        weaponEnabled = false;
         if (_shotCoroutine != null)
             StopCoroutine(_shotCoroutine);
 
         Life = PLAYER_MIN_LIFE;
-        isDead = true;
-        _sprite_renderer.enabled = false;
-        _boxcollider2D.enabled = false;
-        _rigidbody2D.isKinematic = true;
-        _playerInput.enabled = false;
+
+        _isDead = true;
+        spriteRenderer.enabled = false;
+        boxCollider2D.enabled = false;
+        rigidBody2D.isKinematic = true;
+        playerInput.enabled = false;
+
         //Show death screen 
         ShowDeathScreen();
     }
@@ -462,18 +459,24 @@ public class PlayerController : MonoBehaviour
     public void Damage()
     {
         //Play player death sound 
-        _death_audio_source.Play();
+        audioSourceDeath.Play();
        
+        if (_deathParticle)
+        {
+            ParticleSystemRenderer pr = _deathParticle.GetComponent<ParticleSystemRenderer>();
+            pr.material.color = Color.red;
+            _deathParticle.transform.position = rigidBody2D.transform.position;
+            _deathParticle.Play();
+        }
+
         //Don't continue if we are dead or in god mode
-        if (/*_debug_god || */isDead == true)
+        if (/*_debug_god || */_isDead == true)
             return;
 
         //Subtract one life point 
-        if(!_debug_god)
+        if(!_cheatGod)
             Life -= 1;
 
-        //TODO 
-        //Need to play death animation
 
         //If life equal MIN_LIFE we are disable player components for move and body 
         //If we are still alive we are teleport player to spawn point
@@ -487,7 +490,7 @@ public class PlayerController : MonoBehaviour
                     Destroy(bullet.gameObject);
 
             //Set spawn point position to player 
-            this.gameObject.transform.position = RespawnPoint.transform.position;
+            gameObject.transform.position = respawnPoint.transform.position;
         }
     }
     
@@ -506,9 +509,9 @@ public class PlayerController : MonoBehaviour
 
     public void UpdateHUD()
     {
-        _life_text.text  = Life.ToString();
-        _score_text.text = GetNumberWithZeros(Score);
-        _boost_text.text = Boost.ToString();
+        _uiLifeText.text  = Life.ToString();
+        _uiScoreText.text = GetNumberWithZeros(Score);
+        _uiBoostText.text = Boost.ToString();
     }
 
     //Thats update all attached to player game things 
@@ -516,6 +519,6 @@ public class PlayerController : MonoBehaviour
     //Or something related to gameplay
     public void UpdateSettings()
     {
-        _music_audio_source.enabled = GlobalSettings.musicPlay;
+        audioSourceMusic.enabled = GlobalSettings.musicPlay;
     }
 }

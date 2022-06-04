@@ -178,7 +178,7 @@ public class Enemy : MovableObject
     protected virtual void EnemyStart()
     {
         _playerController = (PlayerController)FindObjectOfType(typeof(PlayerController));
-        _playerController.MaxScore += 1000;
+        _playerController.maxScore += 1000;
     }
 
     public virtual void OnShot()
