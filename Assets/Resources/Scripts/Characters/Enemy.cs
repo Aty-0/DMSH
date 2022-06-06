@@ -117,7 +117,8 @@ public class Enemy : MovableObject
         OnDieCompletely();
 
         if(givePlayerScore)
-            _playerController.Score += 1000;
+            if(_playerController)
+                _playerController.Score += 1000;
 
         if (_deathParticle && playParticle)
         {
@@ -178,7 +179,8 @@ public class Enemy : MovableObject
     protected virtual void EnemyStart()
     {
         _playerController = (PlayerController)FindObjectOfType(typeof(PlayerController));
-        _playerController.maxScore += 1000;
+        if(_playerController)
+            _playerController.maxScore += 1000;
     }
 
     public virtual void OnShot()
