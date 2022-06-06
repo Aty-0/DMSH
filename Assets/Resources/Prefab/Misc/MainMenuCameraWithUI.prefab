@@ -3408,7 +3408,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 287bca8b71a44a945bc6024435f3f593, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  scenePath: Assets/DMSH/Scenes/DMSH_SampleScene.unity
+  scenePath: Assets/Resources/Scenes/DMSH_SampleScene.unity
 --- !u!114 &8205561142487038749
 MonoBehaviour:
   m_ObjectHideFlags: 0
