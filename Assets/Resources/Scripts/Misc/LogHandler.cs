@@ -224,7 +224,8 @@ public class LogHandler : MonoBehaviour
             //FIX ME 
             //In game build not selected text box is invisible
             GUIStyle textFieldStyle = new GUIStyle(GUI.skin.textField);
-            textFieldStyle.normal.background = null;
+            //textFieldStyle.normal.background = null;
+            //textFieldStyle.onNormal.background = null;
             textFieldStyle.font = _font;
             textFieldStyle.fontSize = _fontSize;
             textFieldStyle.onNormal.background = null;
