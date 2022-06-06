@@ -295,11 +295,11 @@ public class PathSystemEditor : Editor
 {
     [DrawGizmo(GizmoType.Selected | GizmoType.Active)]
     static void DrawCustomGizmos(PathSystem path, GizmoType gizmoType)
-    {
+    {        
         PathPoint current_point = null;
         PathPoint prev_point = null;
 
-        foreach (var point in path.pathPointsList)
+        foreach (var point in path.pathPointsList.ToArray())
         {
             if (point == null)
                 continue;
@@ -326,7 +326,10 @@ public class PathSystemEditor : Editor
 
     public virtual void OnSceneGUI()
     {
-        PathSystem path = (PathSystem)target;
+        if (target == null)
+            return;
+        
+        PathSystem path = (PathSystem)target;        
         if (!path.pathPointsList.Any())
             return;
 
@@ -335,7 +338,7 @@ public class PathSystemEditor : Editor
             PathPoint current_point = null;
             PathPoint prev_point = null;
 
-            foreach (var point in path.pathPointsList)
+            foreach (var point in path.pathPointsList.ToArray())
             {
                 if (point == null)
                     continue;
@@ -344,9 +347,15 @@ public class PathSystemEditor : Editor
 
                 if (prev_point != null)
                 {
-                    if ((PointsToolsEditorGlobals.selectedPoint == prev_point || PointsToolsEditorGlobals.selectedPoint == point) && prev_point.useCurve && PointsToolsEditorGlobals.showCurveHandle)
+                    if ((PointsToolsEditorGlobals.selectedPoint == prev_point || PointsToolsEditorGlobals.selectedPoint == point)
+                        && prev_point.useCurve && PointsToolsEditorGlobals.showCurveHandle)
                     {
-                        point.curvePoint = Handles.DoPositionHandle(point.curvePoint, Quaternion.identity);
+                        var startMatrix = Handles.matrix;
+                        
+                        Handles.matrix = Matrix4x4.Scale(Vector3.one / 2) * startMatrix;
+                        point.curvePoint = Handles.PositionHandle(point.curvePoint * 2, Quaternion.identity) / 2;
+                        Handles.matrix = startMatrix;
+
                         Handles.color = Color.gray;
                         Handles.DrawLine(prev_point.transform.position, point.curvePoint);
                         Handles.DrawLine(point.curvePoint, point.transform.position);
@@ -367,8 +376,13 @@ public class PathSystemEditor : Editor
                     float zoom = SceneView.currentDrawingSceneView.camera.orthographicSize;
                     if (Handles.Button(position, Quaternion.identity, 0.05f * zoom, 0.07f * zoom, Handles.RectangleHandleCap))
                     {
+                        //Get point and path system
                         PointsToolsEditorGlobals.selectedPoint = point;
                         PointsToolsEditorGlobals.usedPointSystem = point.GetComponentInParent<PathSystem>();
+
+                        //Repaint editor window
+                        PathSystemEditorWindow psewindow = (PathSystemEditorWindow)EditorWindow.GetWindow(typeof(PathSystemEditorWindow));
+                        psewindow?.Repaint();
                     }
 
                     if (EditorGUI.EndChangeCheck())
