@@ -7,61 +7,6 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-#region TODO 
-//////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////
-//TODO 
-//////////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////////
-//[PathSystemEditor]
-//////////////////////////////////////////////////////////////
-//1.Manipulate    
-//-- 1.Need to create new point by click right mouse button and hold the shift key 
-//-- Something like stretching 
-//-- 2.Maybe we need to create points by clicking on screen 
-//2.Hotkeys
-//3.Snaping by grid (Solved ? cuz in unity we are have snap if we are hold the control button but it's kinda... weird?)
-//4.Undo redo
-//[DONE] 5.Need to mark points
-//[DONE] 6.Create point at (previous) or (ahead)[By default] 
-//////////////////////////////////////////////////////////////
-//[PointsToolsWindowEditor]
-//////////////////////////////////////////////////////////////
-//1.Maybe would be cool add icons
-//2.Show the generated invisible wall lines
-//////////////////////////////////////////////////////////////
-//[PointsToolsEditorGlobals]
-//////////////////////////////////////////////////////////////
-//1.Need to replace single object to array for supporting many selection 
-//It's require many changes in methods like Create, Delete etc
-//2.Fix adding clone prefix to new objects
-//////////////////////////////////////////////////////////////
-//[???]
-//////////////////////////////////////////////////////////////
-//1.It's part of creation object by hold the buttons but in editor mode that not working
-//if (Input.GetKeyDown(KeyCode.LeftShift) && Input.GetKeyDown(KeyCode.Mouse0))
-//{
-//    if (PointsToolsEditorGlobals.selectedPoint == null)
-//        return;
-//
-//    PointsToolsEditorGlobals.blockHandles = true;
-//    EditorGUI.BeginChangeCheck();
-//    Vector3 new_position = PointsToolsEditorGlobals.selectedPoint.transform.position;
-//    new_position = Handles.DoPositionHandle(new_position, Quaternion.identity);
-//
-//    EditorUtility.SetDirty(PointsToolsEditorGlobals.selectedPoint);
-//
-//    //Debug.Log($"{block_handles} {new_position}");
-//    if (EditorGUI.EndChangeCheck())
-//    {
-//        Undo.RecordObject(PointsToolsEditorGlobals.selectedPoint.gameObject, "Created new object");
-//
-//        Debug.Log("User create new object");
-//        PointsToolsEditorGlobals.blockHandles = false;
-//        PointsToolsEditorGlobals.Create(new_position, PointsToolsEditorGlobals.selectedPoint);
-//    }
-//}
-#endregion
 
 #region Globals
 public enum PointsToolsCreationMode
@@ -108,7 +53,7 @@ public class PointsToolsEditorGlobals
             Selection.activeObject = selectedPoint;
     }
 
-    //TODO
+    //TODO: Make a better function 
     public static Vector2 CalcCurvePoint(Vector2 p1, Vector2 p2)
     {
         return (p1 - p2);
@@ -116,8 +61,6 @@ public class PointsToolsEditorGlobals
 
     public static void Create(Vector3 example_new_position, PathPoint example = null)
     {
-        //TODO
-        //Maybe we need to new object or get it from prefab
         if (selectedPoint == null)
             example = SceneView.FindObjectOfType<PathPoint>();
         else
@@ -187,22 +130,7 @@ public class PathPointEditor : Editor
 }
 #endregion
 
-#region Path System Editor 
-
-//[CustomEditor(typeof(Spawner), true), CanEditMultipleObjects]
-//public class SpawnerEditor : Editor
-//{
-//    public virtual void OnSceneGUI()
-//    {
-//        GameObject go = (GameObject)target;
-//
-//        Handles.color = Color.red;
-//        Handles.DrawWireCube(go.transform.position, Vector3.one);
-//    }
-//}
-
-[CustomEditor(typeof(PathSystem), true), CanEditMultipleObjects]
-public class PathSystemEditor : Editor
+public class PathSystemEditorWindow : EditorWindow
 {
     private GUIStyle buttonToolsGUIStyle;
     private GUIStyle buttonSelectionGUIStyle;
@@ -321,8 +249,6 @@ public class PathSystemEditor : Editor
                 {
                     if ((PointsToolsEditorGlobals.selectedPoint == prev_point || PointsToolsEditorGlobals.selectedPoint == point) && prev_point.useCurve && PointsToolsEditorGlobals.showCurveHandle)
                     {
-                        //TODO
-                        //Need to use something else not handle 
                         point.curvePoint = Handles.DoPositionHandle(point.curvePoint, Quaternion.identity);
                         Handles.color = Color.gray;
                         Handles.DrawLine(prev_point.transform.position, point.curvePoint);
@@ -339,8 +265,7 @@ public class PathSystemEditor : Editor
                     else
                         position = point.transform.position;
 
-                    //TODO
-                    //Don't show if we are hold shift key
+                    //FIXME: Don't show if we are hold shift key                    
                     Handles.color = PointsToolsEditorGlobals.selectedPoint != point ? Color.white : Color.red;
                     float zoom = SceneView.currentDrawingSceneView.camera.orthographicSize;
                     if (Handles.Button(position, Quaternion.identity, 0.05f * zoom, 0.07f * zoom, Handles.RectangleHandleCap))
@@ -351,12 +276,12 @@ public class PathSystemEditor : Editor
 
                     if (EditorGUI.EndChangeCheck())
                     {
+                        //TODO: Working Undo Redo
+                        //      With working hot keys
                         Undo.RecordObject(point.gameObject, "Changed point position");
                         EditorUtility.SetDirty(point);
 
-                        //TODO
-                        //Recalculate position for curve
-
+                        //TODO: Recalculate position for curve
                         point.transform.position = position;
 
                         //Set selected object
