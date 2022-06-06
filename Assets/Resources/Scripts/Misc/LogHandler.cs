@@ -34,11 +34,15 @@ public class LogHandler : MonoBehaviour
     [SerializeField] private Vector2  _scrollPosition = new Vector2(0.0f, 0.0f);
     [SerializeField] private int _savedGameActiveState;
     [SerializeField] private bool _Resume = true;
+    [SerializeField] private bool _fpsCounter = false;
 
     protected void Start()
     {
         StartCoroutine(TimerToClear());
         
+        consoleCommandsList.Add(new Tuple<string, Action>("fps", () => {
+            _fpsCounter = !_fpsCounter;
+        }));
         consoleCommandsList.Add(new Tuple<string, Action>("help", () => {
             Debug.Log($"Command List:{consoleCommandsList.Count}\n");
             foreach (Tuple<string, Action> item in consoleCommandsList)
@@ -106,8 +110,8 @@ public class LogHandler : MonoBehaviour
 
     private void HandleLog(string logString, string stackTrace, LogType type)
     {
-        _tempMessagesBuffer = logString;
-        string newString = "\n [" + type + "] : " + _tempMessagesBuffer;
+        //Build new string 
+        string newString = "\n [" + type + "] : " + logString;
         _logQueue.Enqueue(newString);
         if (type == LogType.Exception)
         {
@@ -115,10 +119,12 @@ public class LogHandler : MonoBehaviour
             _logQueue.Enqueue(newString);
         }
 
+        //Reset _tempMessagesBuffer 
         _tempMessagesBuffer = string.Empty;
         foreach (string mylog in _logQueue)
             _tempMessagesBuffer += mylog;
        
+        //Create message 
         LogMessage logMessage  = new LogMessage();
         logMessage.messageType = type;
         logMessage.messageText = logString;
@@ -186,6 +192,13 @@ public class LogHandler : MonoBehaviour
             }
         }
 
+        if(_fpsCounter)
+        {
+            GUILayout.BeginArea(new Rect(0, 30, 500, 500));
+            GUILayout.Label($"FPS:{(int)(1f / Time.unscaledDeltaTime)}", textStyle);
+            GUILayout.EndArea();
+        }
+
         if (drawConsole)
         {
             GUI.Box(new Rect(0, 0, Screen.width, Screen.height), "");
@@ -228,7 +241,6 @@ public class LogHandler : MonoBehaviour
             //textFieldStyle.onNormal.background = null;
             textFieldStyle.font = _font;
             textFieldStyle.fontSize = _fontSize;
-            textFieldStyle.onNormal.background = null;
 
             GUI.SetNextControlName("UICommandTextField");
             _command = GUILayout.TextField(_command, textFieldStyle);
@@ -238,6 +250,7 @@ public class LogHandler : MonoBehaviour
         {
             if (drawLogMessages)
             {
+                textStyle.normal.textColor = new Color(255, 97, 0); 
                 GUILayout.Label(_tempMessagesBuffer, textStyle, GUILayout.Height(500));
 
                 GUILayout.BeginArea(new Rect(Screen.width - 100, 0, 500, 500));
