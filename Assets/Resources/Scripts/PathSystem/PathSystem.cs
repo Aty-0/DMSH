@@ -5,20 +5,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO
-//Curve movement [DONE]
-//Run events [DONE]
-//Detach object function [DONE]
-//Give him god mode or destroy it [DONE] 
-//Run events for enemy who reached point [DONE]
-//Distance between objects for fix stacking [DONE]
-//Dynamic creation by count (Spawner) [DONE]
-
-//Slip movement
-
-//Now:
-//Wait timer for enemy
-
 public class PathSystem : MonoBehaviour
 {
     //How much we need points for curve
@@ -37,7 +23,7 @@ public class PathSystem : MonoBehaviour
 
     [Header("Misc")]
     public bool                         holdDistanceBetweenObjects = true;
-    public bool                         catchUpNextObject = false; //At the moment working weird
+    public bool                         catchUpNextObject = false; //At this moment this is working weird
     public float                        distanceAccuracy = 0.01f;
     public float                        distanceBetweenObjects = 2.0f;
     public StageSystem                  stageSystem = null;
@@ -65,6 +51,7 @@ public class PathSystem : MonoBehaviour
                 move_object.pathSystem = this;
     }
 
+    #region Spawner
     private void SpawnObject()
     {
         spawnedObjectCount++;
@@ -92,6 +79,7 @@ public class PathSystem : MonoBehaviour
                     spawnerTimer.StartTimer();
         }
     }
+    #endregion
 
     #region Utils
     public void UpdateElementChangedCallback()
@@ -232,13 +220,13 @@ public class PathSystem : MonoBehaviour
         if (!pathPointsList.Any() || !movablePathObjectsList.Any())
             return;
 
-        //FIXME ?
-        //I'm not sure about using this function in update method
+        //FIXME: ??? I'm not sure about using this function in update method
         movablePathObjectsList.RemoveAll(o => o == null);
 
         MovableObject currentObject = null;
         MovableObject previousObject = null;
 
+        //TODO: Slip movement
         foreach (var move_object in movablePathObjectsList.ToList())
         {
             currentObject = move_object;
@@ -272,8 +260,7 @@ public class PathSystem : MonoBehaviour
                 if(catchUpNextObject)
                     augmentSpeed = Mathf.Clamp(augmentSpeed, distanceBetweenCurrentObjects, distanceBetweenObjects);
 
-                //FIX ME 
-                //Not work correctly for object except first and last
+                //FIX ME: Not work correctly for object except first and last
                 //if (CheckPointOnValid(i + 1))
                 //{
                 //    float distanceBetweenPoints = Vector3.Distance(point.transform.position, pathPointsList[i + 1].transform.position);
@@ -287,8 +274,8 @@ public class PathSystem : MonoBehaviour
                 //    }
                 //}
             }
-            
-            speed = move_object.speed * augmentSpeed * reduceSpeed * Time.deltaTime * GlobalSettings.gameActive; //Calculate speed 
+
+            speed = (move_object.speed * augmentSpeed * reduceSpeed * Time.deltaTime) * GlobalSettings.gameActive; //Calculate speed 
 
             //What's mode we need to use 
             if (point.useCurve)
