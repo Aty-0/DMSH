@@ -42,13 +42,11 @@ SpriteAtlas:
     - {fileID: 4563570114279308907, guid: 2b39ebd513b4e8f41b816c45582fd85c, type: 3}
     - {fileID: 6709864047525896758, guid: 2b39ebd513b4e8f41b816c45582fd85c, type: 3}
     - {fileID: 1051252167986056219, guid: 2b39ebd513b4e8f41b816c45582fd85c, type: 3}
-    - {fileID: -3583268532746176281, guid: 2b39ebd513b4e8f41b816c45582fd85c, type: 3}
     bindAsDefault: 1
     isAtlasV2: 0
     cachedData: {fileID: 0}
   m_MasterAtlas: {fileID: 0}
   m_PackedSprites:
-  - {fileID: -3583268532746176281, guid: 2b39ebd513b4e8f41b816c45582fd85c, type: 3}
   - {fileID: 6709864047525896758, guid: 2b39ebd513b4e8f41b816c45582fd85c, type: 3}
   - {fileID: 1051252167986056219, guid: 2b39ebd513b4e8f41b816c45582fd85c, type: 3}
   - {fileID: 4563570114279308907, guid: 2b39ebd513b4e8f41b816c45582fd85c, type: 3}
@@ -61,7 +59,6 @@ SpriteAtlas:
   - {fileID: 3751715446593366172, guid: 2b39ebd513b4e8f41b816c45582fd85c, type: 3}
   - {fileID: 8074475354067432521, guid: 2b39ebd513b4e8f41b816c45582fd85c, type: 3}
   m_PackedSpriteNamesToIndex:
-  - TempPlayer_12
   - TempPlayer_10
   - TempPlayer_11
   - TempPlayer_9
