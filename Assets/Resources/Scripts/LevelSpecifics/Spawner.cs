@@ -8,8 +8,10 @@ public class Spawner : MonoBehaviour
     public bool isDone = false; 
     public List<GameObject> toSpawn = new List<GameObject>();
     public Timer timer;
+
     [Header("Misc")]
     [SerializeField] private StageSystem _stageSystem;
+
     [Tooltip("If we are attach spawner to point")]
     [SerializeField] private PathSystem _pathSystem;
 
@@ -20,6 +22,7 @@ public class Spawner : MonoBehaviour
         if(timer)
             timer.EndEvent += Spawn;
         _pathSystem = GetComponentInParent<PathSystem>();
+
         if(_pathSystem)
             _pathSystem.onMovableObjectsRemoved.Add(Spawn);
     }

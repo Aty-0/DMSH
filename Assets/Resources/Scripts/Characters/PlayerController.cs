@@ -87,10 +87,10 @@ public class PlayerController : MovableObject
     [SerializeField] private Vector2 _move;
     [SerializeField] private bool    _isDead = false;
 
-    //TODO
-    //Create screen handler or something like that
+    //TODO: Create screen handler or something like that
     private int       _lastScreenWidth = 0;
     private int       _lastScreenHeight = 0;
+
     private Coroutine _showChapterNameCoroutine = null;
     private Coroutine _slowMotionCoroutine = null;
     private Coroutine _shotCoroutine = null;
@@ -131,6 +131,8 @@ public class PlayerController : MovableObject
     [Header("Weapon")]
     public bool     weaponEnabled;
     public Bullet   bulletprefab;
+    [SerializeField] private int    _weaponType;
+    [SerializeField] private float  _weaponBoostGain;
     [SerializeField] private GameObject _shotPoint;     
     [SerializeField] private float  _shotFrequency = 0.05f;
 
@@ -177,6 +179,7 @@ public class PlayerController : MovableObject
 
         gameObject.transform.position = respawnPoint.transform.position;
     }
+
     public void ShowChapterName()
     {
         Debug.Log("ShowChapterName()");
@@ -230,11 +233,11 @@ public class PlayerController : MovableObject
         _wallsList[2].transform.position = ViewportToWorldPointX - new Vector3(ViewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 20.0f, 0, 0);
         _wallsList[3].transform.position = -ViewportToWorldPointX;
 
-        //FIX ME 
-        //Sometimes player can bypass invisible walls when this function is called
-        //It's collision bug but we need to avoid this
+        //FIX ME: Sometimes player can bypass invisible walls when this function is called
+        //        It's collision bug but we need to avoid this
+
         //It's very very bad fix for this problem
-        if(gameObject.transform.position.x >  _wallsList[2].transform.position.x  || gameObject.transform.position.x < _wallsList[3].transform.position.x ||
+        if (gameObject.transform.position.x >  _wallsList[2].transform.position.x  || gameObject.transform.position.x < _wallsList[3].transform.position.x ||
             gameObject.transform.position.y > _wallsList[0].transform.position.y || gameObject.transform.position.y <  _wallsList[1].transform.position.y)
                 gameObject.transform.position = respawnPoint.transform.position;
 
@@ -518,5 +521,16 @@ public class PlayerController : MovableObject
     public void UpdateSettings()
     {
         audioSourceMusic.enabled = GlobalSettings.musicPlay;
+    }
+
+    public void SetWeaponBoost(float gain)
+    {
+        _weaponBoostGain += gain;
+        if(_weaponBoostGain >= 100.0f)
+        {
+            //TODO: Activate needed weapon type
+            _weaponBoostGain = 0.0f;
+        }
+
     }
 }

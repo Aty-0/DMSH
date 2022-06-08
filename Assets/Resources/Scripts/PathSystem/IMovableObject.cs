@@ -4,10 +4,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-/// <summary>
-/// Interface for GameObjects
-/// Needed for PathSystem
-/// </summary>
 public interface IMovableObject 
 {
     int                 currentPoint { get; set; }

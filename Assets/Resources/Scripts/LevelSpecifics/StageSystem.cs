@@ -26,14 +26,12 @@ public class StageSystem : MonoBehaviour
     public List<Stage> stagesList = new List<Stage>();
 
     [Header("Current Stage")]
+    public Stage currentStage = null;
     public Timer timer;
+
     [SerializeField] private int _stageListIndex = 0;
     [SerializeField] private int _listPassed = 0;
-    public Stage currentStage = null;
 
-    /// <summary>
-    /// Custom timer events 
-    /// </summary>
     [Header("Events")]
     public List<Action> onTimerStart = new List<Action>();
     public List<Action> onTimerEnd = new List<Action>();
@@ -79,8 +77,6 @@ public class StageSystem : MonoBehaviour
         timer.StartTimer();
     }
 
-    //TODO
-    //If last stage is done we are show player the result screen or open main menu
     public void OnTimerStart()
     {
         foreach (Stage st in stagesList)
@@ -117,6 +113,7 @@ public class StageSystem : MonoBehaviour
         Debug.Log($"[StageSystem] Activate | Index:{currentStage.stageObjects.IndexOf(go)}");
     }
 
+    //TODO: If last stage is done we are show player the result screen or open main menu
     public void OnTimerEnd()
     {
         //Invoke action when timer is ended

@@ -1,16 +1,13 @@
 using System;
-
 using UnityEngine;
 using UnityEngine.Events;
 
-//FIXME
-//I guess it's bad method
 public enum EnemyScriptedBehavior
 {
     Nothing = 0,
     StartShot,
     StopShot,
-    //TODO etc...
+    //TODO: etc...
 }
 
 public class PathPoint : MonoBehaviour

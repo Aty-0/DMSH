@@ -105,9 +105,6 @@ public class Enemy : MovableObject
         }
     }
 
-    //TODO
-    //Sounds
-
     public void Kill(bool givePlayerScore, bool playParticle = true)
     {
         _lifes  = 0;
@@ -120,6 +117,7 @@ public class Enemy : MovableObject
             if(_playerController)
                 _playerController.Score += 1000;
 
+        //TODO: Add sounds
         if (_deathParticle && playParticle)
         {
             _pathSystem.DetachObject(this);

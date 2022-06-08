@@ -139,7 +139,6 @@ public class LogHandler : MonoBehaviour
         _consoleMessageBuffer.Add(logMessage);
 
         _scrollPosition.y = Mathf.Infinity;
-
     }
 
     protected void OnGUI()

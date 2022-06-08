@@ -2,11 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO
-//Rework freeMovement 
-//Need use impulse for pushing bullet 
-//We need to choise impulse direction 
-//Need to create lifeTime logic 
+//TODO: [freeMovement]
+//      Need use impulse for pushing bullet    
+//      We need to choise impulse direction 
 
 public class Bullet : MovableObject
 {
@@ -33,8 +31,6 @@ public class Bullet : MovableObject
     {
         if (freeMovement == true)
         {
-            //Destroy(this.gameObject, lifeTime);
-
             timer = gameObject.AddComponent(typeof(Timer)) as Timer;
             timer.EndEvent += Kill;
             timer.time = lifeTime;
