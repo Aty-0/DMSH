@@ -14,6 +14,13 @@ sysinfo.txt
 # Unity3D generated meta files
 *.pidb.meta
 
+[Ll]ogs/ApiUpdaterCheck.txt
+[Ll]ogs/AssetImportWorker0.log
+[Ll]ogs/AssetImportWorker0-prev.log
+[Ll]ogs/Packages-Update.log
+[Ll]ogs/shadercompiler-AssetImportWorker0.log
+[Ll]ogs/shadercompiler-UnityShaderCompiler.exe0.log
+
 ###
 # VS/MD solution and project files
 ###
@@ -42,3 +49,4 @@ sysinfo.txt
 Icon?
 ehthumbs.db
 Thumbs.db
+
