@@ -3,18 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-//TODO
-//1.Drop power and bonus points 
-//2.Start particle when enemy is killed
-//3.Free mode: (I'm not sure)
-//Some random movements
-//When enemy is going to out of bounds it got destroy
-//4.Make many types of enemy 
-//It will be have diffrent models, bullet pattern 
-//Diffrent types
-//Weak  (Free mode?, no shots)
-//Strong (Not free)
-
 public class Enemy : MovableObject
 {
     [Header("Weapon")]
