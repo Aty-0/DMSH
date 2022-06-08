@@ -4,6 +4,7 @@ Shader "Custom/BackgroundShader"
     {
         _MainTex("Texture", 2D) = "white" {}
         _Color ("Color", Color) = (0,0,0,1)
+        _GameActive ("GameActive", Range(0, 1)) = 0
     }
 
     SubShader
@@ -32,14 +33,6 @@ Shader "Custom/BackgroundShader"
 
             fixed4 _Color;
 
-            float4 circle(float2 uv, float2 pos, float rad, float3 color)
-            {
-                float d = length(pos - uv) - rad;
-                float t = clamp(d, 0.0, 1.0);
-                return float4(color.x + 1.0 - t, color.y, color.z, 1);
-            }
-
-
             v2f vert(appdata v)
             {
                 v2f o;
@@ -49,25 +42,22 @@ Shader "Custom/BackgroundShader"
                 return o;
             }
 
-            #define mod(x, y) (x - y * floor(x / y))
+            float t = 1;
+            float t2 = 1;
+            int _GameActive = 1;
+            sampler2D _MainTex;
 
-            float3 circle(float2 uv, float clampedSinTime, float aspect)
+            float3 G(float2 uv, float clampedSinTime, float aspect)
             {
                 float sin_factor = sin(_Time.w) / 10;
                 float cos_factor = cos(_Time.w) / 10;
-
                 uv = (uv - 0.5) * .4f + 0.5;                
-                //uv += mul(float2((uv.x - 0.5) * aspect, uv.y - 0.5),  float2x2(cos_factor, sin_factor, -sin_factor, -cos_factor));
-
+                uv += mul(float2((uv.x - 0.5) * aspect, uv.y - 0.5),  float2x2(cos_factor, sin_factor - _SinTime.w, -sin_factor, -tan(cos_factor)));
                 uv = float2((uv.x - 0.5) * aspect, uv.y - 0.5);
-
                 float d = sqrt(dot(uv, uv));
-                float radius = 0.01f;   
+                float radius = 0.006f;   
                 float thickness =  0.07f;
-                float t = 1 - mod(smoothstep(abs(thickness / radius) * 100, 0, abs(radius - d)), 1.0f);
-
-                //t -= frac(0.5f * clampedSinTime);
-
+                float t = 1 - fmod(smoothstep(abs(thickness / radius) * 100, 0, abs(-radius - d)), 1.0f);
                 return t;
             }     
 
@@ -80,10 +70,6 @@ Shader "Custom/BackgroundShader"
                 return frac(sin(q) * 43758.5453);
             }
 
-            float t = 1;
-            float t2 = 1;
-            sampler2D _MainTex;
-
             fixed4 frag(v2f input) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, input.uv);
@@ -93,21 +79,19 @@ Shader "Custom/BackgroundShader"
                 float aspect = _ScreenParams.x / _ScreenParams.y;
 
                 float t2 = 0;
-                t2 += hash3(input.uv);
+                t2 += dot(hash3(input.uv + time), 0.1f);
 
-                input.uv.x += tan(time / 40);
-                input.uv.y += tan(time / 100);
-                float3 moon = float3(1, 1, 1);
-                moon *= circle(float2(input.uv.x + 0.45f, input.uv.y - 0.45f), clampedSinTime, aspect);
-                moon /= frac(circle(float2(input.uv.x + 0.55f, input.uv.y - 0.45f), clampedSinTime, aspect));
-                moon = moon - 0.1f;
+                //input.uv.x += tan(time / 40);
+                //input.uv.y += tan(time / 50);
 
+                float3 f = float3(1, 1, 1);
+                f *= G(float2(input.uv.x + 0.45f, input.uv.y - 0.45f), clampedSinTime, aspect);
+                f /= frac(G(float2(input.uv.x + 0.55f, input.uv.y - 0.45f), clampedSinTime, aspect));
+                f = f * 1.3f;
 
-
-                col -= float4(moon, 1);
-
-
-                //col -= float4(t2, t2, t2, 1);
+                col -= float4(f, 1);
+                col += float4(0.2f, 0, 0, 1);
+                col += float4(t2, t2, t2, 1);
 
                 return col;
             }
