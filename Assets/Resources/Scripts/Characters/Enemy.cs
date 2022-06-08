@@ -14,19 +14,20 @@ public class Enemy : MovableObject
 
     [Header("Enemy")]
     [SerializeField] protected SpriteRenderer _spriteRenderer;
-    [SerializeField] protected bool weakType = false; 
-    [SerializeField] protected bool onLastPointWillDestroy = false;
-    [SerializeField] protected bool _isDead = false;
-    [SerializeField] protected int _lifes = 1;
-    [SerializeField] protected float _maxHealth = 0.0f;
-    [SerializeField] protected float _health = 0.0f;
-    [SerializeField] protected float _reduceHealth = 1.5f;
+    [SerializeField] protected bool     weakType = false; 
+    [SerializeField] protected bool     onLastPointWillDestroy = false;
+    [SerializeField] protected bool     _isDead = false;
+    [SerializeField] protected int      _lifes = 1;
+    [SerializeField] protected float    _maxHealth = 0.0f;
+    [SerializeField] protected float    _health = 0.0f;
+    [SerializeField] protected float    _reduceHealth = 1.5f;
+    [SerializeField] protected bool     _showDamageStatusText = true;
 
     [Header("Misc")] 
     [SerializeField] protected PlayerController _playerController;
     [SerializeField] protected ParticleSystem   _deathParticle;
-    [SerializeField] protected Coroutine _shotCoroutine;
-
+    [SerializeField] protected Coroutine        _shotCoroutine;
+    
     protected void Start()
     {
         _rigidBody2D = GetComponent<Rigidbody2D>();
@@ -93,6 +94,7 @@ public class Enemy : MovableObject
         }
     }
 
+    //TODO: Drop power and bonus points 
     public void Kill(bool givePlayerScore, bool playParticle = true)
     {
         _lifes  = 0;
@@ -108,7 +110,7 @@ public class Enemy : MovableObject
         //TODO: Add sounds
         if (_deathParticle && playParticle)
         {
-            _pathSystem.DetachObject(this);
+            _pathSystem?.DetachObject(this);
             _spriteRenderer.enabled = false;
             _boxCollider2D.enabled = false;
             ParticleSystemRenderer pr = _deathParticle.GetComponent<ParticleSystemRenderer>();            
@@ -121,26 +123,76 @@ public class Enemy : MovableObject
             Destroy(gameObject);
         }
     }
+    private IEnumerator DamageStatusTextGoUpAnimation(TextMesh textMesh)
+    {
+        float y = textMesh.transform.position.y;
+        while (y < textMesh.transform.position.y + 15.0f)
+        {
+            y += 0.04f * GlobalSettings.gameActive;
+            textMesh.transform.position = new Vector3(textMesh.transform.position.x, y, textMesh.transform.position.z);
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
+
+    private IEnumerator DamageStatusTextFadeAnimation(TextMesh textMesh)
+    { 
+        float alpha = 255.0f;
+        while (alpha > 0.0f)
+        {
+            alpha -= 0.1f * GlobalSettings.gameActive;
+            textMesh.color = new Color(255, 255, 255, alpha);
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        textMesh.gameObject.SetActive(false);
+        Destroy(textMesh.gameObject);
+    }
+
+    //FIX ME: For some reason it draw buggy text
+    public void CreateDamageStatusText(string text)
+    {
+        GameObject textGO = new GameObject();
+        textGO.name += $"{name}ReduceHealthTextMesh{textGO.GetInstanceID()}";
+        textGO.transform.parent = transform;
+        textGO.transform.position = transform.position;
+        textGO.transform.localScale = new Vector3(0.25f, 0.25f, 1);
+        textGO.SetActive(true);
+        textGO.AddComponent<MeshRenderer>();
+        TextMesh textTM = textGO.AddComponent<TextMesh>();
+        Font font = Resources.Load<Font>("Fonts/mom");
+        textTM.text = text;
+        textTM.font = font;
+        textTM.fontSize = 16;
+        textTM.color = new Color(255, 255, 255, 255);
+        StartCoroutine(DamageStatusTextGoUpAnimation(textTM));
+        StartCoroutine(DamageStatusTextFadeAnimation(textTM));
+    }
 
     public void Damage()
     {
-        if (ignoreHits)
-            return;
-
-        OnDamage();
-        if (_health <= 0.0f)
+        if (!ignoreHits)
         {
-            _health = _maxHealth;
-            _lifes--;
+            OnDamage();
+            if (_health <= 0.0f)
+            {
+                _health = _maxHealth;
+                _lifes--;
 
-            OnDie();
+                OnDie();
 
-            if (_lifes == 0)
-                Kill(true);
-        }
-        else
-        {
-            _health -= _reduceHealth;
+                if (_lifes == 0)
+                    Kill(true);
+
+                if (_showDamageStatusText)
+                    CreateDamageStatusText("Dead");
+            }
+            else
+            {
+                if (_showDamageStatusText)
+                    CreateDamageStatusText($"-{_reduceHealth} HP");
+
+                _health -= _reduceHealth;
+            }
         }
     }
 
