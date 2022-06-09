@@ -184,7 +184,7 @@ public class PlayerController : MovableObject
     {
         Debug.Log("ShowChapterName()");
         _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(_uiChapterName, 255, 15));
-        _uiChapterName.text = $"Chapter {_stageSystem.CurrentStageIndex} {_stageSystem.currentStage.name}";
+        _uiChapterName.text = $"Chapter {_stageSystem.CurrentStageIndex + 1} {_stageSystem.currentStage.name}";
     }
 
     public void RemoveChapterName()
