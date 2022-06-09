@@ -160,10 +160,6 @@ public class PlayerController : MovableObject
         logHandler          = GetComponent<LogHandler>();
         _stageSystem        = FindObjectOfType<StageSystem>();
 
-        //Set timer callback for stage system
-        _stageSystem.onTimerStart.Add(ShowChapterName);
-        _stageSystem.onTimerEnd.Add(RemoveChapterName);
-
         //First initialize
         UpdateHUD();
         GenerateInvisibleWalls();
@@ -177,7 +173,12 @@ public class PlayerController : MovableObject
         //Don't show cursor when we are create the player 
         Cursor.visible = false;
 
+        //Set respawnPoint position
         gameObject.transform.position = respawnPoint.transform.position;
+
+        //Set timer callback for stage system
+        _stageSystem.onTimerStart.Add(ShowChapterName);
+        _stageSystem.onTimerEnd.Add(RemoveChapterName);
     }
 
     public void ShowChapterName()
