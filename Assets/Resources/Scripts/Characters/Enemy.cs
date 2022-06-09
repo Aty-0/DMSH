@@ -1,7 +1,5 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class Enemy : MovableObject
 {
@@ -123,49 +121,15 @@ public class Enemy : MovableObject
             Destroy(gameObject);
         }
     }
-    private IEnumerator DamageStatusTextGoUpAnimation(TextMesh textMesh)
-    {
-        float y = textMesh.transform.position.y;
-        while (y < textMesh.transform.position.y + 15.0f)
-        {
-            y += 0.04f * GlobalSettings.gameActive;
-            textMesh.transform.position = new Vector3(textMesh.transform.position.x, y, textMesh.transform.position.z);
-            yield return new WaitForSeconds(0.01f);
-        }
-    }
 
-    private IEnumerator DamageStatusTextFadeAnimation(TextMesh textMesh)
-    { 
-        float alpha = 255.0f;
-        while (alpha > 0.0f)
-        {
-            alpha -= 0.1f * GlobalSettings.gameActive;
-            textMesh.color = new Color(255, 255, 255, alpha);
-            yield return new WaitForSeconds(0.01f);
-        }
-
-        textMesh.gameObject.SetActive(false);
-        Destroy(textMesh.gameObject);
-    }
-
-    //FIX ME: For some reason it draw buggy text
     public void CreateDamageStatusText(string text)
     {
         GameObject textGO = new GameObject();
-        textGO.name += $"{name}ReduceHealthTextMesh{textGO.GetInstanceID()}";
-        textGO.transform.parent = transform;
+        textGO.name += $"ReduceHealthTextMesh{textGO.GetInstanceID()}";
         textGO.transform.position = transform.position;
         textGO.transform.localScale = new Vector3(0.25f, 0.25f, 1);
-        textGO.SetActive(true);
-        textGO.AddComponent<MeshRenderer>();
-        TextMesh textTM = textGO.AddComponent<TextMesh>();
-        Font font = Resources.Load<Font>("Fonts/mom");
-        textTM.text = text;
-        textTM.font = font;
-        textTM.fontSize = 16;
-        textTM.color = new Color(255, 255, 255, 255);
-        StartCoroutine(DamageStatusTextGoUpAnimation(textTM));
-        StartCoroutine(DamageStatusTextFadeAnimation(textTM));
+        DamageStatusText dst = textGO.AddComponent<DamageStatusText>();
+        dst.text = text;
     }
 
     public void Damage()
