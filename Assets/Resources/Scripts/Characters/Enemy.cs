@@ -26,6 +26,10 @@ public class Enemy : MovableObject
     [SerializeField] protected ParticleSystem   _deathParticle;
     [SerializeField] protected Coroutine        _shotCoroutine;
     
+    [Header("Sounds")] 
+    [SerializeField] protected AudioSource      _deathAudioSource = null;
+    [SerializeField] protected AudioSource      _damageAudioSource = null;
+
     protected void Start()
     {
         _rigidBody2D = GetComponent<Rigidbody2D>();
@@ -105,7 +109,7 @@ public class Enemy : MovableObject
             if(_playerController)
                 _playerController.Score += 1000;
 
-        //TODO: Add sounds
+        _deathAudioSource?.Play();
         if (_deathParticle && playParticle)
         {
             _pathSystem?.DetachObject(this);
@@ -136,6 +140,7 @@ public class Enemy : MovableObject
     {
         if (!ignoreHits)
         {
+            _damageAudioSource?.Play();
             OnDamage();
             if (_health <= 0.0f)
             {
