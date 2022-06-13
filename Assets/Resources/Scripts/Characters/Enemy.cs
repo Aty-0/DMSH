@@ -172,6 +172,7 @@ public class Enemy : MovableObject
                         Kill(false);
                     break;
                 case Bullet b:
+                    Destroy(b);
                     Damage();
                     break;
             }
