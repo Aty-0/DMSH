@@ -93,6 +93,7 @@ public class PlayerController : MovableObject
 
     private Coroutine _showChapterNameCoroutine = null;
     private Coroutine _slowMotionCoroutine = null;
+    private Coroutine _deathAwakeCoroutine = null;
     private Coroutine _shotCoroutine = null;
 
     [Header("Stage")]
@@ -360,14 +361,16 @@ public class PlayerController : MovableObject
     {
         weaponEnabled = false;
 
-        if(_shotCoroutine != null)
-            StopCoroutine(_shotCoroutine);
+        if(_deathAwakeCoroutine != null)
+            StopCoroutine(_deathAwakeCoroutine);
 
         //Disable or play all sounds in scene
         //foreach (AudioSource s in FindObjectsOfType<AudioSource>())
         //    if(_pause_screen.activeSelf == false)
         //        s.Stop();
  
+        if (_shotCoroutine != null)
+            StopCoroutine(_shotCoroutine);
 
         //Save the last time scale state
         if (_uiPauseScreen.activeSelf == false)
@@ -384,10 +387,14 @@ public class PlayerController : MovableObject
         GlobalSettings.gameActive = System.Convert.ToInt32(!_uiPauseScreen.activeSelf);
         Time.timeScale = _uiPauseScreen.activeSelf == false ? _saved_time_scale : 1.0f;
 
-        //Enable boost if we are exit from pause menu and
-        //if we hasnt enable boost in game we are skip the loop because loop work if Time.timeScale < 1.0f
         if (_uiPauseScreen.activeSelf == false)
+        {
+            //Enable boost if we are exit from pause menu and
+            //if we hasnt enable boost in game we are skip the loop because loop work if Time.timeScale < 1.0f
             _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
+            //Enable death animation
+            _deathAwakeCoroutine = StartCoroutine(SmoothAwake(spriteRenderer));
+        }
 
         playerInput.currentActionMap.Disable();
         playerInput.SwitchCurrentActionMap(_uiPauseScreen.activeSelf == false ? "Player" : "Pause");
@@ -436,6 +443,19 @@ public class PlayerController : MovableObject
             }
         }
     }
+    private IEnumerator SmoothAwake(SpriteRenderer sprite)
+    {
+        float speed = 8.0f;
+        sprite.color = sprite.color.a >= 0.9f ? new Color(sprite.color.r, sprite.color.g, sprite.color.b, 0.0f) : sprite.color;
+        while (sprite.color.a <= 1.0f)
+        {
+            sprite.color = Color.Lerp(sprite.color, new Color(sprite.color.r, sprite.color.g, sprite.color.b, 1.0f), Time.deltaTime * speed);
+            yield return new WaitForSeconds(0.01f);
+        }
+    }
+
+    //TODO: When player is dead
+    //      We are zoom to that place
 
     public void Kill()
     {
@@ -486,6 +506,11 @@ public class PlayerController : MovableObject
             Kill();
         else
         {
+            _deathAwakeCoroutine = StartCoroutine(SmoothAwake(spriteRenderer));
+
+            //Make everything slow
+            Time.timeScale = 0.2f;
+            _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
             //Destroy all bullet cuz we are can teleport player into bullet 
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
                 if (bullet.collisionDestoryBullet)
