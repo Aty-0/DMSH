@@ -53,11 +53,6 @@ public class Enemy : MovableObject
         }
     }
 
-    public override void OnReachedFirstPoint()
-    {
-        ignoreHits = false;
-    }
-
     public override void OnReachedLastPoint()
     {
         if (onLastPointWillDestroy)
@@ -65,8 +60,6 @@ public class Enemy : MovableObject
             Kill(false, false);
             return;
         }
-
-        ignoreHits = true;
     }
 
     public void StartShot()
