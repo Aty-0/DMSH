@@ -6,12 +6,12 @@ public class Enemy : MovableObject
     [Header("Weapon")]
     public float            shotFrequency = 0.05f;
     public bool             weaponEnabled = false;
-    public Bullet           bulletPrefab;
+    public Bullet           bulletPrefab = null;
     public bool             canUseWeapon = true;
-    public bool             ignoreHits = false;
+    public bool             ignoreHits = true;
 
     [Header("Enemy")]
-    [SerializeField] protected SpriteRenderer _spriteRenderer;
+    [SerializeField] protected SpriteRenderer _spriteRenderer = null;
     [SerializeField] protected bool     weakType = false; 
     [SerializeField] protected bool     onLastPointWillDestroy = false;
     [SerializeField] protected bool     _isDead = false;
@@ -22,10 +22,10 @@ public class Enemy : MovableObject
     [SerializeField] protected bool     _showDamageStatusText = true;
 
     [Header("Misc")] 
-    [SerializeField] protected PlayerController _playerController;
-    [SerializeField] protected ParticleSystem   _deathParticle;
-    [SerializeField] protected Coroutine        _shotCoroutine;
-    
+    [SerializeField] protected PlayerController _playerController = null;
+    [SerializeField] protected ParticleSystem   _deathParticle = null;
+    [SerializeField] protected Coroutine        _shotCoroutine = null;
+
     [Header("Sounds")] 
     [SerializeField] protected AudioSource      _deathAudioSource = null;
     [SerializeField] protected AudioSource      _damageAudioSource = null;
@@ -35,7 +35,10 @@ public class Enemy : MovableObject
         _rigidBody2D = GetComponent<Rigidbody2D>();
         _boxCollider2D = GetComponent<BoxCollider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _health = _maxHealth;
+        _deathParticle      = GetComponentInChildren<ParticleSystem>();
+        
+        _health     = _maxHealth;
+        ignoreHits  = true;
 
         EnemyStart();
     }
