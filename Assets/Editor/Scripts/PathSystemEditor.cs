@@ -132,16 +132,15 @@ public class PathPointEditor : Editor
 
 public class PathSystemEditorWindow : EditorWindow
 {
-    private bool _groupEnabled;
-    private GUIStyle buttonToolsGUIStyle;
-    private GUIStyle buttonSelectionGUIStyle;
-    private GUIStyle HeaderTextGUIStyle;
-    private Camera editorCamera;
+    private GUIStyle    buttonToolsGUIStyle;
+    private GUIStyle    buttonSelectionGUIStyle;
+    private GUIStyle    HeaderTextGUIStyle;
+    private Camera      editorCamera;
 
-    [MenuItem("Window/Path System")]
+    [MenuItem("Window/DMSH/Path System")]
     static void Init()
     {
-        PathSystemEditorWindow window = (PathSystemEditorWindow)EditorWindow.GetWindow(typeof(PathSystemEditorWindow));
+        PathSystemEditorWindow window = (PathSystemEditorWindow)EditorWindow.GetWindowWithRect(typeof(PathSystemEditorWindow), new Rect(0, 0, 400, 600));
         GUIContent guiContent = new GUIContent();
         guiContent.text = "Path System";
         //TODO: Icon
@@ -282,8 +281,7 @@ public class PathSystemEditorWindow : EditorWindow
             if (point.eventSpecial.GetPersistentEventCount() != 0)
                 for (int i = 0; i <= point.eventSpecial.GetPersistentEventCount() - 1; i++)
                     GUILayout.Label($"OnEnd:{point.eventSpecial.GetPersistentMethodName(i)}");
-
-
+            point.eventOnEndForAll = (EnemyScriptedBehavior)EditorGUILayout.EnumPopup(point.eventOnEndForAll);
             point.useCurve = GUILayout.Toggle(point.useCurve, "Use curve");
         }
     }
@@ -311,11 +309,7 @@ public class PathSystemEditor : Editor
                 Gizmos.color = path.lineColor;
 
                 if (prev_point.useCurve)
-                {
-                    //PathSystem.CubeFollowedByPath(prev_point.transform.position, current_point.curvePoint, current_point.transform.position);
-                    Gizmos.color = path.lineColor;
-                    PathSystem.LineFollowedByPath(prev_point.transform.position, current_point.curvePoint, current_point.transform.position);
-                }
+                    PathSystem.LineFollowedByPath(prev_point.transform.position, current_point.curvePoint, current_point.transform.position);                
                 else
                     Gizmos.DrawLine(prev_point.transform.position, current_point.transform.position);
             }
