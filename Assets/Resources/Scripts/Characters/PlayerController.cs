@@ -87,10 +87,6 @@ public class PlayerController : MovableObject
     [SerializeField] private Vector2 _move;
     [SerializeField] private bool    _isDead = false;
 
-    //TODO: Create screen handler or something like that
-    private int       _lastScreenWidth = 0;
-    private int       _lastScreenHeight = 0;
-
     private Coroutine _showChapterNameCoroutine = null;
     private Coroutine _slowMotionCoroutine = null;
     private Coroutine _deathAwakeCoroutine = null;
@@ -160,6 +156,8 @@ public class PlayerController : MovableObject
         playerInput         = GetComponent<PlayerInput>();
         logHandler          = GetComponent<LogHandler>();
         _stageSystem        = FindObjectOfType<StageSystem>();
+        screenHandler       = gameObject.AddComponent<ScreenHandler>();
+        screenHandler.onScreenResolutionChange.Add(OnResolutionScreenChange);
 
         //First initialize
         UpdateHUD();
@@ -217,10 +215,7 @@ public class PlayerController : MovableObject
     }
 
     protected void Update()
-    {
-        if (_lastScreenWidth != Screen.width || _lastScreenHeight != Screen.height) 
-            OnResolutionScreenChange();
-
+    {        
         _uiFpsCounterText.text = $"FPS:{(int)(1f / Time.unscaledDeltaTime)}";
     }
 
