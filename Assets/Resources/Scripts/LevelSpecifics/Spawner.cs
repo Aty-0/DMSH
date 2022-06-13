@@ -14,17 +14,18 @@ public class Spawner : MonoBehaviour
 
     [Tooltip("If we are attach spawner to point")]
     [SerializeField] private PathSystem _pathSystem;
-
+    
     protected void Start()
     {
         _stageSystem    = FindObjectOfType<StageSystem>();
         timer           = GetComponent<Timer>();
         if(timer)
             timer.EndEvent += Spawn;
-        _pathSystem = GetComponentInParent<PathSystem>();
 
+        _pathSystem = GetComponentInParent<PathSystem>();
         if(_pathSystem)
-            _pathSystem.onMovableObjectsRemoved.Add(Spawn);
+            _pathSystem.onLastMovableObjectReached.Add(Spawn); //When last movable object is reached needed point we are activate spawner
+     
     }
 
     public void StartTimer()
@@ -34,12 +35,22 @@ public class Spawner : MonoBehaviour
 
     public void Spawn()
     {
-        if (!isDone)
+        if (_pathSystem.currentPoint.gameObject == gameObject 
+            || _pathSystem.movablePathObjectsList.Count == 0)
         {
-            foreach (GameObject go in toSpawn)
-                if (!go.activeSelf)
-                    _stageSystem.AddToStage(go);
-            isDone = true;
+            if (!isDone)
+            {
+                foreach (GameObject go in toSpawn)
+                {
+                    if (go)
+                    {
+                        if (!go.activeSelf)
+                            _stageSystem.AddToStage(go);
+                    }
+                }
+
+                isDone = true;
+            }
         }
     }
 }
