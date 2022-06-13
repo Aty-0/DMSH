@@ -20,6 +20,7 @@ public class PathSystem : MonoBehaviour
     public ObservedList<MovableObject>  movablePathObjectsList = new ObservedList<MovableObject>();
     public List<PathPoint>              pathPointsList = new List<PathPoint>();
     public bool                         loop = true;
+    public PathPoint                    currentPoint = null;
 
     [Header("Misc")]
     public bool                         holdDistanceBetweenObjects = true;
@@ -32,9 +33,10 @@ public class PathSystem : MonoBehaviour
     public Color                        lineColor = Color.green;
 
     [Header("Actions")]
-    public List<Action>                 onMovableObjectsAdded   = new List<Action>();
-    public List<Action>                 onMovableObjectsChanged   = new List<Action>();
-    public List<Action>                 onMovableObjectsRemoved = new List<Action>();
+    public List<Action>                 onMovableObjectsAdded       = new List<Action>();
+    public List<Action>                 onMovableObjectsChanged     = new List<Action>();
+    public List<Action>                 onMovableObjectsRemoved     = new List<Action>();
+    public List<Action>                 onLastMovableObjectReached  = new List<Action>();
 
     protected void Start()
     {
@@ -92,6 +94,9 @@ public class PathSystem : MonoBehaviour
     {
         foreach (Action action in onMovableObjectsRemoved)
             action?.Invoke();
+
+        foreach (Action action in onLastMovableObjectReached)
+            action?.Invoke();
     }
 
     public void UpdateElementAddedCallback()
@@ -99,7 +104,6 @@ public class PathSystem : MonoBehaviour
         foreach (Action action in onMovableObjectsAdded)
             action?.Invoke();
     }
-
 
     public void DetachObject(MovableObject movableObject)
     {
@@ -155,8 +159,14 @@ public class PathSystem : MonoBehaviour
     }
     private void IsReached(PathPoint point, MovableObject move_object)
     {
+        //Invoke events
+        move_object.OnReachedPointEvent(point.eventOnEndForAll);
         if (point.eventSpecial?.GetPersistentEventCount() != 0)
             point.eventSpecial.Invoke();
+
+        if (movablePathObjectsList.IndexOf(move_object) == movablePathObjectsList.Count - 1)
+            foreach (Action action in onLastMovableObjectReached)
+                action?.Invoke();
 
         if (pathPointsList.IndexOf(point) == pathPointsList.Count - 1)
             move_object.OnReachedLastPoint();
@@ -164,8 +174,6 @@ public class PathSystem : MonoBehaviour
             move_object.OnReachedFirstPoint();
         else
             move_object.OnReachedPoint();
-
-        move_object.OnReachedPointEvent(point.eventOnEndForAll);
 
         move_object.currentCurvePoint = 1;
         move_object.currentPoint++;
@@ -245,7 +253,7 @@ public class PathSystem : MonoBehaviour
                 continue; //Move to next object
             }
 
-            PathPoint point = pathPointsList[i]; //Get current point point 
+            currentPoint = pathPointsList[i]; //Get current point point 
             float reduceSpeed = 1.0f;
             float augmentSpeed = 1.0f;
             float speed = 0.0f;
@@ -278,14 +286,14 @@ public class PathSystem : MonoBehaviour
             speed = (move_object.speed * augmentSpeed * reduceSpeed * Time.deltaTime) * GlobalSettings.gameActive; //Calculate speed 
 
             //What's mode we need to use 
-            if (point.useCurve)
+            if (currentPoint.useCurve)
             {
                 //Check current curve point 
                 if (move_object.currentCurvePoint <= PATH_CURVE_LINE_STEPS)
                 {
                     if (CheckPointOnValid(i + 1))
                     {
-                        Vector3 lineEnd = MakeCurve(point.transform.position, pathPointsList[i + 1].curvePoint,
+                        Vector3 lineEnd = MakeCurve(currentPoint.transform.position, pathPointsList[i + 1].curvePoint,
                             pathPointsList[i + 1].transform.position, move_object.currentCurvePoint / (float)PATH_CURVE_LINE_STEPS);
                         float curve_end_distance = Vector3.Distance(move_object.transform.position, lineEnd);
                         move_object.transform.position = Vector3.MoveTowards(move_object.transform.position, lineEnd, speed);
@@ -300,25 +308,25 @@ public class PathSystem : MonoBehaviour
                     {
                         Debug.LogWarning($"{i} That point is last in the list and have curve mode!");
                         //Disable useCurve Flag in current point
-                        point.useCurve = false;
+                        currentPoint.useCurve = false;
                     }
 
                 }
                 else
                 {
-                    IsReached(point, move_object);
+                    IsReached(currentPoint, move_object);
                     continue;
                 }
             }
             else
             {
                 //Check distance for current object
-                float distance = Vector3.Distance(move_object.transform.position, point.transform.position);
-                move_object.transform.position = Vector3.MoveTowards(move_object.transform.position, point.transform.position, speed);
+                float distance = Vector3.Distance(move_object.transform.position, currentPoint.transform.position);
+                move_object.transform.position = Vector3.MoveTowards(move_object.transform.position, currentPoint.transform.position, speed);
                 //If we are get close for point
                 if (distance <= distanceAccuracy)
                 {
-                    IsReached(point, move_object);
+                    IsReached(currentPoint, move_object);
                     continue;
                 }
             }
