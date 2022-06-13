@@ -296,6 +296,10 @@ public class PlayerController : MovableObject
         if ((Boost <= 0 && !_cheatInfiniteBoost) || Time.timeScale < 1.0f)
             return;
 
+        foreach (Bullet bullet in FindObjectsOfType<Bullet>())
+            if (bullet.isEnemyBullet && bullet.collisionDestoryBullet)
+                Destroy(bullet.gameObject);
+
         Boost--;
         Time.timeScale = 0.05f;
         _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
