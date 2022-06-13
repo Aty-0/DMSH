@@ -13,11 +13,7 @@ public class DamageStatusText : MonoBehaviour
     {
         _textTMP = gameObject.AddComponent<TextMeshPro>();
         _textTMP.text = text;
-
-        //TODO: Load TMP font asset
-        //      Need to load it one time 
-        //Font font = Resources.Load<Font>("Fonts/mom");
-        //textTMP.font = font;
+        _textTMP.font = Resources.Load<TMP_FontAsset>("Fonts/mom_SDF");        
         _textTMP.fontSize = 12;
 
         _fadeAnimationCoroutine = StartCoroutine(DamageStatusTextFadeAnimation());
