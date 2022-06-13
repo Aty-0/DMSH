@@ -78,12 +78,14 @@ public class PlayerController : MovableObject
     #endregion
 
     [Header("Global")]
-    public SpriteRenderer   spriteRenderer;
-    public Camera           gameCamera;
-    public LogHandler       logHandler;
-    public GameObject       respawnPoint;
+    public SpriteRenderer   spriteRenderer = null;
+    public Camera           gameCamera = null;
+    public LogHandler       logHandler = null;
+    public GameObject       respawnPoint = null;
+    public PlayerInput      playerInput = null;
+    public ScreenHandler    screenHandler = null;
     public int              maxScore = 0;
-    public PlayerInput      playerInput;
+
     [SerializeField] private Vector2 _move;
     [SerializeField] private bool    _isDead = false;
 
@@ -93,7 +95,7 @@ public class PlayerController : MovableObject
     private Coroutine _shotCoroutine = null;
 
     [Header("Stage")]
-    [SerializeField] private StageSystem _stageSystem;
+    [SerializeField] private StageSystem _stageSystem = null;
 
     [Header("Statistics")]
     [SerializeField] private int _player_score = 0;
@@ -105,45 +107,45 @@ public class PlayerController : MovableObject
     [SerializeField] private float _saved_time_scale = 0.0f;
 
     [Header("Cheats & Debug")]
-    [SerializeField] private bool     _debugGUI;
-    [SerializeField] private GUIStyle _cheatGUIStyle;
-    [SerializeField] private bool     _cheatGod;
-    [SerializeField] private bool     _cheatInfiniteBoost;
+    [SerializeField] private bool     _debugGUI = false;
+    [SerializeField] private GUIStyle _cheatGUIStyle = null;
+    [SerializeField] private bool     _cheatGod = false;
+    [SerializeField] private bool     _cheatInfiniteBoost = false;
 
     [Header("UI")]
-    [SerializeField] private Text     _uiScoreText;
-    [SerializeField] private Text     _uiBoostGainText;
-    [SerializeField] private Text     _uiBoostText;
-    [SerializeField] private Text     _uiLifeText;
-    [SerializeField] private Text     _uiFpsCounterText;
-    [SerializeField] private Text     _uiChapterName;
-    [SerializeField] private Image    _uiSomeImage; //Image on the screen corner
+    [SerializeField] private Text     _uiScoreText = null;
+    [SerializeField] private Text     _uiBoostGainText = null;
+    [SerializeField] private Text     _uiBoostText = null;
+    [SerializeField] private Text     _uiLifeText = null;
+    [SerializeField] private Text     _uiFpsCounterText = null;
+    [SerializeField] private Text     _uiChapterName = null;
+    [SerializeField] private Image    _uiSomeImage = null; //Image on the screen corner
 
     [Header("UI Screens")]
-    [SerializeField] private GameObject _uiPauseScreen;
-    [SerializeField] private GameObject _uiDeathScreen;
-    [SerializeField] private Text       _uiCurrentScoreText; //Only for death screen
-    [SerializeField] private Text       _uiMaxScoreText;
+    [SerializeField] private GameObject _uiPauseScreen = null;
+    [SerializeField] private GameObject _uiDeathScreen = null;
+    [SerializeField] private Text       _uiCurrentScoreText = null; //Only for death screen
+    [SerializeField] private Text       _uiMaxScoreText = null;
 
     [Header("Weapon")]
     public bool     weaponEnabled;
     public Bullet   bulletprefab;
-    [SerializeField] private int    _weaponType;
-    [SerializeField] private float  _weaponBoostGain;
-    [SerializeField] private GameObject _shotPoint;     
-    [SerializeField] private float  _shotFrequency = 0.05f;
+    [SerializeField] private int    _weaponType = 0;
+    [SerializeField] private float  _weaponBoostGain = 0.0f;
+    [SerializeField] private GameObject _shotPoint = null;
+    [SerializeField] private float  _shotFrequency = 0.07f;
 
     [Header("Resizable")]
     [SerializeField] private GameObject[]   _wallsList = new GameObject[4];
-    [SerializeField] private GameObject     _background;
-    
+    [SerializeField] private GameObject     _background = null;
+
     [Header("Sounds")]
-    [SerializeField] private AudioSource audioSourceWeapon;
-    [SerializeField] private AudioSource audioSourceDeath;
-    [SerializeField] private AudioSource audioSourceMusic;
+    [SerializeField] private AudioSource audioSourceWeapon = null;
+    [SerializeField] private AudioSource audioSourceDeath = null;
+    [SerializeField] private AudioSource audioSourceMusic = null;
 
     [Header("Particles")]
-    [SerializeField] protected ParticleSystem _deathParticle;
+    [SerializeField] protected ParticleSystem _deathParticle = null;
 
 
     protected void Start()
@@ -182,14 +184,12 @@ public class PlayerController : MovableObject
 
     public void ShowChapterName()
     {
-        Debug.Log("ShowChapterName()");
         _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(_uiChapterName, 255, 15));
         _uiChapterName.text = $"Chapter {_stageSystem.CurrentStageIndex + 1} {_stageSystem.currentStage.name}";
     }
 
     public void RemoveChapterName()
     {
-        Debug.Log("RemoveChapterName()");
         if(_showChapterNameCoroutine != null)
             StopCoroutine(_showChapterNameCoroutine);
         _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(_uiChapterName, 15));
@@ -366,11 +366,6 @@ public class PlayerController : MovableObject
         if(_deathAwakeCoroutine != null)
             StopCoroutine(_deathAwakeCoroutine);
 
-        //Disable or play all sounds in scene
-        //foreach (AudioSource s in FindObjectsOfType<AudioSource>())
-        //    if(_pause_screen.activeSelf == false)
-        //        s.Stop();
- 
         if (_shotCoroutine != null)
             StopCoroutine(_shotCoroutine);
 
@@ -424,6 +419,8 @@ public class PlayerController : MovableObject
             GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
             GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
             GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActive}");
+            GUI.Label(new Rect(100, 340, 500, 500), $"_weaponBoostGain: {_weaponBoostGain}");
+            GUI.Label(new Rect(100, 360, 500, 500), $"_weaponType: {_weaponType}");
         }      
     }
 
@@ -560,6 +557,7 @@ public class PlayerController : MovableObject
         {
             //TODO: Activate needed weapon type
             _weaponBoostGain = 0.0f;
+            _weaponType += 1;
         }
 
     }
