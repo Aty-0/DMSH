@@ -344,6 +344,9 @@ public class PlayerController : MovableObject
             if (s.gameObject.tag != "NotGenericSound")
                 s.Stop();
 
+        //TODO: Change track 
+        audioSourceMusic.enabled = false;
+
         //Show death screen
         _uiDeathScreen.SetActive(!_uiDeathScreen.activeSelf);
 
@@ -383,6 +386,8 @@ public class PlayerController : MovableObject
         _uiPauseScreen.SetActive(!_uiPauseScreen.activeSelf);
         Cursor.visible = _uiPauseScreen.activeSelf;
 
+        //TODO: Change track 
+        audioSourceMusic.enabled = !_uiPauseScreen.activeSelf;
         GlobalSettings.gameActive = System.Convert.ToInt32(!_uiPauseScreen.activeSelf);
         Time.timeScale = _uiPauseScreen.activeSelf == false ? _saved_time_scale : 1.0f;
 
