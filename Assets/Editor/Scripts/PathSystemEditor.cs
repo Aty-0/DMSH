@@ -236,7 +236,7 @@ public class PathSystemEditorWindow : EditorWindow
         }
         else
         {
-            GUILayout.Label("Non", _headerTextGUIStyle);
+            GUILayout.Label("No active point", _headerTextGUIStyle);
             PointsToolsEditorGlobals.Separator();
         }
 
@@ -257,7 +257,7 @@ public class PathSystemEditorWindow : EditorWindow
         }
         else
         {
-            GUILayout.Label("Non", _headerTextGUIStyle);
+            GUILayout.Label("No active path system", _headerTextGUIStyle);
             PointsToolsEditorGlobals.Separator();
         }
 
