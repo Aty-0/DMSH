@@ -132,10 +132,13 @@ public class PathPointEditor : Editor
 
 public class PathSystemEditorWindow : EditorWindow
 {
-    private GUIStyle    buttonToolsGUIStyle;
-    private GUIStyle    buttonSelectionGUIStyle;
-    private GUIStyle    HeaderTextGUIStyle;
-    private Camera      editorCamera;
+    public  Camera      editorCamera = null;
+
+    private GUIStyle    _buttonToolsGUIStyle = null;
+    private GUIStyle    _headerTextGUIStyle = null;
+    private bool        _foldoutOptionsShow = true;
+    private bool        _foldoutStatsShow = true;
+    private bool        _foldoutToolsShow = true;
 
     [MenuItem("Window/DMSH/Path System")]
     static void Init()
@@ -207,73 +210,40 @@ public class PathSystemEditorWindow : EditorWindow
         PointsToolsEditorGlobals.Create(position);
     }
 
+    public void OnInspectorUpdate()
+    {
+        //Repaint window
+        //OnInspectorUpdate called 10 times per second
+        Repaint();
+    }
+
     protected void OnGUI()
     {
-        HeaderTextGUIStyle = new GUIStyle(GUI.skin.label);
-        HeaderTextGUIStyle.fontSize = 14;
+        _headerTextGUIStyle = new GUIStyle(GUI.skin.label);
+        _headerTextGUIStyle.fontSize = 14;
         
-        buttonToolsGUIStyle = new GUIStyle(GUI.skin.button);
-        buttonToolsGUIStyle.fixedHeight = 22;
-        buttonToolsGUIStyle.fixedWidth = 36;
-
-        buttonSelectionGUIStyle = new GUIStyle(GUI.skin.button);
-        GUILayout.Label($"Tools:", HeaderTextGUIStyle);
-        GUILayout.BeginHorizontal();
-        {
-            if (GUILayout.Button($"C", buttonToolsGUIStyle))
-                OnCreateButtonClick();
-            if (GUILayout.Button($"D", buttonToolsGUIStyle))
-                OnDeleteButtonClick();
-            if (GUILayout.Button($"TS", buttonToolsGUIStyle))
-                OnGotoSystemButtonClick();
-            if (GUILayout.Button($"TGO", buttonToolsGUIStyle))
-                OnGotoGameObjectButtonClick();
-        }
-        GUILayout.EndHorizontal();
-
-        PointsToolsEditorGlobals.Separator();
-
-        GUILayout.Label($"Creation Mode:", HeaderTextGUIStyle);
-        string[] creationToolbarElements = { "End", "Ahead", "Behind" };
-        PointsToolsEditorGlobals.creationMode = (PointsToolsCreationMode)GUILayout.Toolbar((int)PointsToolsEditorGlobals.creationMode, creationToolbarElements);
-        
-        PointsToolsEditorGlobals.Separator();
-        GUILayout.Label($"Scene stats:", HeaderTextGUIStyle);
-        GUILayout.Label($"Path systems:{ FindObjectsOfType<PathSystem>(true).Length }");
-        GUILayout.Label($"Points:{ FindObjectsOfType<PathPoint>(true).Length }");
-        GUILayout.Label($"Active path systems:{ FindObjectsOfType<PathSystem>().Length }");
-        GUILayout.Label($"Active points:{ FindObjectsOfType<PathPoint>().Length }");
-
-        PointsToolsEditorGlobals.Separator();
-        GUILayout.Label($"Options:", HeaderTextGUIStyle);
-        //Some custom options
-        {
-            PointsToolsEditorGlobals.showOnlyLine = GUILayout.Toggle(PointsToolsEditorGlobals.showOnlyLine, "Show only lines");
-            PointsToolsEditorGlobals.showHandles = GUILayout.Toggle(PointsToolsEditorGlobals.showHandles, "Show handles");
-            PointsToolsEditorGlobals.showCurveHandle = GUILayout.Toggle(PointsToolsEditorGlobals.showCurveHandle, "Show curve handle");
-            PointsToolsEditorGlobals.createByEdCameraPosition = GUILayout.Toggle(PointsToolsEditorGlobals.createByEdCameraPosition, "Create by editor camera position");
-            PointsToolsEditorGlobals.pickObjectOnPosChange = GUILayout.Toggle(PointsToolsEditorGlobals.pickObjectOnPosChange, "Pick object when handle is used");
-            PointsToolsEditorGlobals.makeCurveOnCreate = GUILayout.Toggle(PointsToolsEditorGlobals.makeCurveOnCreate, "Make curve on create object");
-            PointsToolsEditorGlobals.Separator();
-            PointsToolsEditorGlobals.createVec = EditorGUILayout.Vector2Field("Addition Vector (Addition to create point)", PointsToolsEditorGlobals.createVec);
-        }
-
-        PointsToolsEditorGlobals.Separator();
+        _buttonToolsGUIStyle = new GUIStyle(GUI.skin.button);
+        _buttonToolsGUIStyle.fixedHeight = 22;
+        _buttonToolsGUIStyle.fixedWidth = 36;
 
         PathSystem pathSystem = PointsToolsEditorGlobals.usedPointSystem;
+        GUILayout.Label($"Path system:", _headerTextGUIStyle);
         if (pathSystem)
         {
-            GUILayout.Label($"Path system:", HeaderTextGUIStyle);
             GUILayout.Label($"Name:{pathSystem.name} ID:{pathSystem.GetInstanceID()}\n" +
                 $"Position:{pathSystem.transform.position }");
             PointsToolsEditorGlobals.Separator();
         }
-
+        else
+        {
+            GUILayout.Label("Non", _headerTextGUIStyle);
+            PointsToolsEditorGlobals.Separator();
+        }
 
         PathPoint point = PointsToolsEditorGlobals.selectedPoint;
+        GUILayout.Label($"Current point:", _headerTextGUIStyle);
         if (point)
         {
-            GUILayout.Label($"Current point:", HeaderTextGUIStyle);
             GUILayout.Label($"Name:{point.name}\n" +
                 $"Position:{point.transform.position }");
             GUILayout.Label($"eventOnEndForAll: {point.eventOnEndForAll}");
@@ -283,7 +253,58 @@ public class PathSystemEditorWindow : EditorWindow
                     GUILayout.Label($"OnEnd:{point.eventSpecial.GetPersistentMethodName(i)}");
             point.eventOnEndForAll = (EnemyScriptedBehavior)EditorGUILayout.EnumPopup(point.eventOnEndForAll);
             point.useCurve = GUILayout.Toggle(point.useCurve, "Use curve");
+            PointsToolsEditorGlobals.Separator();
         }
+        else
+        {
+            GUILayout.Label("Non", _headerTextGUIStyle);
+            PointsToolsEditorGlobals.Separator();
+        }
+
+        _foldoutToolsShow = EditorGUILayout.Foldout(_foldoutToolsShow, $"Tools");
+        if (_foldoutToolsShow)
+        {
+            GUILayout.BeginHorizontal();
+            {
+                if (GUILayout.Button($"C", _buttonToolsGUIStyle))
+                    OnCreateButtonClick();
+                if (GUILayout.Button($"D", _buttonToolsGUIStyle))
+                    OnDeleteButtonClick();
+                if (GUILayout.Button($"TS", _buttonToolsGUIStyle))
+                    OnGotoSystemButtonClick();
+                if (GUILayout.Button($"TGO", _buttonToolsGUIStyle))
+                    OnGotoGameObjectButtonClick();
+            }
+            GUILayout.EndHorizontal();
+
+            PointsToolsEditorGlobals.Separator();
+
+            GUILayout.Label($"Creation Mode:", _headerTextGUIStyle);
+            string[] creationToolbarElements = { "End", "Ahead", "Behind" };
+            PointsToolsEditorGlobals.creationMode = (PointsToolsCreationMode)GUILayout.Toolbar((int)PointsToolsEditorGlobals.creationMode, creationToolbarElements);
+        }
+
+        _foldoutStatsShow = EditorGUILayout.Foldout(_foldoutStatsShow, $"Stats");
+        if (_foldoutStatsShow)
+        { 
+            GUILayout.Label($"Path systems:{ FindObjectsOfType<PathSystem>(true).Length }");
+            GUILayout.Label($"Points:{ FindObjectsOfType<PathPoint>(true).Length }");
+            GUILayout.Label($"Active path systems:{ FindObjectsOfType<PathSystem>().Length }");
+            GUILayout.Label($"Active points:{ FindObjectsOfType<PathPoint>().Length }");
+        }
+
+        _foldoutOptionsShow = EditorGUILayout.Foldout(_foldoutOptionsShow, $"Options");
+        if(_foldoutOptionsShow)
+        {
+            PointsToolsEditorGlobals.showOnlyLine = GUILayout.Toggle(PointsToolsEditorGlobals.showOnlyLine, "Show only lines");
+            PointsToolsEditorGlobals.showHandles = GUILayout.Toggle(PointsToolsEditorGlobals.showHandles, "Show handles");
+            PointsToolsEditorGlobals.showCurveHandle = GUILayout.Toggle(PointsToolsEditorGlobals.showCurveHandle, "Show curve handle");
+            PointsToolsEditorGlobals.createByEdCameraPosition = GUILayout.Toggle(PointsToolsEditorGlobals.createByEdCameraPosition, "Create by editor camera position");
+            PointsToolsEditorGlobals.pickObjectOnPosChange = GUILayout.Toggle(PointsToolsEditorGlobals.pickObjectOnPosChange, "Pick object when handle is used");
+            PointsToolsEditorGlobals.makeCurveOnCreate = GUILayout.Toggle(PointsToolsEditorGlobals.makeCurveOnCreate, "Make curve on create object");
+            PointsToolsEditorGlobals.Separator();
+            PointsToolsEditorGlobals.createVec = EditorGUILayout.Vector2Field("Addition Vector (Addition to create point)", PointsToolsEditorGlobals.createVec);
+        }       
     }
 }
 
