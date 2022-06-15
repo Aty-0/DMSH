@@ -298,7 +298,7 @@ public class PlayerController : MovableObject
 
         foreach (Bullet bullet in FindObjectsOfType<Bullet>())
             if (bullet.isEnemyBullet && bullet.collisionDestoryBullet)
-                Destroy(bullet.gameObject);
+                bullet.SqueezeAndDestroy();
 
         Boost--;
         Time.timeScale = 0.05f;
@@ -392,7 +392,8 @@ public class PlayerController : MovableObject
             //if we hasnt enable boost in game we are skip the loop because loop work if Time.timeScale < 1.0f
             _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
             //Enable death animation
-            _deathAwakeCoroutine = StartCoroutine(SmoothAwake(spriteRenderer));
+            if(spriteRenderer.color.a < 0.9f)
+                _deathAwakeCoroutine = StartCoroutine(SmoothAwake(spriteRenderer));
         }
 
         playerInput.currentActionMap.Disable();
@@ -515,7 +516,7 @@ public class PlayerController : MovableObject
             //Destroy all bullet cuz we are can teleport player into bullet 
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
                 if (bullet.collisionDestoryBullet)
-                    Destroy(bullet.gameObject);
+                    bullet.SqueezeAndDestroy();
 
             //Set spawn point position to player 
             gameObject.transform.position = respawnPoint.transform.position;

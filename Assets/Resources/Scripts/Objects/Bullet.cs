@@ -9,22 +9,50 @@ using UnityEngine;
 public class Bullet : MovableObject
 {
     [Header("Bullet")]
-    public bool       isEnemyBullet = false;
-    public bool       collisionDestoryBullet = true;
-    public float      lifeTime = 2.0f;
-    public bool       freeMovement = false;
-    public Timer      timer;
-    [SerializeField] private Vector2    _bullet_dir = new Vector2(0, 1);
-    [SerializeField] private float      _rotation_speed = 300.0f;
-    
+    public bool     isEnemyBullet = false;
+    public bool     collisionDestoryBullet = true;
+    public float    lifeTime = 2.0f;
+    public bool     freeMovement = false;
+    public Timer    timer = null;
+
+    [SerializeField] private Vector2 _bullet_dir = new Vector2(0, 1);
+    [SerializeField] private float _rotation_speed = 300.0f;
+    [SerializeField] private TrailRenderer _trailRenderer = null;
+
     protected void Start()
     {
         rigidBody2D = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
+        _trailRenderer = GetComponentInChildren<TrailRenderer>();
     }
     public void Kill()
     {
         Destroy(gameObject);
+    }
+
+    private IEnumerator SqueezeAnimation()
+    {
+        while(transform.localScale != new Vector3(0.0f, 0.0f, transform.localScale.z))
+        {
+            float x = Mathf.Lerp(transform.localScale.x, 0, 9.0f *  Time.deltaTime * 10 * GlobalSettings.gameActive);
+            float y = Mathf.Lerp(transform.localScale.y, 0, 9.0f *  Time.deltaTime * 10 * GlobalSettings.gameActive);
+            float startwidth = Mathf.Lerp(_trailRenderer.startWidth, 0, 9.0f * Time.deltaTime * 10 * GlobalSettings.gameActive);
+            float endwidth = Mathf.Lerp(_trailRenderer.endWidth, 0, 9.0f *  Time.deltaTime * 10 *GlobalSettings.gameActive);
+            transform.localScale = new Vector3(x, y, transform.localScale.z);
+            _trailRenderer.endWidth = startwidth;
+            _trailRenderer.startWidth = endwidth;
+            yield return new WaitForSeconds(0.01f);
+        }
+
+        Destroy(gameObject);
+    }
+
+    //Squeeze bullet 
+    //It's just destroy effect for boost or player death
+    public void SqueezeAndDestroy()
+    {
+        boxCollider2D.enabled = false;
+        StartCoroutine(SqueezeAnimation());
     }
 
     protected void Awake()
