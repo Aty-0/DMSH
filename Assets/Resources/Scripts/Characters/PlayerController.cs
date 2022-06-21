@@ -129,7 +129,7 @@ public class PlayerController : MovableObject
 
     [Header("Weapon")]
     public bool     weaponEnabled;
-    public Bullet   bulletprefab;
+    public Bullet   bulletPrefab;
     [SerializeField] private int    _weaponType = 0;
     [SerializeField] private float  _weaponBoostGain = 0.0f;
     [SerializeField] private GameObject _shotPoint = null;
@@ -262,7 +262,7 @@ public class PlayerController : MovableObject
         while (weaponEnabled)
         {
             Vector3 final_pos = _shotPoint != null ? _shotPoint.transform.position : new Vector3(rigidBody2D.position.x, rigidBody2D.position.y + boxCollider2D.size.y, 0);
-            Instantiate(bulletprefab, final_pos, Quaternion.identity);
+            Instantiate(bulletPrefab, final_pos, Quaternion.identity);
 
             audioSourceWeapon.Play();
 
