@@ -270,7 +270,7 @@ public class PlayerController : MovableObject
         }
     }
 
-    private IEnumerator DoSlowMotion()
+    private IEnumerator DoSlowMotion(bool isBoost = true)
     {
         while (Time.timeScale < 1.0f)
         {
@@ -281,7 +281,8 @@ public class PlayerController : MovableObject
                 if(s.gameObject.tag != "NotGenericSound")
                     s.pitch = Time.timeScale;
 
-            _uiBoostGainText.text = $"{(int)(Time.timeScale * 100)}%";
+            if(isBoost)
+                _uiBoostGainText.text = $"{(int)(Time.timeScale * 100)}%";
 
             yield return new WaitForSeconds(.1f);
         }
@@ -516,7 +517,7 @@ public class PlayerController : MovableObject
 
             //Make everything slow
             Time.timeScale = 0.2f;
-            _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
+            _slowMotionCoroutine = StartCoroutine(DoSlowMotion(false));
             //Destroy all bullet cuz we are can teleport player into bullet 
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
                 if (bullet.collisionDestoryBullet)
