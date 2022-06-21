@@ -49,8 +49,8 @@ Shader "Custom/BackgroundShader"
 
             float3 G(float2 uv, float clampedSinTime, float aspect)
             {
-                float sin_factor = sin(_Time.w) / 10;
-                float cos_factor = cos(_Time.w) / 10;
+                float sin_factor = sin(_Time.w) / 60;
+                float cos_factor = cos(_Time.w) / 60;
                 uv = (uv - 0.5) * .4f + 0.5;                
                 uv += mul(float2((uv.x - 0.5) * aspect, uv.y - 0.5),  float2x2(cos_factor, sin_factor - _SinTime.w, -sin_factor, -tan(cos_factor)));
                 uv = float2((uv.x - 0.5) * aspect, uv.y - 0.5);
@@ -79,18 +79,23 @@ Shader "Custom/BackgroundShader"
                 float aspect = _ScreenParams.x / _ScreenParams.y;
 
                 float t2 = 0;
-                t2 += dot(hash3(input.uv + time), 0.1f);
+                t2 += dot(hash3(input.uv + time), 0.05f);
 
-                //input.uv.x += tan(time / 40);
-                //input.uv.y += tan(time / 50);
+                input.uv.x -= clampedSinTime / 10;
+                //input.uv.y -= tan(time / 5);
 
                 float3 f = float3(1, 1, 1);
                 f *= G(float2(input.uv.x + 0.45f, input.uv.y - 0.45f), clampedSinTime, aspect);
                 f /= frac(G(float2(input.uv.x + 0.55f, input.uv.y - 0.45f), clampedSinTime, aspect));
-                f = f * 1.3f;
 
+                f *= G(float2(1 - input.uv.x + 0.45f, 1 - input.uv.y - 0.45f), clampedSinTime, aspect);
+                f /= frac(G(float2(1 - input.uv.x + 0.55f, 1 - input.uv.y - 0.45f), clampedSinTime, aspect));
+
+
+                f = f * 1.3f;
+                float s = dot(_SinTime, 0.02f);
                 col -= float4(f, 1);
-                col += float4(0.2f, 0, 0, 1);
+                col += float4(0.2f * s, s, s, 1) -.3f;
                 col += float4(t2, t2, t2, 1);
 
                 return col;
