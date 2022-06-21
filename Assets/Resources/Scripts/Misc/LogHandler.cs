@@ -55,7 +55,12 @@ public class LogHandler : MonoBehaviour
             PlayerController player = FindObjectOfType<PlayerController>();
             player.DebugGUI = !player.DebugGUI;
         }));
-        consoleCommandsList.Add(new Tuple<string, Action>("tc", () => { _Resume = !_Resume; }));
+        consoleCommandsList.Add(new Tuple<string, Action>("tc", () => {
+            foreach (AudioSource audio in FindObjectsOfType<AudioSource>())
+                audio?.Stop();
+                _Resume = !_Resume; 
+        }));
+
         consoleCommandsList.Add(new Tuple<string, Action>("clear", () => { _consoleMessageBuffer.Clear(); }));
         consoleCommandsList.Add(new Tuple<string, Action>("testLog", () => { Debug.Log("Hi"); }));
         consoleCommandsList.Add(new Tuple<string, Action>("testassert", () => { Debug.Assert(false, "Assert Hi"); }));
@@ -232,9 +237,6 @@ public class LogHandler : MonoBehaviour
             GUILayout.EndArea();
 
             GUILayout.BeginArea(new Rect(0, Screen.height - 25, Screen.width, 100));
-
-            //FIX ME 
-            //In game build not selected text box is invisible
             GUIStyle textFieldStyle = new GUIStyle(GUI.skin.textField);
             //textFieldStyle.normal.background = null;
             //textFieldStyle.onNormal.background = null;
