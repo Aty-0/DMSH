@@ -345,7 +345,7 @@ public class PlayerController : MovableObject
                 s.Stop();
 
         //TODO: Change track 
-        audioSourceMusic.enabled = false;
+        audioSourceMusic.Stop();
 
         //Show death screen
         _uiDeathScreen.SetActive(!_uiDeathScreen.activeSelf);
@@ -361,31 +361,17 @@ public class PlayerController : MovableObject
 
     public void ShowPauseScreen()
     {
-        weaponEnabled = false;
-
-        if(_deathAwakeCoroutine != null)
-            StopCoroutine(_deathAwakeCoroutine);
-
-        if (_shotCoroutine != null)
-            StopCoroutine(_shotCoroutine);
-
         //Save the last time scale state
         if (_uiPauseScreen.activeSelf == false)
             _saved_time_scale = Time.timeScale;
 
-        //If we have enabled boost
-        if(_slowMotionCoroutine != null)
-            StopCoroutine(_slowMotionCoroutine);
-
         //Enable or disable pause menu
         _uiPauseScreen.SetActive(!_uiPauseScreen.activeSelf);
         Cursor.visible = _uiPauseScreen.activeSelf;
-
-        //TODO: Change track 
-        audioSourceMusic.enabled = !_uiPauseScreen.activeSelf;
         GlobalSettings.gameActive = System.Convert.ToInt32(!_uiPauseScreen.activeSelf);
         Time.timeScale = _uiPauseScreen.activeSelf == false ? _saved_time_scale : 1.0f;
 
+        //TODO: Change track 
         if (_uiPauseScreen.activeSelf == false)
         {
             //Enable boost if we are exit from pause menu and
@@ -394,6 +380,24 @@ public class PlayerController : MovableObject
             //Enable death animation
             if(spriteRenderer.color.a < 0.9f)
                 _deathAwakeCoroutine = StartCoroutine(SmoothAwake(spriteRenderer));
+
+            audioSourceMusic.Play();
+        }
+        else
+        {
+            weaponEnabled = false;
+
+            if (_deathAwakeCoroutine != null)
+                StopCoroutine(_deathAwakeCoroutine);
+
+            if (_shotCoroutine != null)
+                StopCoroutine(_shotCoroutine);
+
+            //If we have enabled boost
+            if (_slowMotionCoroutine != null)
+                StopCoroutine(_slowMotionCoroutine);
+
+            audioSourceMusic.Pause();
         }
 
         playerInput.currentActionMap.Disable();
