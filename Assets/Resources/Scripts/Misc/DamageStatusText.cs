@@ -5,6 +5,7 @@ using TMPro;
 public class DamageStatusText : MonoBehaviour
 {
     public string text = string.Empty;
+    public float fontSize = 12.0f;
     [SerializeField] private TextMeshPro _textTMP;
     [SerializeField] private Coroutine _fadeAnimationCoroutine;
     [SerializeField] private Coroutine _goUpAnimationCoroutine;
@@ -14,7 +15,7 @@ public class DamageStatusText : MonoBehaviour
         _textTMP = gameObject.AddComponent<TextMeshPro>();
         _textTMP.text = text;
         _textTMP.font = Resources.Load<TMP_FontAsset>("Fonts/mom_SDF");        
-        _textTMP.fontSize = 12;
+        _textTMP.fontSize = fontSize;
 
         _fadeAnimationCoroutine = StartCoroutine(DamageStatusTextFadeAnimation());
         _goUpAnimationCoroutine = StartCoroutine(DamageStatusTextGoUpAnimation());
