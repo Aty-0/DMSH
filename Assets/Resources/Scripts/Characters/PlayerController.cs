@@ -205,8 +205,6 @@ public class PlayerController : MovableObject
             local_boxCollider2D.size += i <= 1 ? new Vector2(0.0f, 0.1f) : new Vector2(0.1f, 0.0f);
             _wallsList[i].layer = 8; // wtf
         }
-
-        UpdateInvisibleWallsPosition();
     }
 
     protected void FixedUpdate()
@@ -219,15 +217,11 @@ public class PlayerController : MovableObject
         _uiFpsCounterText.text = $"FPS:{(int)(1f / Time.unscaledDeltaTime)}";
     }
 
-    private void UpdateInvisibleWallsPosition()
-    {
-        //Get viewport world points
-        Vector3 ViewportToWorldPointX = new Vector2(gameCamera.ViewportToWorldPoint(new Vector2(1, 0)).x , 0);
-        Vector3 ViewportToWorldPointY = new Vector2(0, gameCamera.ViewportToWorldPoint(new Vector2(0, 1)).y);
-
+    private void UpdateInvisibleWallsPosition(Vector3 ViewportToWorldPointX, Vector3 ViewportToWorldPointY, Vector3 viewportToWorldPointXWithImage)
+    {        
         _wallsList[0].transform.position = ViewportToWorldPointY;
         _wallsList[1].transform.position = -ViewportToWorldPointY;
-        _wallsList[2].transform.position = ViewportToWorldPointX - new Vector3(ViewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 20.0f, 0, 0);
+        _wallsList[2].transform.position = viewportToWorldPointXWithImage;
         _wallsList[3].transform.position = -ViewportToWorldPointX;
 
         //FIX ME: Sometimes player can bypass invisible walls when this function is called
@@ -237,20 +231,26 @@ public class PlayerController : MovableObject
         if (gameObject.transform.position.x >  _wallsList[2].transform.position.x  || gameObject.transform.position.x < _wallsList[3].transform.position.x ||
             gameObject.transform.position.y > _wallsList[0].transform.position.y || gameObject.transform.position.y <  _wallsList[1].transform.position.y)
                 gameObject.transform.position = respawnPoint.transform.position;
+    }
 
+    private void OnResolutionScreenChange()
+    {
+        //Get viewport world points
+        Vector3 viewportToWorldPointX = new Vector2(gameCamera.ViewportToWorldPoint(new Vector2(1, 0)).x, 0);
+        Vector3 viewportToWorldPointY = new Vector2(0, gameCamera.ViewportToWorldPoint(new Vector2(0, 1)).y);
+        Vector3 viewportToWorldPointXWithImage = viewportToWorldPointX - new Vector3(viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 20.0f, 0, 0);
+        float   aspectRatioWithImage = (Vector3.Distance(-viewportToWorldPointX, viewportToWorldPointXWithImage) / Vector3.Distance(viewportToWorldPointY, -viewportToWorldPointY)) + _uiSomeImage.rectTransform.sizeDelta.x * 2;
+        UpdateInvisibleWallsPosition(viewportToWorldPointX, viewportToWorldPointY, viewportToWorldPointXWithImage);
+        
         //I guess it's not correct way to implement background restretch
         if (_background)
         {
-            _background.transform.localScale = new Vector3(
-                (Vector3.Distance(_wallsList[3].transform.position, _wallsList[2].transform.position) / Vector3.Distance(_wallsList[0].transform.position, _wallsList[1].transform.position)) + _uiSomeImage.rectTransform.sizeDelta.x * 2, //X
-                Vector3.Distance(_wallsList[0].transform.position, _wallsList[1].transform.position), //Y
-                1);
-            _background.transform.position = new Vector3(-ViewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 9.2f, 0, 5);
+            _background.transform.localScale = new Vector3(aspectRatioWithImage, Vector3.Distance(viewportToWorldPointY, viewportToWorldPointY), 1);
+            _background.transform.position = new Vector3(gameCamera.transform.position.x + -viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 9.2f, gameCamera.transform.position.y, 5);
         }
 
         //Set screen middle position for respawn point
-        respawnPoint.transform.position = new Vector2((-ViewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x) / 1000, -ViewportToWorldPointY.y / 1.2f);
-    }
+        respawnPoint.transform.position = new Vector2((-viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x) / 1000, -viewportToWorldPointY.y / 1.2f);
 
     private void OnResolutionScreenChange()
     {
