@@ -88,6 +88,7 @@ public class PlayerController : MovableObject
 
     [SerializeField] private Vector2 _move;
     [SerializeField] private bool    _isDead = false;
+    [SerializeField] private CameraDeathAnimation _cameraDeathAnimation = null;
 
     private Coroutine _showChapterNameCoroutine = null;
     private Coroutine _slowMotionCoroutine = null;
@@ -160,6 +161,9 @@ public class PlayerController : MovableObject
         _stageSystem        = FindObjectOfType<StageSystem>();
         screenHandler       = gameObject.AddComponent<ScreenHandler>();
         screenHandler.onScreenResolutionChange.Add(OnResolutionScreenChange);
+        _cameraDeathAnimation = gameObject.AddComponent<CameraDeathAnimation>();
+        _cameraDeathAnimation.animCamera = gameCamera;
+        _cameraDeathAnimation.target = gameObject;
 
         //First initialize
         UpdateHUD();
@@ -461,11 +465,10 @@ public class PlayerController : MovableObject
         }
     }
 
-    //TODO: When player is dead
-    //      We are zoom to that place
-
     public void Kill()
     {
+        _cameraDeathAnimation.Play();
+
         if (_slowMotionCoroutine != null)
             StopCoroutine(_slowMotionCoroutine);
 
