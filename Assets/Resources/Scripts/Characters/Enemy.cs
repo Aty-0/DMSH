@@ -36,10 +36,10 @@ public class Enemy : MovableObject
 
     protected void Start()
     {
-        _rigidBody2D = GetComponent<Rigidbody2D>();
-        _boxCollider2D = GetComponent<BoxCollider2D>();
+        _rigidBody2D    = GetComponent<Rigidbody2D>();
+        _boxCollider2D  = GetComponent<BoxCollider2D>();
         _spriteRenderer = GetComponent<SpriteRenderer>();
-        _deathParticle      = GetComponentInChildren<ParticleSystem>();
+        _deathParticle  = GetComponentInChildren<ParticleSystem>();
         
         _health     = _maxHealth;
         ignoreHits  = true;
@@ -64,7 +64,7 @@ public class Enemy : MovableObject
     {
         if (onLastPointWillDestroy)
         {
-            Kill(false, false);
+            Kill(false, true);
             return;
         }
     }
@@ -96,21 +96,21 @@ public class Enemy : MovableObject
         }
     }
 
-    //TODO: Drop power and bonus points 
-    public void Kill(bool givePlayerScore, bool playParticle = true)
+    public void Kill(bool givePlayerScore, bool unspawn = false)
     {
         _lifes  = 0;
         _health = 0;
         _isDead = true;
 
-        OnDieCompletely();
+        if(!unspawn)
+            OnDieCompletely();
 
-        if(givePlayerScore)
+        if (givePlayerScore)
             if(_playerController)
                 _playerController.Score += 1000;
 
         _deathAudioSource?.Play();
-        if (_deathParticle && playParticle)
+        if (_deathParticle && !unspawn)
         {
             _pathSystem?.DetachObject(this);
             _spriteRenderer.enabled = false;
