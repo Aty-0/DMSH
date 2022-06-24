@@ -21,6 +21,10 @@ public class Enemy : MovableObject
     [SerializeField] protected float    _reduceHealth = 1.5f;
     [SerializeField] protected bool     _showDamageStatusText = true;
 
+    [Header("Bonus")] 
+    [SerializeField] protected GameObject _bonusWeaponBuff = null;
+    [SerializeField] protected GameObject _bonusScoreBuff  = null;
+
     [Header("Misc")] 
     [SerializeField] protected PlayerController _playerController = null;
     [SerializeField] protected ParticleSystem   _deathParticle = null;
@@ -214,6 +218,28 @@ public class Enemy : MovableObject
 
     public virtual void OnDieCompletely()
     {
-        
+        DropBonus();
+    }
+
+    public void DropBonus()
+    {
+        //TODO: Drop point in random position by range
+        if (_bonusWeaponBuff)
+        {
+            for (int i = 0; i <= Random.Range(0, 2); i++)
+            {
+                Instantiate(_bonusWeaponBuff);
+                _bonusWeaponBuff.transform.position = gameObject.transform.position;
+            }
+        }
+
+        if (_bonusScoreBuff)
+        {
+            for (int i = 0; i <= Random.Range(0, 2); i++)
+            {
+                Instantiate(_bonusScoreBuff);
+                _bonusScoreBuff.transform.position = gameObject.transform.position;
+            }
+        }
     }
 }

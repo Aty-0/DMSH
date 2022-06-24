@@ -5001,6 +5001,8 @@ MonoBehaviour:
   _health: 0
   _reduceHealth: 1.5
   _showDamageStatusText: 1
+  _bonusWeaponBuff: {fileID: 4162459214245127621, guid: 307332adac44dfa499659c92f6c259e9, type: 3}
+  _bonusScoreBuff: {fileID: 4461109801838719764, guid: 6153ae2a2284cb341b1427520964dacf, type: 3}
   _playerController: {fileID: 0}
   _deathParticle: {fileID: 8225971831675203144}
   _deathAudioSource: {fileID: 6611297172389828778}
