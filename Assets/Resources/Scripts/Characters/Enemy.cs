@@ -129,7 +129,7 @@ public class Enemy : MovableObject
     public void CreateDamageStatusText(string text)
     {
         GameObject textGO = new GameObject();
-        textGO.name += $"ReduceHealthTextMesh{textGO.GetInstanceID()}";
+        textGO.name = $"ReduceHealthTextMesh{textGO.GetInstanceID()}";
         textGO.transform.position = transform.position;
         textGO.transform.localScale = new Vector3(0.25f, 0.25f, 1);
         DamageStatusText dst = textGO.AddComponent<DamageStatusText>();
