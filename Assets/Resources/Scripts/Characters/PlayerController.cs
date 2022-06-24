@@ -129,8 +129,8 @@ public class PlayerController : MovableObject
     [SerializeField] private Text       _uiMaxScoreText = null;
 
     [Header("Weapon")]
-    public bool     weaponEnabled;
-    public Bullet   bulletPrefab;
+    public bool     weaponEnabled = false;
+    public Bullet   bulletPrefab = null;
     [SerializeField] private int    _weaponType = 0;
     [SerializeField] private float  _weaponBoostGain = 0.0f;
     [SerializeField] private GameObject _shotPoint = null;
@@ -559,7 +559,7 @@ public class PlayerController : MovableObject
         audioSourceMusic.enabled = GlobalSettings.musicPlay;
     }
 
-    public void SetWeaponBoost(float gain)
+    public void AddWeaponBoost(float gain)
     {
         _weaponBoostGain += gain;
         if(_weaponBoostGain >= 100.0f)
