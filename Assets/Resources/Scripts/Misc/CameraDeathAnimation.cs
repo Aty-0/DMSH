@@ -4,25 +4,14 @@ using UnityEngine;
 
 public class CameraDeathAnimation : MonoBehaviour
 {
-    public GameObject   target;
+    public GameObject   target = null;
+    public Camera       animCamera = null;
     public float        size    = 2.0f;
     public float        speed   = 3.0f;
-    public Camera       animCamera;
+
     [SerializeField] private Coroutine  _coroutineZoom;
     [SerializeField] private Coroutine  _coroutineMoveToTarget;
-    [SerializeField] private Coroutine  _coroutineCameraShake;
-    private IEnumerator CameraShake()
-    {
-        while (true)
-        {
-            animCamera.transform.rotation = Quaternion.Euler(Vector3.Lerp(animCamera.transform.rotation.eulerAngles, animCamera.transform.rotation.eulerAngles +
-                new Vector3(0, 0, Mathf.Sin(Random.insideUnitCircle.x) + 10), 
-                (speed / 2) * Time.deltaTime));
-
-            yield return new WaitForSeconds(0.01f);
-        }
-    }
-
+    
     private IEnumerator Zoom()
     {
         while (animCamera.orthographicSize >= size)
@@ -49,25 +38,5 @@ public class CameraDeathAnimation : MonoBehaviour
     {
         _coroutineZoom = StartCoroutine(Zoom());
         _coroutineMoveToTarget = StartCoroutine(MoveToTarget());
-        //_coroutineCameraShake = StartCoroutine(CameraShake());
     }
-
-    //protected void OnGUI()
-    //{
-    //    if (GUI.Button(new Rect(20,200, 100, 100), "Play"))
-    //    {
-    //        if (_coroutineZoom != null)
-    //            StopCoroutine(_coroutineZoom);
-    //
-    //        if (_coroutineCameraShake != null)
-    //            StopCoroutine(_coroutineCameraShake);
-    //
-    //        if (_coroutineMoveToTarget != null)
-    //            StopCoroutine(_coroutineMoveToTarget);
-    //
-    //        _camera.orthographicSize = 5.0f;
-    //        _camera.transform.position = new Vector3(0, 0, _camera.transform.position.z);
-    //        Play();
-    //    }
-    //}
 }
