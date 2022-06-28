@@ -34,11 +34,11 @@ public class Bullet : MovableObject
     {
         while(transform.localScale != new Vector3(0.0f, 0.0f, transform.localScale.z))
         {
-            float x = Mathf.Lerp(transform.localScale.x, 0, 9.0f *  Time.deltaTime * 10 * GlobalSettings.gameActive);
-            float y = Mathf.Lerp(transform.localScale.y, 0, 9.0f *  Time.deltaTime * 10 * GlobalSettings.gameActive);
-            float startwidth = Mathf.Lerp(_trailRenderer.startWidth, 0, 9.0f * Time.deltaTime * 10 * GlobalSettings.gameActive);
-            float endwidth = Mathf.Lerp(_trailRenderer.endWidth, 0, 9.0f *  Time.deltaTime * 10 *GlobalSettings.gameActive);
-            transform.localScale = new Vector3(x, y, transform.localScale.z);
+            float speed = 4.0f * Time.deltaTime * 10 * GlobalSettings.gameActive;
+            Vector3 vec = Vector3.Lerp(transform.localScale, Vector3.zero, speed);
+            float startwidth = Mathf.Lerp(_trailRenderer.startWidth, 0, speed);
+            float endwidth = Mathf.Lerp(_trailRenderer.endWidth, 0, speed);
+            transform.localScale = new Vector3(vec.x, vec.y, transform.localScale.z);
             _trailRenderer.endWidth = startwidth;
             _trailRenderer.startWidth = endwidth;
             yield return new WaitForSeconds(0.01f);
