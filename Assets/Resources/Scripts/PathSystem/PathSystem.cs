@@ -14,7 +14,9 @@ public class PathSystem : MonoBehaviour
     public int                          objectCount = 0;
     public int                          spawnedObjectCount = 0;
     public MovableObject                objectPrefab = null;
-    public Timer                        spawnerTimer = null;
+    public float                        spawnerTimerTime = 0.5f;
+    public float                        spawnerTimerTick = 0.5f;
+    private Timer                       _spawnerTimer = null;
 
     [Header("PathSystem")]
     public ObservedList<MovableObject>  movablePathObjectsList = new ObservedList<MovableObject>();
@@ -74,22 +76,24 @@ public class PathSystem : MonoBehaviour
         movableObject.transform.parent = transform.parent;
         movablePathObjectsList.Add(movableObject);
         if (spawnedObjectCount == objectCount)
-            spawnerTimer.EndTimer();
+            _spawnerTimer.EndTimer();
         else
-            spawnerTimer.ResetTimer();
+            _spawnerTimer.ResetTimer();
     }
 
     public void EnableSpawner()
     {
         if (objectCount != 0)
         {
-            spawnerTimer = GetComponent<Timer>();
+            _spawnerTimer = gameObject.AddComponent<Timer>();
+            _spawnerTimer.tick = spawnerTimerTick;
+            _spawnerTimer.time = spawnerTimerTime;
             Debug.Assert(pathPointsList[0] != null);
-            Debug.Assert(spawnerTimer != null);
-            spawnerTimer.EndEvent += SpawnObject;
+            Debug.Assert(objectPrefab != null);
+            _spawnerTimer.EndEvent += SpawnObject;
             if (objectPrefab != null)
-                for (int i = 1; i <= objectCount && !spawnerTimer.isEnded; i++)
-                    spawnerTimer.StartTimer();
+                for (int i = 1; i <= objectCount && !_spawnerTimer.isEnded; i++)
+                    _spawnerTimer.StartTimer();
         }
 
         if (lifeTime > 0.0f)
@@ -133,7 +137,7 @@ public class PathSystem : MonoBehaviour
     {
         //If all enemy is dead
         //We are pass this scenario list
-        if (!movablePathObjectsList.Any() && ((spawnerTimer == null) ? true : spawnerTimer.isEnded))
+        if (!movablePathObjectsList.Any() && ((_spawnerTimer == null) ? true : _spawnerTimer.isEnded))
         {
             UpdateElementRemovedCallback();
             stageSystem.AddedPass();

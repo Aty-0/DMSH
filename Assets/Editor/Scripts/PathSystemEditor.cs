@@ -263,7 +263,7 @@ public class PathSystemEditorWindow : EditorWindow
                 pathSystem.loop = EditorGUILayout.Toggle("Loop", pathSystem.loop);
                 pathSystem.objectCount  = EditorGUILayout.IntField("Spawn object count", pathSystem.objectCount);
                 pathSystem.objectPrefab = EditorGUILayout.ObjectField("Spawn prefab", pathSystem.objectPrefab, typeof(MovableObject)) as MovableObject;
-                pathSystem.spawnerTimer = EditorGUILayout.ObjectField("Spawner Timer", pathSystem.spawnerTimer, typeof(Timer)) as Timer;
+                //pathSystem.spawnerTimer = EditorGUILayout.ObjectField("Spawner Timer", pathSystem.spawnerTimer, typeof(Timer)) as Timer;
 
                 PointsToolsEditorGlobals.Separator();
                 pathSystem.lineColor = EditorGUILayout.ColorField("Line Color", pathSystem.lineColor);
