@@ -5,7 +5,6 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-//TODO: Lifetime
 public class PathSystem : MonoBehaviour
 {
     //How much we need points for curve
@@ -39,6 +38,11 @@ public class PathSystem : MonoBehaviour
     public List<Action>                 onMovableObjectsRemoved     = new List<Action>();
     public List<Action>                 onLastMovableObjectReached  = new List<Action>();
 
+    [Header("Lifetime")]
+    public float                         lifeTime = 0.0f;
+    private Timer                        _lifetimeTimer = null;
+
+
     protected void Start()
     {
         movablePathObjectsList.Updated += UpdateElementChangedCallback;
@@ -52,6 +56,12 @@ public class PathSystem : MonoBehaviour
         foreach (var move_object in movablePathObjectsList)
             if(move_object != null)
                 move_object.pathSystem = this;
+    }
+
+    public void OnLifetimeEnd()
+    {
+        //TODO: How we can direct every object to last point immediately ?
+        loop = false;
     }
 
     #region Spawner
@@ -80,6 +90,14 @@ public class PathSystem : MonoBehaviour
             if (objectPrefab != null)
                 for (int i = 1; i <= objectCount && !spawnerTimer.isEnded; i++)
                     spawnerTimer.StartTimer();
+        }
+
+        if (lifeTime > 0.0f)
+        {
+            _lifetimeTimer = gameObject.AddComponent<Timer>();
+            _lifetimeTimer.time = lifeTime;
+            _lifetimeTimer.EndEvent += OnLifetimeEnd;
+            _lifetimeTimer.StartTimer();
         }
     }
     #endregion
@@ -251,6 +269,12 @@ public class PathSystem : MonoBehaviour
                 //If loop on we are reset current point num 
                 if (loop)
                     move_object.currentPoint = 0;
+                else
+                {
+                    Debug.Log($"Unspawn: {move_object.name}");
+                    move_object.Unspawn();
+                }
+
                 continue; //Move to next object
             }
 

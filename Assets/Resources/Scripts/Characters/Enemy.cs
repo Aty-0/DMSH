@@ -98,6 +98,10 @@ public class Enemy : MovableObject
             yield return new WaitForSeconds(shotFrequency);
         }
     }
+    public override void Unspawn()
+    {
+        Kill(false, true);
+    }
 
     public void Kill(bool givePlayerScore, bool unspawn = false)
     {

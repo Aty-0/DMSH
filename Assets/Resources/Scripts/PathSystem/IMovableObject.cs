@@ -42,4 +42,6 @@ public abstract class MovableObject : MonoBehaviour, IMovableObject
     public virtual void OnReachedFirstPoint() { }    
 
     public virtual void OnReachedLastPoint() { }    
+
+    public virtual void Unspawn() { }    
 }
