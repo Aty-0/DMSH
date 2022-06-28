@@ -8,8 +8,8 @@ using UnityEngine;
 public class Stage
 {
     public List<GameObject> stageObjects = new List<GameObject>();
-    public bool isDone = false;
-    public string name;
+    public bool             isDone = false;
+    public string           name = string.Empty;
 }
 
 [DisallowMultipleComponent]
@@ -39,6 +39,7 @@ public class StageSystem : MonoBehaviour
     protected void Start()
     {
         Debug.Log($"[StageSystem] Stage system is started...");
+
         //Disable all scenario packs
         foreach (GameObject go in GameObject.FindGameObjectsWithTag("ScenarioPack"))
             go.SetActive(false);
@@ -63,7 +64,7 @@ public class StageSystem : MonoBehaviour
 
     private void StagePassed()
     {
-        Debug.Log($"[StageSystem] Stage passed {_stageListIndex}");
+        Debug.Log($"[StageSystem] Stage passed! index: {_stageListIndex}");
 
         currentStage.isDone = true;
 
@@ -73,15 +74,25 @@ public class StageSystem : MonoBehaviour
         _stageListIndex++;
         _listPassed = 0;
 
+        if(stagesList.IndexOf(currentStage) == (stagesList.Count - 1))
+        {
+            //TODO: Show player result screen or main menu
+
+            //This is part when we are finish every stages
+            //Basically, this is the game end 
+            currentStage = null;
+            return;
+        }
+
         timer.ResetTimer();
         timer.StartTimer();
     }
 
     public void OnTimerStart()
-    {
+    {        
         foreach (Stage st in stagesList)
         {
-            Debug.Log($"[StageSystem] Index: {stagesList.IndexOf(st)} StageObjects Count:{st.stageObjects.Count}");
+            Debug.Log($"[StageSystem] Choice stage... index: {stagesList.IndexOf(st)} stage objects count:{st.stageObjects.Count}");
             //If current stage is passed we are go to another
             if (st.isDone)
                 continue;            
@@ -97,23 +108,31 @@ public class StageSystem : MonoBehaviour
     //Dynamicly add pack and activate it
     public void AddToStage(GameObject go)
     {
-        go.SetActive(true);
         currentStage.stageObjects.Add(go);
-        PathSystem ps = go.GetComponentInChildren<PathSystem>();
-        ps?.EnableSpawner();
         Debug.Log($"[StageSystem] Added | Last Index:{currentStage.stageObjects.Count}");
+        Activate(go);
     }
 
     //Activate existing pack
     public void Activate(GameObject go)
     {
+        PathSystem ps = null;
+        if (go.GetType() == typeof(GameObject))
+            ps = go.GetComponentInChildren<PathSystem>(); //Legacy pack style        
+        else
+            ps = go.GetComponent<PathSystem>();
+
+        Debug.Assert(ps);        
+
+        //Enable Game Object
         go.SetActive(true);
-        PathSystem ps = go.GetComponentInChildren<PathSystem>();
+
+        //Enable spawner in PathSystem
         ps?.EnableSpawner();
+
         Debug.Log($"[StageSystem] Activate | Index:{currentStage.stageObjects.IndexOf(go)}");
     }
 
-    //TODO: If last stage is done we are show player the result screen or open main menu
     public void OnTimerEnd()
     {
         //Invoke action when timer is ended
@@ -125,17 +144,22 @@ public class StageSystem : MonoBehaviour
             if (currentStage.isDone)
                 return;
 
+            //Remove all null objects 
+            currentStage.stageObjects.RemoveAll(o => o == null);
+
             Debug.Log($"[StageSystem] Try to start another stage Current: {_stageListIndex}");
-            //If it's stage is not passed
-            //We are activate objects in pack
-            foreach (GameObject go in currentStage.stageObjects.ToList()) 
-                if (go != null)
-                    Activate(go);
-            
-            //If we don't have any objects 
-            //We are skip this
+
+            //If we don't have any objects, we are skip this stage
             if (currentStage.stageObjects.Count == 0)
+            {
+                Debug.Log($"[StageSystem] Skip {_stageListIndex}");
                 StagePassed();
+                return;
+            }
+
+            //Activate objects in pack
+            foreach (GameObject go in currentStage.stageObjects.ToList())
+                Activate(go);
         }
         else
         {
