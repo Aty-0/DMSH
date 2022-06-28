@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class Enemy : MovableObject
 {
+    public const int MAX_RANDOM_DROP_SCORE_BONUS    = 4;
+    public const int MAX_RANDOM_DROP_WEAPON_BONUS   = 4;
+
     [Header("Weapon")]
     public float            shotFrequency = 0.05f;
     public bool             weaponEnabled = false;
@@ -226,7 +229,7 @@ public class Enemy : MovableObject
         //TODO: Drop point in random position by range
         if (_bonusWeaponBuff)
         {
-            for (int i = 0; i <= Random.Range(0, 2); i++)
+            for (int i = 0; i <= Random.Range(0, MAX_RANDOM_DROP_WEAPON_BONUS); i++)
             {
                 Instantiate(_bonusWeaponBuff);
                 _bonusWeaponBuff.transform.position = gameObject.transform.position;
@@ -235,7 +238,7 @@ public class Enemy : MovableObject
 
         if (_bonusScoreBuff)
         {
-            for (int i = 0; i <= Random.Range(0, 2); i++)
+            for (int i = 0; i <= Random.Range(0, MAX_RANDOM_DROP_SCORE_BONUS); i++)
             {
                 Instantiate(_bonusScoreBuff);
                 _bonusScoreBuff.transform.position = gameObject.transform.position;
