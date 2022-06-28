@@ -1419,7 +1419,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2489675750705107768}
-  - component: {fileID: 4498726577800526779}
+  - component: {fileID: 759148203187812659}
   - component: {fileID: 32471182662921623}
   m_Layer: 9
   m_Name: BonusMagnet
@@ -1442,8 +1442,8 @@ Transform:
   m_Father: {fileID: 5158097134412944852}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!61 &4498726577800526779
-BoxCollider2D:
+--- !u!58 &759148203187812659
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -1456,18 +1456,8 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0, y: 0}
-    oldSize: {x: 0, y: 0}
-    newSize: {x: 0, y: 0}
-    adaptiveTilingThreshold: 0
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 1, y: 1}
-  m_EdgeRadius: 0
+  m_Radius: 0.5
 --- !u!114 &32471182662921623
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1480,7 +1470,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5648b10cbb7089a4686be90bb4b1e762, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _triggerMiddle: 0
 --- !u!1 &2594459505132790833
 GameObject:
   m_ObjectHideFlags: 0
