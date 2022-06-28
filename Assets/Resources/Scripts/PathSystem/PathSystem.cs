@@ -5,6 +5,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
+//TODO: Lifetime
 public class PathSystem : MonoBehaviour
 {
     //How much we need points for curve
@@ -267,20 +268,6 @@ public class PathSystem : MonoBehaviour
 
                 if(catchUpNextObject)
                     augmentSpeed = Mathf.Clamp(augmentSpeed, distanceBetweenCurrentObjects, distanceBetweenObjects);
-
-                //FIX ME: Not work correctly for object except first and last
-                //if (CheckPointOnValid(i + 1))
-                //{
-                //    float distanceBetweenPoints = Vector3.Distance(point.transform.position, pathPointsList[i + 1].transform.position);
-                //    if (augmentSpeed > distanceBetweenPoints) //If object is stuck out of bounds or far away 
-                //    {
-                //        Debug.LogError($"{move_object.name} {distanceBetweenPoints} {augmentSpeed} augmentSpeed > distanceBetweenPoints");
-                //        speed = move_object.speed * augmentSpeed * Time.deltaTime;
-                //        float distanceToPreviousObject = Vector3.Distance(move_object.transform.position, previousObject.transform.position);
-                //        move_object.transform.position = Vector3.MoveTowards(move_object.transform.position, previousObject.transform.position, speed);
-                //        //continue;
-                //    }
-                //}
             }
 
             speed = (move_object.speed * augmentSpeed * reduceSpeed * Time.deltaTime) * GlobalSettings.gameActive; //Calculate speed 
@@ -306,8 +293,8 @@ public class PathSystem : MonoBehaviour
                     }
                     else
                     {
-                        Debug.LogWarning($"{i} That point is last in the list and have curve mode!");
-                        //Disable useCurve Flag in current point
+                        Debug.LogWarning($"{name} - index: {i} | that point is last in the list and have curve mode!");
+                        //Disable useCurve flag 
                         currentPoint.useCurve = false;
                     }
 
