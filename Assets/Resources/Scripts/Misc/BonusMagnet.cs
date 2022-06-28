@@ -18,6 +18,13 @@ public class BonusMagnet : MonoBehaviour
                     float distance = Vector3.Distance(bonus.transform.position, gameObject.transform.position);
                     float speed = 9.0f * distance * Time.deltaTime;
                     bonus.transform.position = Vector3.MoveTowards(bonus.transform.position, gameObject.transform.position, speed);
+
+                    //FIX ME: It works correctly ?
+                    //Needed for avoid flying close to player bonuses 
+                    if (distance <= 0.6f) 
+                        bonus.Use(gameObject.transform.parent.GetComponent<PlayerController>());
+                    
+
                     break;
             }
         }

@@ -3,6 +3,7 @@ using UnityEngine;
 public class BonusScoreBuff : Bonus
 {
     private Timer _destroyTimer = null;
+    private AudioSource _audioSource = null;
 
     protected void Start()
     {
@@ -11,6 +12,8 @@ public class BonusScoreBuff : Bonus
         _destroyTimer.EndEvent += Kill;
         _destroyTimer.StartTimer();
 
+        _audioSource = gameObject.GetComponent<AudioSource>();
+
         PlayerController player = FindObjectOfType<PlayerController>();
         player.maxScore += 1000;
     }
@@ -18,6 +21,21 @@ public class BonusScoreBuff : Bonus
     private void Kill()
     {
         Destroy(gameObject);
+    }
+
+    public override void Use(PlayerController player)
+    {
+        if (!_audioSource.isPlaying)
+        {
+            Debug.Assert(player);
+            player.Score += 1000;
+            CreateBonusStatusText("+1000");
+            Destroy(gameObject, _audioSource.clip.length);
+            _audioSource.Play();
+            gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            gameObject.GetComponent<Collider2D>().enabled = false;
+        }
     }
 
     public void CreateBonusStatusText(string text)
@@ -40,10 +58,7 @@ public class BonusScoreBuff : Bonus
             switch (component)
             {
                 case PlayerController player:
-                    //TODO: Sound
-                    player.Score += 1000;
-                    CreateBonusStatusText("+1000");
-                    Kill();
+                    Use(player);
                     break;
             }
         }
