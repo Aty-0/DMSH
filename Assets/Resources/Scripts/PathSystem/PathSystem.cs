@@ -5,6 +5,12 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
+public class PointAction
+{
+    public PathPoint pathPoint = null;
+    public Action action = null;
+}
+
 public class PathSystem : MonoBehaviour
 {
     //How much we need points for curve
@@ -38,7 +44,8 @@ public class PathSystem : MonoBehaviour
     public List<Action>                 onMovableObjectsAdded       = new List<Action>();
     public List<Action>                 onMovableObjectsChanged     = new List<Action>();
     public List<Action>                 onMovableObjectsRemoved     = new List<Action>();
-    public List<Action>                 onLastMovableObjectReached  = new List<Action>();
+
+    public List<PointAction>            onLastMovableObjectReached  = new List<PointAction>();
 
     [Header("Lifetime")]
     public float                         lifeTime = 0.0f;
@@ -118,8 +125,9 @@ public class PathSystem : MonoBehaviour
         foreach (Action action in onMovableObjectsRemoved)
             action?.Invoke();
 
-        foreach (Action action in onLastMovableObjectReached)
-            action?.Invoke();
+        foreach (PointAction pa in onLastMovableObjectReached)
+            if(movablePathObjectsList.Count == 0)
+                pa.action?.Invoke();
     }
 
     public void UpdateElementAddedCallback()
@@ -182,16 +190,24 @@ public class PathSystem : MonoBehaviour
     }
     private void IsReached(PathPoint point, MovableObject move_object)
     {
-        //Invoke events
-        move_object.OnReachedPointEvent(point.eventOnEndForAll);
+        //Debug.Log($"[PathSystem] IsReached {pathPointsList.IndexOf(point)} {movablePathObjectsList.IndexOf(move_object)} {movablePathObjectsList.Count}");
+
+        //Invoke points events 
         if (point.eventSpecial?.GetPersistentEventCount() != 0)
             point.eventSpecial.Invoke();
 
-        if (movablePathObjectsList.IndexOf(move_object) == movablePathObjectsList.Count - 1)
-            foreach (Action action in onLastMovableObjectReached)
-                action?.Invoke();
+        //Invoke custom function only when last object reached needed point 
+        if (movablePathObjectsList.IndexOf(move_object) == (movablePathObjectsList.Count - 1))
+        {
+            foreach (PointAction pa in onLastMovableObjectReached)
+                if (currentPoint.gameObject == pa.pathPoint.gameObject) 
+                    pa.action?.Invoke();      
+        }
 
-        if (pathPointsList.IndexOf(point) == pathPointsList.Count - 1)
+        //Invoke MovableObject events 
+        move_object.OnReachedPointEvent(point.eventOnEndForAll);
+
+        if (pathPointsList.IndexOf(point) == (pathPointsList.Count - 1))
             move_object.OnReachedLastPoint();
         else if (pathPointsList.IndexOf(point) == 0)
             move_object.OnReachedFirstPoint();

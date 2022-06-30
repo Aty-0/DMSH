@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 public class Spawner : MonoBehaviour
 {
@@ -23,8 +24,15 @@ public class Spawner : MonoBehaviour
             timer.EndEvent += Spawn;
 
         _pathSystem = GetComponentInParent<PathSystem>();
-        if(_pathSystem)
-            _pathSystem.onLastMovableObjectReached.Add(Spawn); //When last movable object is reached needed point we are activate spawner
+
+        if (_pathSystem)
+        {
+            PointAction pa = new PointAction();
+            pa.action += Spawn;
+            pa.pathPoint = gameObject.GetComponent<PathPoint>();
+            //When last movable object is reached needed point we are activate spawner
+            _pathSystem.onLastMovableObjectReached.Add(pa);
+        }
      
     }
 
@@ -35,22 +43,21 @@ public class Spawner : MonoBehaviour
 
     public void Spawn()
     {
-        if (_pathSystem.currentPoint.gameObject == gameObject 
-            || _pathSystem.movablePathObjectsList.Count == 0)
+        if (!isDone)
         {
-            if (!isDone)
+            foreach (GameObject go in toSpawn)
             {
-                foreach (GameObject go in toSpawn)
-                {
-                    if (go)
-                    {
+                if (go)
+                {                    
+                    if (PrefabUtility.IsPartOfAnyPrefab(go))
+                        _stageSystem.AddToStage(Instantiate(go));
+                    else
                         if (!go.activeSelf)
                             _stageSystem.AddToStage(go);
-                    }
                 }
-
-                isDone = true;
             }
+
+            isDone = true;
         }
     }
 }
