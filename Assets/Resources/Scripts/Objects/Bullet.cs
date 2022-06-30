@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 //TODO: [freeMovement]
@@ -24,17 +23,34 @@ public class Bullet : MovableObject
         rigidBody2D = GetComponent<Rigidbody2D>();
         boxCollider2D = GetComponent<BoxCollider2D>();
         _trailRenderer = GetComponentInChildren<TrailRenderer>();
+
+        //If we are attach pathSystem on start 
+        freeMovement = freeMovement && pathSystem == null;
+
+        if (freeMovement == true)
+        {
+            timer = gameObject.AddComponent(typeof(Timer)) as Timer;
+            timer.EndEvent += Unspawn;
+            timer.time = lifeTime;
+            timer.StartTimer();
+        }
     }
-    public void Kill()
+
+    public override void Unspawn()
     {
         Destroy(gameObject);
     }
+
+    //Squeeze bullet 
+    //It's just destroy effect for boost or player death
 
     private IEnumerator SqueezeAnimation()
     {
         while(transform.localScale != new Vector3(0.0f, 0.0f, transform.localScale.z))
         {
+            //FIX ME: Smooth...
             float speed = 4.0f * Time.deltaTime * 10 * GlobalSettings.gameActive;
+
             Vector3 vec = Vector3.Lerp(transform.localScale, Vector3.zero, speed);
             float startwidth = Mathf.Lerp(_trailRenderer.startWidth, 0, speed);
             float endwidth = Mathf.Lerp(_trailRenderer.endWidth, 0, speed);
@@ -44,26 +60,13 @@ public class Bullet : MovableObject
             yield return new WaitForSeconds(0.01f);
         }
 
-        Destroy(gameObject);
+        Unspawn();
     }
 
-    //Squeeze bullet 
-    //It's just destroy effect for boost or player death
     public void SqueezeAndDestroy()
     {
         boxCollider2D.enabled = false;
         StartCoroutine(SqueezeAnimation());
-    }
-
-    protected void Awake()
-    {
-        if (freeMovement == true)
-        {
-            timer = gameObject.AddComponent(typeof(Timer)) as Timer;
-            timer.EndEvent += Kill;
-            timer.time = lifeTime;
-            timer.StartTimer();
-        }
     }
 
     protected void Update()
@@ -78,7 +81,7 @@ public class Bullet : MovableObject
     protected void OnCollisionEnter2D(Collision2D collision)
     {
         if (collisionDestoryBullet)
-            Kill();
+            Unspawn();
     }
 
 }
