@@ -9,7 +9,7 @@ public class Bullet : MovableObject
 {
     [Header("Bullet")]
     public bool     isEnemyBullet = false;
-    public bool     collisionDestoryBullet = true;
+    public bool     collisionDestroyBullet = true;
     public float    lifeTime = 2.0f;
     public bool     freeMovement = false;
     public Timer    timer = null;
@@ -80,7 +80,7 @@ public class Bullet : MovableObject
 
     protected void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collisionDestoryBullet)
+        if (collisionDestroyBullet)
             Unspawn();
     }
 
