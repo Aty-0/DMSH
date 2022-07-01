@@ -302,8 +302,10 @@ public class PlayerController : MovableObject
             return;
 
         foreach (Bullet bullet in FindObjectsOfType<Bullet>())
-            if (bullet.isEnemyBullet && bullet.collisionDestoryBullet)
-                bullet.SqueezeAndDestroy();
+            if (bullet.isEnemyBullet &&
+                bullet.collisionDestroyBullet &&
+                bullet.pathSystem == null)
+                    bullet.SqueezeAndDestroy();
 
         Boost--;
         Time.timeScale = 0.05f;
@@ -523,8 +525,10 @@ public class PlayerController : MovableObject
             _slowMotionCoroutine = StartCoroutine(DoSlowMotion(false));
             //Destroy all bullet cuz we are can teleport player into bullet 
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
-                if (bullet.collisionDestoryBullet)
-                    bullet.SqueezeAndDestroy();
+                if (bullet.isEnemyBullet &&
+                    bullet.collisionDestroyBullet &&
+                    bullet.pathSystem == null)
+                        bullet.SqueezeAndDestroy();
 
             //Set spawn point position to player 
             gameObject.transform.position = respawnPoint.transform.position;

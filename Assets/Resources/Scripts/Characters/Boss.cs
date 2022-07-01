@@ -40,8 +40,10 @@ public class Boss : Enemy
 
         //Clear scene from bullets
         foreach (Bullet bullet in FindObjectsOfType<Bullet>())
-            if (!bullet.isEnemyBullet && bullet.collisionDestoryBullet)
-                Destroy(bullet.gameObject);
+            if (bullet.isEnemyBullet &&
+                bullet.collisionDestroyBullet &&
+                bullet.pathSystem == null)
+                bullet.Unspawn();
     }
 
     public override void OnDieCompletely()
