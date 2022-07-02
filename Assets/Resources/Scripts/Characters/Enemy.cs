@@ -90,7 +90,7 @@ public class Enemy : MovableObject
 
     private IEnumerator Shot() 
     {
-        while (GlobalSettings.gameActiveBool && (weaponEnabled && canUseWeapon && !_isDead))
+        while (GlobalSettings.gameActiveAsBool && (weaponEnabled && canUseWeapon && !_isDead))
         {
             OnShot();
             Vector2 final_pos = new Vector2(rigidBody2D.position.x, rigidBody2D.position.y - boxCollider2D.size.y);

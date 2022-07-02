@@ -148,7 +148,6 @@ public class PlayerController : MovableObject
     [Header("Particles")]
     [SerializeField] protected ParticleSystem _deathParticle = null;
 
-
     protected void Start()
     {
         //Get all components
@@ -213,12 +212,13 @@ public class PlayerController : MovableObject
 
     protected void FixedUpdate()
     {
-        _rigidBody2D.MovePosition(_rigidBody2D.position + ((_move * _speed) * Time.fixedDeltaTime * GlobalSettings.gameActive));
+        _rigidBody2D.MovePosition(_rigidBody2D.position + ((_move * _speed) * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt));
     }
 
     protected void Update()
-    {        
-        _uiFpsCounterText.text = $"FPS:{(int)(1f / Time.unscaledDeltaTime)}";
+    {   
+        if(_uiFpsCounterText)
+            _uiFpsCounterText.text = $"FPS:{(int)(1f / Time.unscaledDeltaTime)}";
     }
 
     private void UpdateInvisibleWallsPosition(Vector3 ViewportToWorldPointX, Vector3 ViewportToWorldPointY, Vector3 viewportToWorldPointXWithImage)
@@ -256,11 +256,13 @@ public class PlayerController : MovableObject
         //Set screen middle position for respawn point
         respawnPoint.transform.position = new Vector2((-viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x) / 1000, -viewportToWorldPointY.y / 1.2f);
 
-    private void OnResolutionScreenChange()
-    {
-        UpdateInvisibleWallsPosition();
+        //Rescale pathSystem and change position for all point
+        foreach (PathSystem system in FindObjectsOfType<PathSystem>())
+        {
+            system.transform.localScale = new Vector3(aspectRatioWithImage, system.transform.localScale.y, 1);
+            //TODO Positions
+        }
     }
-
     private IEnumerator Shot()
     {
         while (weaponEnabled)
@@ -279,7 +281,8 @@ public class PlayerController : MovableObject
         while (Time.timeScale < 1.0f)
         {
             Time.fixedDeltaTime = 0.02F * Time.timeScale;
-            Time.timeScale += GlobalSettings.gameActive * _boost_speed;
+            Time.timeScale += GlobalSettings.gameActiveAsInt * _boost_speed;
+
 
             foreach (AudioSource s in FindObjectsOfType<AudioSource>())
                 if(s.gameObject.tag != "NotGenericSound")
@@ -314,13 +317,13 @@ public class PlayerController : MovableObject
 
     private void OnUseBoost(InputValue input)
     {
-        if (GlobalSettings.gameActiveBool)
+        if (GlobalSettings.gameActiveAsBool)
             UseBoost();
     }
 
     private void OnShot(InputValue input)
     {
-        if (GlobalSettings.gameActiveBool)
+        if (GlobalSettings.gameActiveAsBool)
         {
             weaponEnabled = input.isPressed;
             _shotCoroutine = StartCoroutine(Shot());
@@ -358,8 +361,8 @@ public class PlayerController : MovableObject
         _uiDeathScreen.SetActive(!_uiDeathScreen.activeSelf);
 
         //Stop game world
-        GlobalSettings.gameActive = 0;
         Time.timeScale = 1.0f;
+        GlobalSettings.SetGameActive(false);
 
         //Show some results
         _uiCurrentScoreText.text += GetNumberWithZeros(Score);
@@ -375,7 +378,8 @@ public class PlayerController : MovableObject
         //Enable or disable pause menu
         _uiPauseScreen.SetActive(!_uiPauseScreen.activeSelf);
         Cursor.visible = _uiPauseScreen.activeSelf;
-        GlobalSettings.gameActive = System.Convert.ToInt32(!_uiPauseScreen.activeSelf);
+        GlobalSettings.SetGameActive(!_uiPauseScreen.activeSelf);
+
         Time.timeScale = _uiPauseScreen.activeSelf == false ? _saved_time_scale : 1.0f;
 
         //TODO: Change track 
@@ -430,7 +434,7 @@ public class PlayerController : MovableObject
             GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weaponEnabled}");
             GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
             GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
-            GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActive}");
+            GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActiveAsBool}");
             GUI.Label(new Rect(100, 340, 500, 500), $"_weaponBoostGain: {_weaponBoostGain}");
             GUI.Label(new Rect(100, 360, 500, 500), $"_weaponType: {_weaponType}");
         }      

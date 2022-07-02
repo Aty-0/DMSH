@@ -166,9 +166,9 @@ public class LogHandler : MonoBehaviour
                 if (_Resume)
                 {
                     if (drawConsole)
-                        _savedGameActiveState = GlobalSettings.gameActive;
+                        _savedGameActiveState = GlobalSettings.gameActiveAsInt; //FIX ME: I'm too lazy to fix type 
 
-                    GlobalSettings.gameActive = Convert.ToInt32(_savedGameActiveState == 1 && !drawConsole);
+                    GlobalSettings.SetGameActive(_savedGameActiveState == 1 && !drawConsole);
                 }
 
 
@@ -255,7 +255,7 @@ public class LogHandler : MonoBehaviour
                 GUILayout.Label(_tempMessagesBuffer, textStyle, GUILayout.Height(500));
 
                 GUILayout.BeginArea(new Rect(Screen.width - 100, 0, 500, 500));
-                GUILayout.Label($"{GlobalSettings.gameActive}", textStyle);
+                GUILayout.Label($"gameActive: {GlobalSettings.gameActiveAsBool}", textStyle);
                 GUILayout.EndArea();
             }
         }

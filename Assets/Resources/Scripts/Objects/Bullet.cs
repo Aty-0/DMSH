@@ -49,7 +49,7 @@ public class Bullet : MovableObject
         while(transform.localScale != new Vector3(0.0f, 0.0f, transform.localScale.z))
         {
             //FIX ME: Smooth...
-            float speed = 4.0f * Time.deltaTime * 10 * GlobalSettings.gameActive;
+            float speed = 4.0f * Time.deltaTime * 10 * GlobalSettings.gameActiveAsInt;
 
             Vector3 vec = Vector3.Lerp(transform.localScale, Vector3.zero, speed);
             float startwidth = Mathf.Lerp(_trailRenderer.startWidth, 0, speed);
@@ -72,10 +72,10 @@ public class Bullet : MovableObject
     protected void Update()
     {
         //Basic effect of rotation
-        rigidBody2D.MoveRotation(rigidBody2D.rotation + (_rotation_speed * Time.fixedDeltaTime * GlobalSettings.gameActive));
+        rigidBody2D.MoveRotation(rigidBody2D.rotation + (_rotation_speed * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt));
 
         if (freeMovement == true)
-            rigidBody2D.MovePosition(rigidBody2D.position + ((_bullet_dir * speed) * Time.fixedDeltaTime * GlobalSettings.gameActive));
+            rigidBody2D.MovePosition(rigidBody2D.position + ((_bullet_dir * speed) * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt));
     }
 
     protected void OnCollisionEnter2D(Collision2D collision)

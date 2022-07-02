@@ -314,7 +314,7 @@ public class PathSystem : MonoBehaviour
                     augmentSpeed = Mathf.Clamp(augmentSpeed, distanceBetweenCurrentObjects, distanceBetweenObjects);
             }
 
-            speed = (move_object.speed * augmentSpeed * reduceSpeed * Time.deltaTime) * GlobalSettings.gameActive; //Calculate speed 
+            speed = (move_object.speed * augmentSpeed * reduceSpeed * Time.deltaTime) * GlobalSettings.gameActiveAsInt; //Calculate speed 
 
             //What's mode we need to use 
             if (currentPoint.useCurve)

@@ -55,12 +55,12 @@ public class Timer : MonoBehaviour
         _currentTime = time;
     }
 
-    IEnumerator Tick()
+    private IEnumerator Tick()
     {
         StartEvent?.Invoke();
         while (_currentTime >= 0)
         {
-            _currentTime -= tick * GlobalSettings.gameActive;
+            _currentTime -= tick * GlobalSettings.gameActiveAsInt;
 
             UpdateEvent?.Invoke();
             yield return new WaitForSeconds(tick);

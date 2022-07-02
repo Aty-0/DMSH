@@ -33,7 +33,7 @@ public class DamageStatusText : MonoBehaviour
         Vector2 initPos = _textTMP.transform.position;
         while (initPos.y < initPos.y + 2.0f)
         {
-            initPos.y += 0.02f * GlobalSettings.gameActive;
+            initPos.y += 0.02f * GlobalSettings.gameActiveAsInt;
             _textTMP.transform.position = initPos;
             yield return new WaitForSeconds(0.01f);
         }
@@ -44,7 +44,7 @@ public class DamageStatusText : MonoBehaviour
         float alpha = 1.0f;
         while (alpha > 0.0f)
         {
-            alpha -= 0.01f * GlobalSettings.gameActive;
+            alpha -= 0.01f * GlobalSettings.gameActiveAsInt;
             _textTMP.color = new Color(1, 1, 1, alpha);
             yield return new WaitForSeconds(0.01f);
         }
