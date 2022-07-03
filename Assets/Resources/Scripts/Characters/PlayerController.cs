@@ -243,9 +243,9 @@ public class PlayerController : MovableObject
         Vector3 viewportToWorldPointX = new Vector2(gameCamera.ViewportToWorldPoint(new Vector2(1, 0)).x, 0);
         Vector3 viewportToWorldPointY = new Vector2(0, gameCamera.ViewportToWorldPoint(new Vector2(0, 1)).y);
         Vector3 viewportToWorldPointXWithImage = viewportToWorldPointX - new Vector3(viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 20.0f, 0, 0);
-        float   aspectRatioWithImage = (Vector3.Distance(-viewportToWorldPointX, viewportToWorldPointXWithImage) / Vector3.Distance(viewportToWorldPointY, -viewportToWorldPointY)) + _uiSomeImage.rectTransform.sizeDelta.x * 2;
+        float aspectRatioWithImage = (Vector3.Distance(-viewportToWorldPointX, viewportToWorldPointXWithImage) / Vector3.Distance(viewportToWorldPointY, -viewportToWorldPointY)) + _uiSomeImage.rectTransform.sizeDelta.x * 2;
         UpdateInvisibleWallsPosition(viewportToWorldPointX, viewportToWorldPointY, viewportToWorldPointXWithImage);
-        
+
         //I guess it's not correct way to implement background restretch
         if (_background)
         {
@@ -256,9 +256,7 @@ public class PlayerController : MovableObject
         //Set screen middle position for respawn point
         respawnPoint.transform.position = new Vector2((-viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x) / 1000, -viewportToWorldPointY.y / 1.2f);
 
-    private void OnResolutionScreenChange()
-    {
-        UpdateInvisibleWallsPosition();
+        UpdateInvisibleWallsPosition(viewportToWorldPointX, viewportToWorldPointY, viewportToWorldPointXWithImage);
     }
 
     private IEnumerator Shot()
@@ -575,3 +573,4 @@ public class PlayerController : MovableObject
 
     }
 }
+
