@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
 public class Spawner : MonoBehaviour
 {
@@ -49,7 +48,7 @@ public class Spawner : MonoBehaviour
             {
                 if (go)
                 {                    
-                    if (PrefabUtility.IsPartOfAnyPrefab(go))
+                    if (go.scene.name == null) //this is prefab
                         _stageSystem.AddToStage(Instantiate(go));
                     else
                         if (!go.activeSelf)
