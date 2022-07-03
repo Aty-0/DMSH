@@ -134,7 +134,7 @@ public class PathPointEditor : Editor
 public class PathSystemEditorWindow : EditorWindow
 {
     public  Camera      editorCamera = null;
-
+    public Vector2      _scrollVec = Vector2.zero;
     private GUIStyle    _buttonToolsGUIStyle = null;
     private GUIStyle    _headerTextGUIStyle = null;
     private bool        _foldoutOptionsShow = true;
@@ -247,6 +247,8 @@ public class PathSystemEditorWindow : EditorWindow
 
         PathSystem pathSystem = PointsToolsEditorGlobals.usedPointSystem;
 
+        _scrollVec = EditorGUILayout.BeginScrollView(_scrollVec);
+
         _foldoutPathObjectInspectorShow = EditorGUILayout.Foldout(_foldoutPathObjectInspectorShow, $"Objects");
         if (_foldoutPathObjectInspectorShow)
         {
@@ -344,7 +346,9 @@ public class PathSystemEditorWindow : EditorWindow
             PointsToolsEditorGlobals.makeCurveOnCreate = GUILayout.Toggle(PointsToolsEditorGlobals.makeCurveOnCreate, "Make curve on create object");
             PointsToolsEditorGlobals.Separator();
             PointsToolsEditorGlobals.createVec = EditorGUILayout.Vector2Field("Addition Vector (Addition to create point)", PointsToolsEditorGlobals.createVec);
-        }       
+        }
+
+        EditorGUILayout.EndScrollView();
     }
 }
 
