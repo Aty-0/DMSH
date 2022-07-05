@@ -17,11 +17,7 @@ public class LogHandler : MonoBehaviour
 {
     //How much messages we can save into the command buffer
     private const int MAX_CONSOLE_BUFFER_MESSAGES_COUNT = 200;
-    
-    //How much messages we can show 
-    private const int MAX_SHOW_MESSAGES_COUNT = 5;
-
-   
+       
     [Header("Draw")]
     public bool             drawLogMessages = false;
     public bool             drawConsole = false;
