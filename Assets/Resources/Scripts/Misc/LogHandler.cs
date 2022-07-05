@@ -7,33 +7,42 @@ using UnityEngine.UI;
 
 public class LogMessage
 {
-    public string   messageStackTrace   { get; set; }
-    public string   messageText         { get; set; }
-    public LogType  messageType         { get; set; }
-    public string   messageSendTime     { get; set; }
+    public string messageStackTrace { get; set; }
+    public string messageText { get; set; }
+    public LogType messageType { get; set; }
+    public string messageSendTime { get; set; }
 }
 
 public class LogHandler : MonoBehaviour
 {
-    private const int MAX_MESSAGES_COUNT = 200;
+    //How much messages we can save into the command buffer
+    private const int MAX_CONSOLE_BUFFER_MESSAGES_COUNT = 200;
+    
+    //How much messages we can show 
+    private const int MAX_SHOW_MESSAGES_COUNT = 5;
 
-    [Header("Commands")]
-    public List<Tuple<string, Action>> consoleCommandsList = new List<Tuple<string, Action>>();
-
+   
     [Header("Draw")]
     public bool             drawLogMessages = false;
     public bool             drawConsole = false;
 
-    [Header("Misc")]
+    [Header("UI")]
     [SerializeField] private Font   _font;
     [SerializeField] private int    _fontSize;
+
+    [Header("Log")]
     [SerializeField] private Queue _logQueue = new Queue();
-    [SerializeField] private string _tempMessagesBuffer;
-    [SerializeField] private string _command;
-    [SerializeField] private List<LogMessage> _consoleMessageBuffer = new List<LogMessage>();
-    [SerializeField] private Vector2  _scrollPosition = new Vector2(0.0f, 0.0f);
-    [SerializeField] private int _savedGameActiveState;
-    [SerializeField] private bool _Resume = true;
+    [SerializeField] private string _logMessagesBuffer = string.Empty;
+
+    [Header("Console")]
+    public List<Tuple<string, Action>> consoleCommandsList = new List<Tuple<string, Action>>();
+    [SerializeField] private string             _command = string.Empty;
+    [SerializeField] private List<LogMessage>   _consoleMessageBuffer = new List<LogMessage>();
+    [SerializeField] private Vector2            _scrollPosition = new Vector2(0.0f, 0.0f);
+
+    [Header("Other")]
+    [SerializeField] private int _savedGameActiveState = 0;
+    [SerializeField] private bool _Resume = true; //ctl command
     [SerializeField] private bool _fpsCounter = false;
 
     protected void Start()
@@ -85,7 +94,6 @@ public class LogHandler : MonoBehaviour
 
     private void Clear()
     {
-        _tempMessagesBuffer = null;
         _logQueue.Clear();
     }
 
@@ -115,34 +123,40 @@ public class LogHandler : MonoBehaviour
 
     private void HandleLog(string logString, string stackTrace, LogType type)
     {
-        //Build new string 
-        string newString = "\n [" + type + "] : " + logString;
-        _logQueue.Enqueue(newString);
-        if (type == LogType.Exception)
+        if (drawLogMessages)
         {
-            newString = "\n" + stackTrace;
+            //Build new string 
+            string newString = "\n [" + type + "] : " + logString;
             _logQueue.Enqueue(newString);
+            if (type == LogType.Exception)
+            {
+                newString = "\n" + stackTrace;
+                _logQueue.Enqueue(newString);
+            }
+
+            _logMessagesBuffer = string.Empty;
+            foreach (string mylog in _logQueue)
+                _logMessagesBuffer += mylog;
         }
 
-        //Reset _tempMessagesBuffer 
-        _tempMessagesBuffer = string.Empty;
-        foreach (string mylog in _logQueue)
-            _tempMessagesBuffer += mylog;
-       
         //Create message 
         LogMessage logMessage  = new LogMessage();
         logMessage.messageType = type;
         logMessage.messageText = logString;
         logMessage.messageSendTime = DateTime.Now.ToString();
 
+        //If it's exception we are add stack trace
         if (type == LogType.Exception)
             logMessage.messageStackTrace = stackTrace;
 
-        if (_consoleMessageBuffer.Count > MAX_MESSAGES_COUNT)
+        //Remove previous messages if we are overflow buffer max count constant
+        if (_consoleMessageBuffer.Count > MAX_CONSOLE_BUFFER_MESSAGES_COUNT)
             _consoleMessageBuffer.RemoveAt(0);
 
+        //Add message to buffer
         _consoleMessageBuffer.Add(logMessage);
 
+        //Scroll down 
         _scrollPosition.y = Mathf.Infinity;
     }
 
@@ -251,12 +265,8 @@ public class LogHandler : MonoBehaviour
         {
             if (drawLogMessages)
             {
-                textStyle.normal.textColor = new Color(255, 97, 0); 
-                GUILayout.Label(_tempMessagesBuffer, textStyle, GUILayout.Height(500));
-
-                GUILayout.BeginArea(new Rect(Screen.width - 100, 0, 500, 500));
-                GUILayout.Label($"gameActive: {GlobalSettings.gameActiveAsBool}", textStyle);
-                GUILayout.EndArea();
+                textStyle.normal.textColor = new Color(255, 97, 0);
+                GUILayout.Label(_logMessagesBuffer, textStyle, GUILayout.Height(1000));
             }
         }
     }
