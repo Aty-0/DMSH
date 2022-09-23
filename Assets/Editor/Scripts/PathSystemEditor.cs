@@ -134,14 +134,14 @@ public class PathPointEditor : Editor
 // TODO: Get path system when we are select it in inspector
 public class PathSystemEditorWindow : EditorWindow
 {
-    public Camera editorCamera = null;
-
-    private GUIStyle _buttonToolsGUIStyle = null;
-    private GUIStyle _headerTextGUIStyle = null;
-    private bool _foldoutOptionsShow = true;
-    private bool _foldoutStatsShow = true;
-    private bool _foldoutToolsShow = true;
-    private bool _foldoutPathObjectInspectorShow = true;
+    public  Camera      editorCamera = null;
+    public Vector2      _scrollVec = Vector2.zero;
+    private GUIStyle    _buttonToolsGUIStyle = null;
+    private GUIStyle    _headerTextGUIStyle = null;
+    private bool        _foldoutOptionsShow = true;
+    private bool        _foldoutStatsShow = true;
+    private bool        _foldoutToolsShow = true;
+    private bool        _foldoutPathObjectInspectorShow = true;
 
     [MenuItem("Window/DMSH/Path System")]
     static void Init()
@@ -248,6 +248,8 @@ public class PathSystemEditorWindow : EditorWindow
 
         PathSystem pathSystem = PointsToolsEditorGlobals.usedPointSystem;
 
+        _scrollVec = EditorGUILayout.BeginScrollView(_scrollVec);
+
         _foldoutPathObjectInspectorShow = EditorGUILayout.Foldout(_foldoutPathObjectInspectorShow, $"Objects");
         if (_foldoutPathObjectInspectorShow)
         {
@@ -346,6 +348,8 @@ public class PathSystemEditorWindow : EditorWindow
             PointsToolsEditorGlobals.Separator();
             PointsToolsEditorGlobals.createVec = EditorGUILayout.Vector2Field("Addition Vector (Addition to create point)", PointsToolsEditorGlobals.createVec);
         }
+
+        EditorGUILayout.EndScrollView();
     }
 }
 
