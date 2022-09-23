@@ -36,15 +36,6 @@ namespace DMSH.LevelSpecifics
                 pa.pathPoint = gameObject.GetComponent<PathPoint>();
                 // When last movable object is reached needed point we are activate spawner
                 _pathSystem.onLastMovableObjectReached.Add(pa);
-
-                if (go)
-                {                    
-                    if (go.scene.name == null) // this is prefab
-                        _stageSystem.AddToStage(Instantiate(go));
-                    else
-                        if (!go.activeSelf)
-                            _stageSystem.AddToStage(go);
-                }
             }
 
         }
@@ -62,11 +53,11 @@ namespace DMSH.LevelSpecifics
                 {
                     if (go)
                     {
-                        if (PrefabUtility.IsPartOfAnyPrefab(go))
+                        if (go.scene.name == null) // this is prefab
                             _stageSystem.AddToStage(Instantiate(go));
                         else
-                            if (!go.activeSelf)
-                            _stageSystem.AddToStage(go);
+                             if (!go.activeSelf)
+                                _stageSystem.AddToStage(go);
                     }
                 }
 
