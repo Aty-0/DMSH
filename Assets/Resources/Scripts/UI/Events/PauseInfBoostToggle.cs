@@ -1,21 +1,26 @@
 using UnityEngine;
 using UnityEngine.UI;
+using DMSH.Characters;
 
-public class PauseInfBoostToggle : MonoBehaviour
+namespace DMSH.UI.Events
 {
-    [SerializeField] private PlayerController _controller;
-    [SerializeField] private Toggle _toggle;
-    private void Start()
+    public class PauseInfBoostToggle : MonoBehaviour
     {
-        _toggle = GetComponent<Toggle>();
-        _toggle.isOn = _controller.CheatInfBoost;
-        _toggle.onValueChanged.AddListener(delegate {
-            ToggleValueChanged(_toggle);
-        });
-    }
+        [SerializeField] private PlayerController _controller;
+        [SerializeField] private Toggle _toggle;
+        private void Start()
+        {
+            _toggle = GetComponent<Toggle>();
+            _toggle.isOn = _controller.CheatInfBoost;
+            _toggle.onValueChanged.AddListener(delegate
+            {
+                ToggleValueChanged(_toggle);
+            });
+        }
 
-    public void ToggleValueChanged(Toggle change)
-    {
-        _controller.CheatInfBoost = _toggle.isOn;
+        public void ToggleValueChanged(Toggle change)
+        {
+            _controller.CheatInfBoost = _toggle.isOn;
+        }
     }
 }

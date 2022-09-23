@@ -1,56 +1,56 @@
 using System;
-
-using Unity;
 using UnityEngine;
 
-//TODO: 1. Make functions to stop non DMSH Game elements 
-//      2. Read settings from game.json or something like that
-//      3. Save the current settings
+// TODO: 1. Make functions to stop non DMSH Game elements 
+//       2. Read settings from game.json or something like that
+//       3. Save the current settings
 
-[Serializable]
-public static class GlobalSettings
+namespace DMSH.Misc
 {
-    public static bool musicPlay = true;
-    public static bool mainMenuAwakeAnimation = true;
-
-    private static bool _gameActive = true;
-
-    public static int gameActiveAsInt
+    [Serializable]
+    public static class GlobalSettings
     {
-        get => Convert.ToInt32(_gameActive);
-    }
+        public static bool musicPlay = true;
+        public static bool mainMenuAwakeAnimation = true;
 
-    public static bool gameActiveAsBool
-    {
-        get => _gameActive;
-    }
+        private static bool _gameActive = true;
 
-    public static void SetGameActive(bool gameActive)
-    {
-        _gameActive = gameActive;
-
-        foreach (GameObject go in UnityEngine.Object.FindObjectsOfType<GameObject>())
+        public static int gameActiveAsInt
         {
-            Component[] components = go.GetComponents<Component>();
+            get => Convert.ToInt32(_gameActive);
+        }
 
-            foreach (Component component in components)
+        public static bool gameActiveAsBool
+        {
+            get => _gameActive;
+        }
+
+        public static void SetGameActive(bool gameActive)
+        {
+            _gameActive = gameActive;
+
+            foreach (GameObject go in UnityEngine.Object.FindObjectsOfType<GameObject>())
             {
-                switch (component)
-                {
-                    case Rigidbody2D r:
-                        r.isKinematic = _gameActive;
-                        break;
-                    case TrailRenderer tr:
-                        //TODO: How we can save the data ??
-                        //tr.time = 0; <- it's stop the trail
-                        tr.time = gameActiveAsInt;
-                        break;
+                Component[] components = go.GetComponents<Component>();
 
-                    //TODO: Add another components
+                foreach (Component component in components)
+                {
+                    switch (component)
+                    {
+                        case Rigidbody2D r:
+                            r.isKinematic = _gameActive;
+                            break;
+                        case TrailRenderer tr:
+                            // TODO: How we can save the data ??
+                            // tr.time = 0; <- it's stop the trail
+                            tr.time = gameActiveAsInt;
+                            break;
+
+                            // TODO: Add another components
+                    }
                 }
             }
         }
+
     }
-
 }
-

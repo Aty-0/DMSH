@@ -1,16 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DMSH.Misc;
 
-public class MainMenuButtonNewGame : MonoBehaviour
+namespace DMSH.UI.Events
 {
-    public ScenePicker scene;
-
-    public void ButtonNewGameEvent()
+    public class MainMenuButtonNewGame : MonoBehaviour
     {
-        SceneManager.LoadScene(scene.scenePath);
+        public ScenePicker scene;
+
+        public void ButtonNewGameEvent()
+        {
+            SceneManager.LoadScene(scene.scenePath);
+        }
     }
 }
-
-

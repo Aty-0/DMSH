@@ -1,15 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DMSH.Misc;
 
-public class ButtonRetry : MonoBehaviour
+namespace DMSH.UI.Events
 {
-    public void ButtonRetryEvent()
+    public class ButtonRetry : MonoBehaviour
     {
-        Time.timeScale = 1.0f;
-        GlobalSettings.SetGameActive(true);
-        Cursor.visible = false;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        public void ButtonRetryEvent()
+        {
+            Time.timeScale = 1.0f;
+            GlobalSettings.SetGameActive(true);
+            Cursor.visible = false;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
     }
 }

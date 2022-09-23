@@ -7,6 +7,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
+using DMSH.Path;
 
 #region Globals
 public enum PointsToolsCreationMode
@@ -53,7 +54,7 @@ public class PointsToolsEditorGlobals
             Selection.activeObject = selectedPoint;
     }
 
-    //TODO: Make a better function 
+    // TODO: Make a better function 
     public static Vector2 CalcCurvePoint(Vector2 p1, Vector2 p2)
     {
         return (p1 - p2);
@@ -80,17 +81,17 @@ public class PointsToolsEditorGlobals
         }
 
 
-        //We are want to create new PathPoint
+        // We are want to create new PathPoint
         PathPoint point = SceneView.Instantiate(example, example_new_position, Quaternion.identity, usedPointSystem == null ? null :
             usedPointSystem.gameObject.transform);
 
-        //Set new name 
+        // Set new name 
         point.name = usedPointSystem.pathPointsList[0].name + "_" + usedPointSystem.pathPointsList.Count;
 
         point.useCurve = makeCurveOnCreate;
 
         List<PathPoint> pathlist = usedPointSystem.pathPointsList;
-        
+
         if (makeCurveOnCreate)
         {
             if (pathlist.Count != 1 && pathlist.IndexOf(selectedPoint) == pathlist.Count)
@@ -122,7 +123,7 @@ public class PathPointEditor : Editor
     {
         PathPoint point = (PathPoint)target;
 
-        //Push object to globals if we are select the point 
+        // Push object to globals if we are select the point 
         PointsToolsEditorGlobals.selectedPoint = point;
         if (PointsToolsEditorGlobals.usedPointSystem == null)
             PointsToolsEditorGlobals.usedPointSystem = PointsToolsEditorGlobals.selectedPoint.GetComponentInParent<PathSystem>();
@@ -130,17 +131,17 @@ public class PathPointEditor : Editor
 }
 #endregion
 
-//TODO: Get path system when we are select it in inspector
+// TODO: Get path system when we are select it in inspector
 public class PathSystemEditorWindow : EditorWindow
 {
-    public  Camera      editorCamera = null;
+    public Camera editorCamera = null;
 
-    private GUIStyle    _buttonToolsGUIStyle = null;
-    private GUIStyle    _headerTextGUIStyle = null;
-    private bool        _foldoutOptionsShow = true;
-    private bool        _foldoutStatsShow = true;
-    private bool        _foldoutToolsShow = true;
-    private bool        _foldoutPathObjectInspectorShow = true;
+    private GUIStyle _buttonToolsGUIStyle = null;
+    private GUIStyle _headerTextGUIStyle = null;
+    private bool _foldoutOptionsShow = true;
+    private bool _foldoutStatsShow = true;
+    private bool _foldoutToolsShow = true;
+    private bool _foldoutPathObjectInspectorShow = true;
 
     [MenuItem("Window/DMSH/Path System")]
     static void Init()
@@ -148,7 +149,7 @@ public class PathSystemEditorWindow : EditorWindow
         PathSystemEditorWindow window = (PathSystemEditorWindow)EditorWindow.GetWindowWithRect(typeof(PathSystemEditorWindow), new Rect(0, 0, 400, 600));
         GUIContent guiContent = new GUIContent();
         guiContent.text = "Path System";
-        //TODO: Icon
+        // TODO: Icon
         window.titleContent = guiContent;
         window.autoRepaintOnSceneChange = true;
         window.Show();
@@ -186,11 +187,11 @@ public class PathSystemEditorWindow : EditorWindow
         if (PointsToolsEditorGlobals.selectedPoint == null || !PointsToolsEditorGlobals.CheckPathSystem())
             return;
 
-        //Remove object from list
+        // Remove object from list
         PointsToolsEditorGlobals.usedPointSystem.pathPointsList.Remove(PointsToolsEditorGlobals.selectedPoint);
-        //Remove it from scene
+        // Remove it from scene
         DestroyImmediate(PointsToolsEditorGlobals.selectedPoint.gameObject);
-        //Select previous object from list if we can
+        // Select previous object from list if we can
         PointsToolsEditorGlobals.selectedPoint = PointsToolsEditorGlobals.usedPointSystem.pathPointsList[PointsToolsEditorGlobals.usedPointSystem.pathPointsList.Count - 1];
 
         if (EditorGUI.EndChangeCheck())
@@ -204,7 +205,7 @@ public class PathSystemEditorWindow : EditorWindow
     private void OnUnselectAllButtonClick()
     {
         PointsToolsEditorGlobals.usedPointSystem = null;
-        PointsToolsEditorGlobals.selectedPoint  = null;
+        PointsToolsEditorGlobals.selectedPoint = null;
     }
 
     private void SearchEditorCamera()
@@ -231,8 +232,8 @@ public class PathSystemEditorWindow : EditorWindow
 
     public void OnInspectorUpdate()
     {
-        //Repaint window
-        //OnInspectorUpdate called 10 times per second
+        // Repaint window
+        // OnInspectorUpdate called 10 times per second
         Repaint();
     }
 
@@ -240,7 +241,7 @@ public class PathSystemEditorWindow : EditorWindow
     {
         _headerTextGUIStyle = new GUIStyle(GUI.skin.label);
         _headerTextGUIStyle.fontSize = 14;
-        
+
         _buttonToolsGUIStyle = new GUIStyle(GUI.skin.button);
         _buttonToolsGUIStyle.fixedHeight = 22;
         _buttonToolsGUIStyle.fixedWidth = 36;
@@ -261,7 +262,7 @@ public class PathSystemEditorWindow : EditorWindow
                 pathSystem.holdDistanceBetweenObjects = EditorGUILayout.Toggle("Hold Distance Between Objects", pathSystem.holdDistanceBetweenObjects);
                 pathSystem.distanceBetweenObjects = EditorGUILayout.FloatField("Distance Between Objects", pathSystem.distanceBetweenObjects);
                 pathSystem.loop = EditorGUILayout.Toggle("Loop", pathSystem.loop);
-                pathSystem.objectCount  = EditorGUILayout.IntField("Spawn object count", pathSystem.objectCount);
+                pathSystem.objectCount = EditorGUILayout.IntField("Spawn object count", pathSystem.objectCount);
                 pathSystem.objectPrefab = EditorGUILayout.ObjectField("Spawn prefab", pathSystem.objectPrefab, typeof(MovableObject)) as MovableObject;
                 //pathSystem.spawnerTimer = EditorGUILayout.ObjectField("Spawner Timer", pathSystem.spawnerTimer, typeof(Timer)) as Timer;
 
@@ -326,7 +327,7 @@ public class PathSystemEditorWindow : EditorWindow
 
         _foldoutStatsShow = EditorGUILayout.Foldout(_foldoutStatsShow, $"Stats");
         if (_foldoutStatsShow)
-        { 
+        {
             GUILayout.Label($"Path systems:{ FindObjectsOfType<PathSystem>(true).Length }");
             GUILayout.Label($"Points:{ FindObjectsOfType<PathPoint>(true).Length }");
             GUILayout.Label($"Active path systems:{ FindObjectsOfType<PathSystem>().Length }");
@@ -334,7 +335,7 @@ public class PathSystemEditorWindow : EditorWindow
         }
 
         _foldoutOptionsShow = EditorGUILayout.Foldout(_foldoutOptionsShow, $"Options");
-        if(_foldoutOptionsShow)
+        if (_foldoutOptionsShow)
         {
             PointsToolsEditorGlobals.showOnlyLine = GUILayout.Toggle(PointsToolsEditorGlobals.showOnlyLine, "Show only lines");
             PointsToolsEditorGlobals.showHandles = GUILayout.Toggle(PointsToolsEditorGlobals.showHandles, "Show handles");
@@ -344,7 +345,7 @@ public class PathSystemEditorWindow : EditorWindow
             PointsToolsEditorGlobals.makeCurveOnCreate = GUILayout.Toggle(PointsToolsEditorGlobals.makeCurveOnCreate, "Make curve on create object");
             PointsToolsEditorGlobals.Separator();
             PointsToolsEditorGlobals.createVec = EditorGUILayout.Vector2Field("Addition Vector (Addition to create point)", PointsToolsEditorGlobals.createVec);
-        }       
+        }
     }
 }
 
@@ -354,7 +355,7 @@ public class PathSystemEditor : Editor
 {
     [DrawGizmo(GizmoType.Selected | GizmoType.Active)]
     static void DrawCustomGizmos(PathSystem path, GizmoType gizmoType)
-    {        
+    {
         PathPoint current_point = null;
         PathPoint prev_point = null;
 
@@ -370,7 +371,7 @@ public class PathSystemEditor : Editor
                 Gizmos.color = path.lineColor;
 
                 if (prev_point.useCurve)
-                    PathSystem.LineFollowedByPath(prev_point.transform.position, current_point.curvePoint, current_point.transform.position);                
+                    PathSystem.LineFollowedByPath(prev_point.transform.position, current_point.curvePoint, current_point.transform.position);
                 else
                     Gizmos.DrawLine(prev_point.transform.position, current_point.transform.position);
             }
@@ -383,8 +384,8 @@ public class PathSystemEditor : Editor
     {
         if (target == null)
             return;
-        
-        PathSystem path = (PathSystem)target;        
+
+        PathSystem path = (PathSystem)target;
         if (!path.pathPointsList.Any())
             return;
 
@@ -408,7 +409,7 @@ public class PathSystemEditor : Editor
                         && prev_point.useCurve && PointsToolsEditorGlobals.showCurveHandle)
                     {
                         var startMatrix = Handles.matrix;
-                        
+
                         Handles.matrix = Matrix4x4.Scale(Vector3.one / 2) * startMatrix;
                         point.curvePoint = Handles.PositionHandle(point.curvePoint * 2, Quaternion.identity) / 2;
                         Handles.matrix = startMatrix;
@@ -428,15 +429,15 @@ public class PathSystemEditor : Editor
                     else
                         position = point.transform.position;
 
-                    //FIXME: Don't show if we are hold shift key                    
+                    // FIXME: Don't show if we are hold shift key                    
                     Handles.color = PointsToolsEditorGlobals.selectedPoint != point ? Color.white : Color.red;
                     float zoom = SceneView.currentDrawingSceneView.camera.orthographicSize;
                     if (Handles.Button(position, Quaternion.identity, 0.05f * zoom, 0.07f * zoom, Handles.RectangleHandleCap))
                     {
-                        //Get point and path system
+                        // Get point and path system
                         PointsToolsEditorGlobals.selectedPoint = point;
 
-                        //Repaint editor window
+                        // Repaint editor window
                         PathSystemEditorWindow psewindow = (PathSystemEditorWindow)EditorWindow.GetWindow(typeof(PathSystemEditorWindow));
                         psewindow?.Repaint();
                         EditorUtility.SetDirty(point);
@@ -445,14 +446,14 @@ public class PathSystemEditor : Editor
 
                     if (EditorGUI.EndChangeCheck())
                     {
-                        //TODO: Working Undo Redo
-                        //      With working hot keys
+                        // TODO: Working Undo Redo
+                        //       With working hot keys
                         Undo.RecordObject(point.gameObject, "Changed point position");
 
-                        //TODO: Recalculate position for curve
+                        // TODO: Recalculate position for curve
                         point.transform.position = position;
 
-                        //Set selected object
+                        // Set selected object
                         if (PointsToolsEditorGlobals.pickObjectOnPosChange)
                             PointsToolsEditorGlobals.selectedPoint = point;
                     }
@@ -465,4 +466,3 @@ public class PathSystemEditor : Editor
     }
 }
 #endregion
-

@@ -1,11 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DMSH.Characters;
 
-public class Bonus : MonoBehaviour
+namespace DMSH.Objects.Bonuses
 {
-    public virtual void Use(PlayerController player)
+    public class Bonus : MonoBehaviour
     {
+        public virtual void Use(PlayerController player)
+        {
 
+        }
     }
 }

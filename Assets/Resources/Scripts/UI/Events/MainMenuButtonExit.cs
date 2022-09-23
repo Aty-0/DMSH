@@ -1,14 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-public class MainMenuButtonExit : MonoBehaviour
+namespace DMSH.UI.Events
 {
-    public void ButtonExitEvent()
+    public class MainMenuButtonExit : MonoBehaviour
     {
-        Application.Quit();
+        public void ButtonExitEvent()
+        {
+            Application.Quit();
+        }
     }
 }
-
-

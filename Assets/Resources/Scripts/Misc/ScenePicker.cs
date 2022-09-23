@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 
-public class ScenePicker : MonoBehaviour
+namespace DMSH.Misc
 {
-    [SerializeField] public string scenePath;
+    public class ScenePicker : MonoBehaviour
+    {
+        [SerializeField] public string scenePath;
+    }
 }
-

@@ -1,17 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using DMSH.Misc;
 
-public class ButtonBackToMainMenu : MonoBehaviour
+namespace DMSH.UI.Events
 {
-    public ScenePicker scene;
-
-    public void ButtonBackToMainMenuEvent()
+    public class ButtonBackToMainMenu : MonoBehaviour
     {
-        Time.timeScale = 1.0f;
-        GlobalSettings.SetGameActive(true);
-        Cursor.visible = true;
-        SceneManager.LoadScene(scene.scenePath);
+        public ScenePicker scene;
+
+        public void ButtonBackToMainMenuEvent()
+        {
+            Time.timeScale = 1.0f;
+            GlobalSettings.SetGameActive(true);
+            Cursor.visible = true;
+            SceneManager.LoadScene(scene.scenePath);
+        }
     }
 }
