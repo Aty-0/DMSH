@@ -10,20 +10,19 @@ namespace DMSH.Path
         Nothing = 0,
         StartShot,
         StopShot,
-        // TODO: etc...
     }
 
     public class PathPoint : MonoBehaviour
     {
         [Header("Other")]
-        public Timer waitTimer;
+        public Timer waitTimer = null;
 
         [Header("Curve")]
-        public bool useCurve;
+        public bool useCurve = false;
         public Vector3 curvePoint = Vector3.zero;
 
         [Header("Events")]
-        public EnemyScriptedBehavior eventOnEndForAll;
+        public EnemyScriptedBehavior eventOnEndForAll = EnemyScriptedBehavior.Nothing;
 
         // When point is reached by enemy
         public UnityEvent eventSpecial = new UnityEvent();

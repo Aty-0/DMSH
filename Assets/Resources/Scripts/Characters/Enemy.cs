@@ -7,6 +7,9 @@ using DMSH.Objects;
 
 namespace DMSH.Characters
 {
+    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(SpriteRenderer))]
     public class Enemy : MovableObject
     {
         public const int MAX_RANDOM_DROP_SCORE_BONUS = 4;
@@ -45,10 +48,10 @@ namespace DMSH.Characters
 
         protected void Start()
         {
-            _rigidBody2D = GetComponent<Rigidbody2D>();
-            _boxCollider2D = GetComponent<BoxCollider2D>();
+            _rigidBody2D    = GetComponent<Rigidbody2D>();
+            _boxCollider2D  = GetComponent<BoxCollider2D>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
-            _deathParticle = GetComponentInChildren<ParticleSystem>();
+            _deathParticle  = GetComponentInChildren<ParticleSystem>();
 
             _health = _maxHealth;
             ignoreHits = true;

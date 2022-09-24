@@ -10,18 +10,9 @@ using DMSH.LevelSpecifics.Stage;
 //#define PATH_SYSTEM_DEBUG_MOVEMENT
 
 namespace DMSH.Path
-{
-    public class PointAction
-    {
-        public PathPoint pathPoint = null;
-        public Action action = null;
-    }
-
+{  
     public class PathSystem : MonoBehaviour
-    {
-        // How much we need points for curve
-        public static readonly int PATH_CURVE_LINE_STEPS = 20;
-
+    {        
         [Header("Spawner")]
         public int objectCount = 0;
         public int spawnedObjectCount = 0;
@@ -38,7 +29,8 @@ namespace DMSH.Path
 
         [Header("Misc")]
         public bool holdDistanceBetweenObjects = true;
-        public bool catchUpNextObject = false; // At this moment this is working weird
+        // FIX ME: At this moment this working weird
+        public bool catchUpNextObject = false; 
         public float distanceAccuracy = 0.01f;
         public float distanceBetweenObjects = 2.0f;
         public StageSystem stageSystem = null;
@@ -168,31 +160,7 @@ namespace DMSH.Path
 
             return false;
         }
-
-        public static Vector3 MakeCurve(Vector3 p0, Vector3 p1, Vector3 p2, float t)
-        {
-            return Vector3.Lerp(Vector3.Lerp(p0, p1, t), Vector3.Lerp(p1, p2, t), t);
-        }
-
-        public static void LineFollowedByPath(Vector2 start, Vector2 point, Vector2 end)
-        {
-            Vector3 lineStart = start;
-            for (int i = 1; i <= PATH_CURVE_LINE_STEPS; i++)
-            {
-                Vector3 lineEnd = MakeCurve(start, point, end, i / (float)PATH_CURVE_LINE_STEPS);
-                Gizmos.DrawLine(lineStart, lineEnd);
-                lineStart = lineEnd;
-            }
-        }
-
-        public static void CubeFollowedByPath(Vector2 start, Vector2 point, Vector2 end)
-        {
-            for (int i = 1; i <= PATH_CURVE_LINE_STEPS; i++)
-            {
-                Vector3 lineEnd = MakeCurve(start, point, end, i / (float)PATH_CURVE_LINE_STEPS);
-                Gizmos.DrawCube(lineEnd, new Vector3(0.2f, 0.2f, 0.2f));
-            }
-        }
+       
         private void IsReached(PathPoint point, MovableObject move_object)
         {
             //Debug.Log($"[PathSystem] IsReached {pathPointsList.IndexOf(point)} {movablePathObjectsList.IndexOf(move_object)} {movablePathObjectsList.Count}");
@@ -224,55 +192,44 @@ namespace DMSH.Path
         }
         #endregion
 
-        #region DEBUG_DEFINES
+        #region Debug
 #if PATH_SYSTEM_DEBUG_MOVEMENT
     [Header("Debug")]
-    [SerializeField]
-    private Vector2 _dbgObjectVec;
-    [SerializeField]
-    private Vector2 _dbgLineStart;
-    [SerializeField]
-    private Vector2 _dbgLineEnd;
-    [SerializeField]
-    private Vector2 _dbgCurveLineEnd;
-    [SerializeField]
-    private Vector2 _dbgCurvePoint;
-    [SerializeField]
-    private bool _dbgUseCurve;
+    [SerializeField] private Vector2 _dbgObjectVec;
+    [SerializeField] private Vector2 _dbgLineStart;
+    [SerializeField] private Vector2 _dbgLineEnd;
+    [SerializeField] private Vector2 _dbgCurveLineEnd;
+    [SerializeField] private Vector2 _dbgCurvePoint;
+    [SerializeField] private bool _dbgUseCurve;
 
-    public void OnGUI()
-    {
-
-    }
-
-    public void OnDrawGizmos()
+    protected void OnDrawGizmos()
     {
         Gizmos.DrawLine(_dbgObjectVec, _dbgLineEnd);
         Gizmos.color = Color.green;
         if (_dbgUseCurve)
         {
-            LineFollowedByPath(_dbgLineStart, _dbgCurvePoint, _dbgLineEnd);
-            CubeFollowedByPath(_dbgLineStart, _dbgCurvePoint, _dbgLineEnd);
+            MathCurve.LineFollowedByPath(_dbgLineStart, _dbgCurvePoint, _dbgLineEnd);
+            MathCurve.CubeFollowedByPath(_dbgLineStart, _dbgCurvePoint, _dbgLineEnd);
 
             Gizmos.DrawCube(_dbgCurvePoint, new Vector3(0.5f, 0.5f, 0.5f));
 
             Gizmos.color = Color.red;
             Gizmos.DrawLine(_dbgObjectVec, _dbgLineEnd);
         }
-
-
     }
 #endif
         #endregion
 
         #region Update
-        public void Update()
+        protected void Update()
         {
             // Check both lists on object exist
             if (!pathPointsList.Any() || !movablePathObjectsList.Any())
                 return;
 
-            // FIXME: ??? I'm not sure about using this function in update method
+            // FIXME: I'm not sure about using this function in update method
+
+            // Will protect from unexpected deleted objects 
             movablePathObjectsList.RemoveAll(o => o == null);
 
             MovableObject currentObject = null;
@@ -303,14 +260,17 @@ namespace DMSH.Path
                     continue; // Move to next object
                 }
 
-                currentPoint = pathPointsList[i]; // Get current point point 
-                float reduceSpeed = 1.0f;
-                float augmentSpeed = 1.0f;
-                float speed = 0.0f;
+                // Get current point point 
+                currentPoint = pathPointsList[i];
+
+                // Calculate reduce, augment speed for protecting objects from stacking or moving too far from previous 
+                var reduceSpeed = 1.0f;
+                var augmentSpeed = 1.0f;
+                var speed = 0.0f;
 
                 if (previousObject)
                 {
-                    float distanceBetweenCurrentObjects = Vector3.Distance(currentObject.transform.position, previousObject.transform.position);
+                    var distanceBetweenCurrentObjects = Vector3.Distance(currentObject.transform.position, previousObject.transform.position);
 
                     if (holdDistanceBetweenObjects)
                         reduceSpeed = Mathf.Clamp(reduceSpeed, 1.0f, Mathf.Clamp(distanceBetweenCurrentObjects, 0.0f, 2.0f / distanceBetweenObjects));
@@ -319,21 +279,22 @@ namespace DMSH.Path
                         augmentSpeed = Mathf.Clamp(augmentSpeed, distanceBetweenCurrentObjects, distanceBetweenObjects);
                 }
 
-                speed = (move_object.speed * augmentSpeed * reduceSpeed * Time.deltaTime) * GlobalSettings.gameActiveAsInt; // Calculate speed 
+                // Calculate final object speed 
+                speed = (move_object.speed * augmentSpeed * reduceSpeed * Time.deltaTime) * GlobalSettings.gameActiveAsInt; 
 
                 // What's mode we need to use 
                 if (currentPoint.useCurve)
                 {
                     // Check current curve point 
-                    if (move_object.currentCurvePoint <= PATH_CURVE_LINE_STEPS)
+                    if (move_object.currentCurvePoint <= MathCurve.PATH_CURVE_LINE_STEPS)
                     {
                         if (CheckPointOnValid(i + 1))
                         {
-                            Vector3 lineEnd = MakeCurve(currentPoint.transform.position, pathPointsList[i + 1].curvePoint,
-                                pathPointsList[i + 1].transform.position, move_object.currentCurvePoint / (float)PATH_CURVE_LINE_STEPS);
-                            float curve_end_distance = Vector3.Distance(move_object.transform.position, lineEnd);
+                            var lineEnd = MathCurve.MakeCurve(currentPoint.transform.position, pathPointsList[i + 1].curvePoint,
+                                pathPointsList[i + 1].transform.position, move_object.currentCurvePoint / (float)MathCurve.PATH_CURVE_LINE_STEPS);
+                            var curveEndDistance = Vector3.Distance(move_object.transform.position, lineEnd);
                             move_object.transform.position = Vector3.MoveTowards(move_object.transform.position, lineEnd, speed);
-                            if (curve_end_distance <= distanceAccuracy)
+                            if (curveEndDistance <= distanceAccuracy)
                                 move_object.currentCurvePoint++;
 
 #if PATH_SYSTEM_DEBUG_MOVEMENT
@@ -342,8 +303,10 @@ namespace DMSH.Path
                         }
                         else
                         {
-                            Debug.LogWarning($"{name} - index: {i} | that point is last in the list and have curve mode!");
-                            // Disable useCurve flag 
+                            // Not critical because we can disable this flag 
+                            //Debug.LogWarning($"{name} - index: {i} | that point is last in the list and have curve mode!");
+
+                            // Disable useCurve flag because last point can't have a curve mode
                             currentPoint.useCurve = false;
                         }
 
@@ -357,7 +320,7 @@ namespace DMSH.Path
                 else
                 {
                     // Check distance for current object
-                    float distance = Vector3.Distance(move_object.transform.position, currentPoint.transform.position);
+                    var distance = Vector3.Distance(move_object.transform.position, currentPoint.transform.position);
                     move_object.transform.position = Vector3.MoveTowards(move_object.transform.position, currentPoint.transform.position, speed);
                     // If we are get close for point
                     if (distance <= distanceAccuracy)

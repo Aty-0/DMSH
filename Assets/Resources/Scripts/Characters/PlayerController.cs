@@ -11,6 +11,12 @@ using DMSH.LevelSpecifics.Stage;
 
 namespace DMSH.Characters
 {
+    [RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(LogHandler))]
+    [RequireComponent(typeof(PlayerInput))]
+    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(Collider2D))]
+
     public class PlayerController : MovableObject
     {
         #region Public Values

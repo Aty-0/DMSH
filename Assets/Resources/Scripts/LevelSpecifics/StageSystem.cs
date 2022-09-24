@@ -34,7 +34,7 @@ namespace DMSH.LevelSpecifics.Stage
         public Timer timer;
 
         [SerializeField] private int _stageListIndex = 0;
-        [SerializeField] private int _listPassed = 0;
+        [SerializeField] private int _stagesPassed = 0;
 
         [Header("Events")]
         public List<Action> onTimerStart = new List<Action>();
@@ -44,13 +44,16 @@ namespace DMSH.LevelSpecifics.Stage
         {
             Debug.Log($"[StageSystem] Stage system is started...");
 
-            // Disable all scenario packs
-            foreach (GameObject go in GameObject.FindGameObjectsWithTag("ScenarioPack"))
-                go.SetActive(false);
+            // Disable all path system
+            foreach (var go in GetComponents<PathSystem>())
+                go.gameObject.SetActive(false);
 
+            // Get timer, set events
             timer = GetComponent<Timer>();
             timer.StartEvent += OnTimerStart;
             timer.EndEvent += OnTimerEnd;
+
+            // Game scenario logic start...
             timer.StartTimer();
         }
 
@@ -58,10 +61,10 @@ namespace DMSH.LevelSpecifics.Stage
         {
             if (currentStage != null)
             {
-                _listPassed++;
-                Debug.Log($"[StageSystem] Added pass | Count {currentStage.stageObjects.Count} Index{_stageListIndex} Passes {_listPassed}");
+                _stagesPassed++;
+                Debug.Log($"[StageSystem] Added pass | Count {currentStage.stageObjects.Count} Index{_stageListIndex} Passes {_stagesPassed}");
                 // If all scenario lists passed we are passed this stage
-                if (_listPassed == currentStage.stageObjects.Count)
+                if (_stagesPassed == currentStage.stageObjects.Count)
                     StagePassed();
             }
         }
@@ -76,7 +79,7 @@ namespace DMSH.LevelSpecifics.Stage
                 go.SetActive(false);
 
             _stageListIndex++;
-            _listPassed = 0;
+            _stagesPassed = 0;
 
             if (stagesList.IndexOf(currentStage) == (stagesList.Count - 1))
             {
@@ -121,8 +124,9 @@ namespace DMSH.LevelSpecifics.Stage
         public void Activate(GameObject go)
         {
             PathSystem ps = null;
+
             if (go.GetType() == typeof(GameObject))
-                ps = go.GetComponentInChildren<PathSystem>(); //Legacy pack style        
+                ps = go.GetComponentInChildren<PathSystem>(); // Legacy pack style        
             else
                 ps = go.GetComponent<PathSystem>();
 
