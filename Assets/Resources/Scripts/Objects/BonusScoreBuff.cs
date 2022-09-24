@@ -52,20 +52,5 @@ namespace DMSH.Objects.Bonuses
             dst.text = text;
             dst.fontSize = 6.0f;
         }
-
-        protected void OnTriggerEnter2D(Collider2D collider)
-        {
-            Component[] components = collider.gameObject.GetComponents<Component>();
-
-            foreach (Component component in components)
-            {
-                switch (component)
-                {
-                    case PlayerController player:
-                        Use(player);
-                        break;
-                }
-            }
-        }
     }
 }

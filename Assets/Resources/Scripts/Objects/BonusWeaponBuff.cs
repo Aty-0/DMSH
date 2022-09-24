@@ -36,20 +36,5 @@ namespace DMSH.Objects.Bonuses
                 gameObject.GetComponent<Collider2D>().enabled = false;
             }
         }
-
-        protected void OnTriggerEnter2D(Collider2D collider)
-        {
-            Component[] components = collider.gameObject.GetComponents<Component>();
-
-            foreach (Component component in components)
-            {
-                switch (component)
-                {
-                    case PlayerController player:
-                        Use(player);
-                        break;
-                }
-            }
-        }
     }
 }
