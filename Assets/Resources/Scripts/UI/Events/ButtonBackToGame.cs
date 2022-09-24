@@ -1,12 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DMSH.Characters;
 
-public class ButtonBackToGame : MonoBehaviour
+namespace DMSH.UI.Events
 {
-    [SerializeField] private PlayerController _controller;
-    public void ButtonBackToGameEvent()
+    public class ButtonBackToGame : MonoBehaviour
     {
-        _controller?.ShowPauseScreen();
+        [SerializeField] private PlayerController _controller;
+        public void ButtonBackToGameEvent()
+        {
+            _controller?.ShowPauseScreen();
+        }
     }
 }

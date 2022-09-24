@@ -1,11 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DMSH.Characters;
 
-public class Bonus : MonoBehaviour
+namespace DMSH.Objects.Bonuses
 {
-    public virtual void Use(PlayerController player)
+    public class Bonus : MonoBehaviour
     {
+        protected void OnTriggerEnter2D(Collider2D collider)
+        {
+            var player = collider.gameObject.GetComponent<PlayerController>();
 
+            if (player)
+                Use(player);
+        }
+
+        public virtual void Use(PlayerController player)
+        {
+
+        }
     }
 }

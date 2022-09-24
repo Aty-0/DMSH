@@ -1,27 +1,31 @@
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum EnemyScriptedBehavior
+using DMSH.Misc;
+
+namespace DMSH.Path
 {
-    Nothing = 0,
-    StartShot,
-    StopShot,
-    //TODO: etc...
-}
+    public enum EnemyScriptedBehavior
+    {
+        Nothing = 0,
+        StartShot,
+        StopShot,
+        // TODO: etc...
+    }
 
-public class PathPoint : MonoBehaviour
-{
-    [Header("Other")]
-    public Timer        waitTimer;
+    public class PathPoint : MonoBehaviour
+    {
+        [Header("Other")]
+        public Timer waitTimer;
 
-    [Header("Curve")]
-    public bool         useCurve;
-    public Vector3      curvePoint = Vector3.zero;
+        [Header("Curve")]
+        public bool useCurve;
+        public Vector3 curvePoint = Vector3.zero;
 
-    [Header("Events")]
-    public EnemyScriptedBehavior eventOnEndForAll;
+        [Header("Events")]
+        public EnemyScriptedBehavior eventOnEndForAll;
 
-    //When point is reached by enemy
-    public UnityEvent eventSpecial = new UnityEvent();
+        // When point is reached by enemy
+        public UnityEvent eventSpecial = new UnityEvent();
+    }
 }
