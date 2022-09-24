@@ -1,63 +1,68 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 
-public class Spawner : MonoBehaviour
+using DMSH.LevelSpecifics.Stage;
+using DMSH.Path;
+using DMSH.Misc;
+
+namespace DMSH.LevelSpecifics
 {
-    [Header("Main")]
-    public bool isDone = false; 
-    public List<GameObject> toSpawn = new List<GameObject>();
-    public Timer timer;
-
-    [Header("Misc")]
-    [SerializeField] private StageSystem _stageSystem;
-
-    [Tooltip("If we are attach spawner to point")]
-    [SerializeField] private PathSystem _pathSystem;
-    
-    protected void Start()
+    public class Spawner : MonoBehaviour
     {
-        _stageSystem    = FindObjectOfType<StageSystem>();
-        timer           = GetComponent<Timer>();
-        if(timer)
-            timer.EndEvent += Spawn;
+        [Header("Main")]
+        public bool isDone = false;
+        public List<GameObject> toSpawn = new List<GameObject>();
+        public Timer timer;
 
-        _pathSystem = GetComponentInParent<PathSystem>();
+        [Header("Misc")]
+        [SerializeField] private StageSystem _stageSystem;
 
-        if (_pathSystem)
+        [Tooltip("If spawner attached to point")]
+        [SerializeField] private PathSystem _pathSystem;
+
+        protected void Start()
         {
-            PointAction pa = new PointAction();
-            pa.action += Spawn;
-            pa.pathPoint = gameObject.GetComponent<PathPoint>();
-            //When last movable object is reached needed point we are activate spawner
-            _pathSystem.onLastMovableObjectReached.Add(pa);
-        }
-     
-    }
+            _stageSystem = FindObjectOfType<StageSystem>();
+            timer = GetComponent<Timer>();
+            if (timer)
+                timer.EndEvent += Spawn;
 
-    public void StartTimer()
-    {
-        timer?.StartTimer();
-    }
+            _pathSystem = GetComponentInParent<PathSystem>();
 
-    public void Spawn()
-    {
-        if (!isDone)
-        {
-            foreach (GameObject go in toSpawn)
+            if (_pathSystem)
             {
-                if (go)
-                {                    
-                    if (PrefabUtility.IsPartOfAnyPrefab(go))
-                        _stageSystem.AddToStage(Instantiate(go));
-                    else
-                        if (!go.activeSelf)
-                            _stageSystem.AddToStage(go);
-                }
+                PointAction pa = new PointAction();
+                pa.action += Spawn;
+                pa.pathPoint = gameObject.GetComponent<PathPoint>();
+                // When last movable object is reached needed point we are activate spawner
+                _pathSystem.onLastMovableObjectReached.Add(pa);
             }
 
-            isDone = true;
+        }
+
+        public void StartTimer()
+        {
+            timer?.StartTimer();
+        }
+
+        public void Spawn()
+        {
+            if (!isDone)
+            {
+                foreach (GameObject go in toSpawn)
+                {
+                    if (go)
+                    {
+                        if (go.scene.name == null) // this is prefab
+                            _stageSystem.AddToStage(Instantiate(go));
+                        else
+                             if (!go.activeSelf)
+                                _stageSystem.AddToStage(go);
+                    }
+                }
+
+                isDone = true;
+            }
         }
     }
 }

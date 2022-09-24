@@ -1,18 +1,29 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScreenHandler : MonoBehaviour
+namespace DMSH.Misc
 {
-    public List<Action> onScreenResolutionChange = new List<Action>();
-    [SerializeField] private int _lastScreenWidth = 0;
-    [SerializeField] private int _lastScreenHeight = 0;
-
-    protected void Update()
+    public class ScreenHandler : MonoBehaviour
     {
-        if (_lastScreenWidth != Screen.width || _lastScreenHeight != Screen.height)
-            foreach (Action action in onScreenResolutionChange)
-                action?.Invoke();
+        public List<Action> onScreenResolutionChange = new List<Action>();
+
+        [Header("Resoulution")]
+        [SerializeField] private int _lastScreenWidth = 0;
+        [SerializeField] private int _lastScreenHeight = 0;
+
+        protected void Update()
+        {
+            if (_lastScreenWidth != Screen.width || _lastScreenHeight != Screen.height)
+            {
+                // Rewrite last screen width and height
+                _lastScreenWidth = Screen.width;
+                _lastScreenHeight = Screen.height;
+
+                // Invoke events 
+                foreach (Action action in onScreenResolutionChange)
+                    action?.Invoke();
+            }
+        }
     }
 }

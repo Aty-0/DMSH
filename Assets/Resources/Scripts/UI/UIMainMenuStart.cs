@@ -1,15 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using DMSH.Misc;
 
-public class UIMainMenuStart : MonoBehaviour
+namespace DMSH.UI
 {
-    public float speed = 10.0f; //11
-    protected void Start()
+    public class UIMainMenuStart : MonoBehaviour
     {
-        if (GlobalSettings.mainMenuAwakeAnimation)
-            foreach(Text text in FindObjectsOfType<Text>())
-                StartCoroutine(BasicAnimationsPack.SmoothAwakeText(text, speed));      
+        public float speed = 10.0f; //11
+        protected void Start()
+        {
+            if (GlobalSettings.mainMenuAwakeAnimation)
+                foreach (Text text in FindObjectsOfType<Text>())
+                    StartCoroutine(BasicAnimationsPack.SmoothAwakeText(text, speed));
+        }
     }
 }

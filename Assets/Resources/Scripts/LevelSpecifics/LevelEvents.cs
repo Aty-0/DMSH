@@ -1,24 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using DMSH.Characters;
 
-public class LevelEvents : MonoBehaviour
+namespace DMSH.LevelSpecifics
 {
-    public static void GlobalEventAllEnemyStartShot()
+    public class LevelEvents : MonoBehaviour
     {
-        foreach (Enemy e in FindObjectsOfType<Enemy>())
+        public static void GlobalEventAllEnemyStartShot()
         {
-            e.StartShot();
+            foreach (Enemy e in FindObjectsOfType<Enemy>())
+            {
+                e.StartShot();
+            }
         }
-    }
 
-    public static void GlobalEventAllEnemyStopShot()
-    {
-        foreach (Enemy e in FindObjectsOfType<Enemy>())
+        public static void GlobalEventAllEnemyStopShot()
         {
-            e.StopShot();
+            foreach (Enemy e in FindObjectsOfType<Enemy>())
+            {
+                e.StopShot();
+            }
         }
     }
 }
-
-
