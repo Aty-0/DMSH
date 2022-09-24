@@ -233,7 +233,7 @@ namespace DMSH.Characters
 
             CheckBounds();
         }
-
+        
         private void CheckBounds()
         {
             Vector3 posInScreen = gameCamera.WorldToScreenPoint(transform.position);
@@ -270,7 +270,9 @@ namespace DMSH.Characters
                 _background.transform.localScale = new Vector3(aspectRatioWithImage, Vector3.Distance(viewportToWorldPointY, viewportToWorldPointY), 1);
                 _background.transform.position = new Vector3(gameCamera.transform.position.x + -viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 9.2f, gameCamera.transform.position.y, 5);
             }
-
+            
+            UpdateInvisibleWallsPosition(viewportToWorldPointX, viewportToWorldPointY, viewportToWorldPointXWithImage);
+    
             // Set screen middle position for respawn point
             respawnPoint.transform.position = new Vector2((-viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x) / 1000, -viewportToWorldPointY.y / 1.2f);
 
@@ -590,3 +592,4 @@ namespace DMSH.Characters
         }
     }
 }
+
