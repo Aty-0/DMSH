@@ -1,3 +1,5 @@
+//#define PATH_SYSTEM_DEBUG_MOVEMENT
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -7,7 +9,6 @@ using UnityEngine;
 using DMSH.Misc;
 using DMSH.LevelSpecifics.Stage;
 
-//#define PATH_SYSTEM_DEBUG_MOVEMENT
 
 namespace DMSH.Path
 {  
@@ -334,10 +335,10 @@ namespace DMSH.Path
 
 #if PATH_SYSTEM_DEBUG_MOVEMENT
                 _dbgObjectVec = move_object.transform.position;
-                _dbgLineStart = point.transform.position;
-                _dbgUseCurve = point.useCurve;
+                _dbgLineStart = currentPoint.transform.position;
+                _dbgUseCurve = currentPoint.useCurve;
 
-                if (point.useCurve)
+                if (currentPoint.useCurve)
                 {
                     if (CheckPointOnValid(i + 1))
                     {
