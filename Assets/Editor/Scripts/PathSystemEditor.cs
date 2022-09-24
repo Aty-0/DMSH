@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.UIElements;
 
 using DMSH.Path;
+using DMSH.Misc;
 
 #region Globals
 public enum PointsToolsCreationMode
@@ -375,7 +376,7 @@ public class PathSystemEditor : Editor
                 Gizmos.color = path.lineColor;
 
                 if (prev_point.useCurve)
-                    PathSystem.LineFollowedByPath(prev_point.transform.position, current_point.curvePoint, current_point.transform.position);
+                    MathCurve.LineFollowedByPath(prev_point.transform.position, current_point.curvePoint, current_point.transform.position);
                 else
                     Gizmos.DrawLine(prev_point.transform.position, current_point.transform.position);
             }
