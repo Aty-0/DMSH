@@ -11,6 +11,9 @@ namespace DMSH.Path
         BoxCollider2D boxCollider2D { get; set; }
         Vector3 moveOffset { get; set; }
         PathSystem pathSystem { get; set; }
+        float reduceSpeed { get; set; }
+        float augmentSpeed { get; set; }
+        float finalSpeed { get; set; }
     }
 
 
@@ -24,6 +27,9 @@ namespace DMSH.Path
         [SerializeField] protected BoxCollider2D _boxCollider2D = null;
         [SerializeField] protected Vector3 _moveOffset = Vector3.zero;
         [SerializeField] protected PathSystem _pathSystem = null;
+        [SerializeField] protected float _reduceSpeed  = 1.0f;
+        [SerializeField] protected float _augmentSpeed = 1.0f;
+        [SerializeField] protected float _finalSpeed = 0.0f;
 
         public int currentPoint { get { return _currentPoint; } set { _currentPoint = value; } }
         public int currentCurvePoint { get { return _currentCurvePoint; } set { _currentCurvePoint = value; } }
@@ -32,6 +38,9 @@ namespace DMSH.Path
         public BoxCollider2D boxCollider2D { get { return _boxCollider2D; } set { _boxCollider2D = value; } }
         public Vector3 moveOffset { get { return _moveOffset; } set { _moveOffset = value; } }
         public PathSystem pathSystem { get { return _pathSystem; } set { _pathSystem = value; } }
+        public float reduceSpeed { get { return _reduceSpeed; } set { _reduceSpeed = value; } }
+        public float augmentSpeed { get { return _augmentSpeed; } set { _augmentSpeed = value; } }
+        public float finalSpeed { get { return _finalSpeed; } set { _finalSpeed = value; } }
 
         public virtual void OnReachedPointEvent(EnemyScriptedBehavior enemyScriptedBehavior) { }
 

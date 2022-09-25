@@ -10,6 +10,12 @@ namespace DMSH.Misc
     [Serializable]
     public static class GlobalSettings
     {
+        public static bool debugDrawPSObjectInfo        = false;
+        // TODO:
+        // Works only on unity editor, because we use gizmos
+        public static bool debugDrawPSAllPoints         = false;
+        public static bool debugDrawPSCurrentMovement   = false;
+
         public static bool musicPlay = true;
         public static bool mainMenuAwakeAnimation = true;
 
