@@ -446,7 +446,9 @@ public class PathSystemEditor : Editor
                         PathSystemEditorWindow psewindow = (PathSystemEditorWindow)EditorWindow.GetWindow(typeof(PathSystemEditorWindow));
                         psewindow?.Repaint();
                         EditorUtility.SetDirty(point);
-                        EditorApplication.MarkSceneDirty();
+
+                        if(!Application.isPlaying)
+                            EditorApplication.MarkSceneDirty();
                     }
 
                     if (EditorGUI.EndChangeCheck())
