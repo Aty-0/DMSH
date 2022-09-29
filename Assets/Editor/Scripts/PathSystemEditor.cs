@@ -144,15 +144,21 @@ public class PathSystemEditorWindow : EditorWindow
     private bool        _foldoutToolsShow = true;
     private bool        _foldoutPathObjectInspectorShow = true;
 
-    [MenuItem("Window/DMSH/Path System")]
-    static void Init()
+    protected void Awake()
     {
-        PathSystemEditorWindow window = (PathSystemEditorWindow)EditorWindow.GetWindowWithRect(typeof(PathSystemEditorWindow), new Rect(0, 0, 400, 600));
+        PathSystemEditorWindow window = (PathSystemEditorWindow)GetWindow(typeof(PathSystemEditorWindow));
         GUIContent guiContent = new GUIContent();
         guiContent.text = "Path System";
         // TODO: Icon
         window.titleContent = guiContent;
         window.autoRepaintOnSceneChange = true;
+
+    }
+
+    [MenuItem("Window/DMSH/Path System")]
+    static void Init()
+    {
+        PathSystemEditorWindow window = (PathSystemEditorWindow)GetWindow(typeof(PathSystemEditorWindow));
         window.Show();
     }
 
@@ -338,12 +344,12 @@ public class PathSystemEditorWindow : EditorWindow
         _foldoutOptionsShow = EditorGUILayout.Foldout(_foldoutOptionsShow, $"Options");
         if (_foldoutOptionsShow)
         {
-            PointsToolsEditorGlobals.showOnlyLine = GUILayout.Toggle(PointsToolsEditorGlobals.showOnlyLine, "Show only lines");
+            PointsToolsEditorGlobals.showOnlyLine = GUILayout.Toggle(PointsToolsEditorGlobals.showOnlyLine, "Hide all (Showing only path lines)");
             PointsToolsEditorGlobals.showHandles = GUILayout.Toggle(PointsToolsEditorGlobals.showHandles, "Show handles");
             PointsToolsEditorGlobals.showCurveHandle = GUILayout.Toggle(PointsToolsEditorGlobals.showCurveHandle, "Show curve handle");
-            PointsToolsEditorGlobals.createByEdCameraPosition = GUILayout.Toggle(PointsToolsEditorGlobals.createByEdCameraPosition, "Create by editor camera position");
-            PointsToolsEditorGlobals.pickObjectOnPosChange = GUILayout.Toggle(PointsToolsEditorGlobals.pickObjectOnPosChange, "Pick object when handle is used");
-            PointsToolsEditorGlobals.makeCurveOnCreate = GUILayout.Toggle(PointsToolsEditorGlobals.makeCurveOnCreate, "Make curve on create object");
+            PointsToolsEditorGlobals.createByEdCameraPosition = GUILayout.Toggle(PointsToolsEditorGlobals.createByEdCameraPosition, "Create point by in editor camera position");
+            PointsToolsEditorGlobals.pickObjectOnPosChange = GUILayout.Toggle(PointsToolsEditorGlobals.pickObjectOnPosChange, "Pick object when handle has been used");
+            PointsToolsEditorGlobals.makeCurveOnCreate = GUILayout.Toggle(PointsToolsEditorGlobals.makeCurveOnCreate, "Activate curve mode by default");
             PointsToolsEditorGlobals.Separator();
             PointsToolsEditorGlobals.createVec = EditorGUILayout.Vector2Field("Addition Vector (Addition to create point)", PointsToolsEditorGlobals.createVec);
         }
@@ -432,7 +438,7 @@ public class PathSystemEditor : Editor
                     else
                         position = point.transform.position;
 
-                    // FIXME: Don't show if we are hold shift key                    
+                    // TODO: Don't show if we are hold shift key                    
                     Handles.color = PointsToolsEditorGlobals.selectedPoint != point ? Color.white : Color.red;
                     float zoom = SceneView.currentDrawingSceneView.camera.orthographicSize;
                     if (Handles.Button(position, Quaternion.identity, 0.05f * zoom, 0.07f * zoom, Handles.RectangleHandleCap))
