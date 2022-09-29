@@ -455,15 +455,15 @@ namespace DMSH.Characters
 
             if (_debugGUI)
             {
-                GUI.Label(new Rect(100, 80, 500, 500), "DeltaTime: " + Time.deltaTime);
+                GUI.Label(new Rect(100, 80, 500, 500),  $"DeltaTime: {Time.deltaTime}");
                 GUI.Label(new Rect(100, 120, 500, 500), $"Position: {rigidBody2D.position}");
                 GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {rigidBody2D.velocity}");
                 GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weaponEnabled}");
                 GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
                 GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
                 GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActiveAsBool}");
-                GUI.Label(new Rect(100, 340, 500, 500), $"_weaponBoostGain: {_weaponBoostGain}");
-                GUI.Label(new Rect(100, 360, 500, 500), $"_weaponType: {_weaponType}");
+                GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {_weaponBoostGain}");
+                GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {_weaponType}");
             }
         }
 #endif
@@ -547,7 +547,7 @@ namespace DMSH.Characters
                 Time.timeScale = 0.2f;
                 _slowMotionCoroutine = StartCoroutine(DoSlowMotion(false));
 
-                // Destroy all bullet cuz we are can teleport player into bullet 
+                // Destroy all bullet cuz we are can teleport player into the bullet 
                 foreach (Bullet bullet in FindObjectsOfType<Bullet>())
                     if (bullet.isEnemyBullet &&
                         bullet.collisionDestroyBullet &&

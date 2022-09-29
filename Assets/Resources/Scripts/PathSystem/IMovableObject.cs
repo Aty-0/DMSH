@@ -27,9 +27,9 @@ namespace DMSH.Path
         [SerializeField] protected BoxCollider2D _boxCollider2D = null;
         [SerializeField] protected Vector3 _moveOffset = Vector3.zero;
         [SerializeField] protected PathSystem _pathSystem = null;
-        [SerializeField] protected float _reduceSpeed  = 1.0f;
-        [SerializeField] protected float _augmentSpeed = 1.0f;
-        [SerializeField] protected float _finalSpeed = 0.0f;
+        [SerializeField] [HideInInspector] protected float _reduceSpeed  = 1.0f;
+        [SerializeField] [HideInInspector] protected float _augmentSpeed = 1.0f;
+        [SerializeField] [HideInInspector] protected float _finalSpeed = 0.0f;
 
         public int currentPoint { get { return _currentPoint; } set { _currentPoint = value; } }
         public int currentCurvePoint { get { return _currentCurvePoint; } set { _currentCurvePoint = value; } }
