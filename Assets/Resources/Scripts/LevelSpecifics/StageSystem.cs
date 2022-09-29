@@ -62,7 +62,7 @@ namespace DMSH.LevelSpecifics.Stage
             if (currentStage != null)
             {
                 _stagesPassed++;
-                Debug.Log($"[StageSystem] Added pass | Count {currentStage.stageObjects.Count} Index{_stageListIndex} Passes {_stagesPassed}");
+                Debug.Log($"[StageSystem] Added pass | Count: {currentStage.stageObjects.Count} Index: {_stageListIndex} Stage passes: {_stagesPassed}");
                 // If all scenario lists passed we are passed this stage
                 if (_stagesPassed == currentStage.stageObjects.Count)
                     StagePassed();
@@ -71,7 +71,7 @@ namespace DMSH.LevelSpecifics.Stage
 
         private void StagePassed()
         {
-            Debug.Log($"[StageSystem] Stage passed! index: {_stageListIndex}");
+            Debug.Log($"[StageSystem] Stage passed! Index: {_stageListIndex}");
 
             currentStage.isDone = true;
 
@@ -99,7 +99,7 @@ namespace DMSH.LevelSpecifics.Stage
         {
             foreach (Stage st in stagesList)
             {
-                Debug.Log($"[StageSystem] Choice stage... index: {stagesList.IndexOf(st)} stage objects count:{st.stageObjects.Count}");
+                Debug.Log($"[StageSystem] Choice stage... Index: {stagesList.IndexOf(st)} Stage objects count: {st.stageObjects.Count}");
                 // If current stage is passed we are go to another
                 if (st.isDone)
                     continue;

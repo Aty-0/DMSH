@@ -260,9 +260,7 @@ public class PathSystemEditorWindow : EditorWindow
                 pathSystem.name = EditorGUILayout.TextField($"Name:", pathSystem.name);
                 GUILayout.Label($"ID:{pathSystem.GetInstanceID()}");
                 pathSystem.transform.position = EditorGUILayout.Vector3Field("Position", pathSystem.transform.position);
-                pathSystem.catchUpNextObject = EditorGUILayout.Toggle("Catch Up Next Object", pathSystem.catchUpNextObject);
                 pathSystem.distanceAccuracy = EditorGUILayout.FloatField("Distance Accuracy", pathSystem.distanceAccuracy);
-                pathSystem.holdDistanceBetweenObjects = EditorGUILayout.Toggle("Hold Distance Between Objects", pathSystem.holdDistanceBetweenObjects);
                 pathSystem.distanceBetweenObjects = EditorGUILayout.FloatField("Distance Between Objects", pathSystem.distanceBetweenObjects);
                 pathSystem.loop = EditorGUILayout.Toggle("Loop", pathSystem.loop);
                 pathSystem.objectCount = EditorGUILayout.IntField("Spawn object count", pathSystem.objectCount);

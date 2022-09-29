@@ -12,6 +12,12 @@ namespace DMSH.Path
 {  
     public class PathSystem : MonoBehaviour
     {        
+        [Header("Main")]
+        [HideInInspector] public StageSystem stageSystem = null;
+        public ObservedList<MovableObject> movablePathObjectsList = new ObservedList<MovableObject>();
+        public List<PathPoint> pathPointsList = new List<PathPoint>();
+        public bool loop = true;
+       
         [Header("Spawner")]
         public int objectCount = 0;
         public int spawnedObjectCount = 0;
@@ -20,37 +26,30 @@ namespace DMSH.Path
         public float spawnerTimerTick = 0.5f;
         private Timer _spawnerTimer = null;
 
-        [Header("PathSystem")]
-        public ObservedList<MovableObject> movablePathObjectsList = new ObservedList<MovableObject>();
-        public List<PathPoint> pathPointsList = new List<PathPoint>();
-        public bool loop = true;
-       
         [Header("Misc")]
-        public bool holdDistanceBetweenObjects = true;
-        // FIX ME: At this moment this working weird
-        public bool catchUpNextObject = false; 
-        public float distanceAccuracy = 0.01f;
         public float distanceBetweenObjects = 2.0f;
-        public StageSystem stageSystem = null;
+
+        [Tooltip("Distance accuracy for reach point")]
+        public float distanceAccuracy = 0.01f;
 
         [Header("Editor")]
         public Color lineColor = Color.green;
-
-        [Header("Actions")]
-        public List<Action> onMovableObjectsAdded = new List<Action>();
-        public List<Action> onMovableObjectsChanged = new List<Action>();
-        public List<Action> onMovableObjectsRemoved = new List<Action>();
-
-        public List<PointAction> onLastMovableObjectReached = new List<PointAction>();
 
         [Header("Lifetime")]
         public float lifeTime = 0.0f;
         private Timer _lifetimeTimer = null;
 
         [Header("Current")]
+        // TODO: [HideInInspector] 
         public PathPoint currentPathPoint = null;
         public PathPoint nextPathPoint = null;
         public MovableObject currentPathObject = null;
+
+        [Header("Callbacks")]
+        public List<Action> onMovableObjectsAdded = new List<Action>();
+        public List<Action> onMovableObjectsChanged = new List<Action>();
+        public List<Action> onMovableObjectsRemoved = new List<Action>();
+        public List<PointAction> onLastMovableObjectReached = new List<PointAction>();
 
         protected void Start()
         {
@@ -69,8 +68,10 @@ namespace DMSH.Path
 
         public void OnLifetimeEnd()
         {
-            // TODO: How we can direct every object to last point immediately ?
             loop = false;
+
+            foreach (var mO in movablePathObjectsList.ToList())
+                mO.currentPoint = pathPointsList.Count - 1;
         }
 
         #region Spawner
@@ -293,17 +294,16 @@ namespace DMSH.Path
             // Will protect from unexpected deleted objects 
             movablePathObjectsList.RemoveAll(o => o == null);
 
-            MovableObject previousObject = null;
+            MovableObject futurePathObject = null;
 
             // TODO: Slip movement
             foreach (var mO in movablePathObjectsList.ToList())
             {
                 currentPathObject = mO;
+                
+                // If current path object is null we are skip this
                 if (currentPathObject == null)
                     continue;
-
-                // Get current point 
-                int i = currentPathObject.currentPoint;
 
                 // If we are have excess point
                 if (currentPathObject.currentPoint >= pathPointsList.Count)
@@ -320,45 +320,49 @@ namespace DMSH.Path
                     continue; // Move to next object
                 }
 
-                // Get current point point 
+                // Get future path object
+                int fi = movablePathObjectsList.IndexOf(currentPathObject) + 1;
+                futurePathObject = fi < movablePathObjectsList.Count ? movablePathObjectsList[fi] : movablePathObjectsList[0];
+                
+                // Get current point 
+                int i =  currentPathObject.currentPoint;
                 currentPathPoint = pathPointsList[i];
 
-                if (pathPointsList.IndexOf(currentPathPoint) + 1 != pathPointsList.Count)
-                    nextPathPoint = pathPointsList[i + 1];
+                // Get next point 
+                int npi = i + 1; 
+                nextPathPoint = npi < pathPointsList.Count ? pathPointsList[npi] : pathPointsList[0];
+                                        
+                var distanceBetweenCurrentObjects = Vector3.Distance(currentPathObject.transform.position, futurePathObject.transform.position);
+
+                // Will protect objects from stucking 
+                if (distanceBetweenCurrentObjects < 1)
+                {
+                    currentPathObject.reduceSpeed = Mathf.Clamp(Mathf.Clamp(currentPathObject.reduceSpeed, distanceBetweenObjects / distanceBetweenCurrentObjects,
+                        Mathf.Clamp(distanceBetweenCurrentObjects, 0.0f, 1.0f / distanceBetweenObjects)), 0.001f, 1.0f);
+                }
                 else
-                    nextPathPoint = null;
+                    currentPathObject.reduceSpeed = 1;
+
+                // Will boost up speed when object is stand behind 
+                if (distanceBetweenCurrentObjects > distanceBetweenObjects)
+                    currentPathObject.augmentSpeed = Mathf.Clamp(Mathf.Clamp(distanceBetweenCurrentObjects, 1.0f, distanceBetweenCurrentObjects) / distanceBetweenObjects, 0.01f, 5.0f);
+                else
+                    currentPathObject.augmentSpeed = 1;
 
                 // Calculate final speed 
-                currentPathObject.finalSpeed = (currentPathObject.speed * Time.deltaTime) * GlobalSettings.gameActiveAsInt; 
+                currentPathObject.finalSpeed = (currentPathObject.speed * Time.deltaTime * currentPathObject.reduceSpeed * currentPathObject.augmentSpeed) * GlobalSettings.gameActiveAsInt;
 
-                // Calculate reduce, augment speed for protecting objects from stacking or moving too far from previous                 
-                if (previousObject)
-                {
-                    var distanceBetweenCurrentObjects = Vector3.Distance(currentPathObject.transform.position, previousObject.transform.position);
-
-                    if (holdDistanceBetweenObjects)
-                    {
-                        currentPathObject.reduceSpeed = Mathf.Clamp(currentPathObject.reduceSpeed, 1.0f, Mathf.Clamp(distanceBetweenCurrentObjects, 0.0f, 2.0f / distanceBetweenObjects));
-                        currentPathObject.finalSpeed *= currentPathObject.reduceSpeed;
-                    }
-
-                    if (catchUpNextObject)
-                    {
-                        currentPathObject.augmentSpeed = Mathf.Clamp(currentPathObject.augmentSpeed, distanceBetweenCurrentObjects, distanceBetweenObjects);
-                        currentPathObject.finalSpeed *= currentPathObject.augmentSpeed;
-                    }
-                }
-
+            
                 // What's mode we need to use 
                 if (currentPathPoint.useCurve)
                 {
                     // Check current curve point 
                     if (currentPathObject.currentCurvePoint <= MathCurve.PATH_CURVE_LINE_STEPS)
                     {
-                        if (CheckPointOnValid(i + 1))
+                        if (nextPathPoint != pathPointsList[0])
                         {
-                            var lineEnd = MathCurve.MakeCurve(currentPathPoint.transform.position, pathPointsList[i + 1].curvePoint,
-                                pathPointsList[i + 1].transform.position, currentPathObject.currentCurvePoint / (float)MathCurve.PATH_CURVE_LINE_STEPS);
+                            var lineEnd = MathCurve.MakeCurve(currentPathPoint.transform.position, nextPathPoint.curvePoint,
+                                nextPathPoint.transform.position, currentPathObject.currentCurvePoint / (float)MathCurve.PATH_CURVE_LINE_STEPS);
                             var curveEndDistance = Vector3.Distance(currentPathObject.transform.position, lineEnd);
                             currentPathObject.transform.position = Vector3.MoveTowards(currentPathObject.transform.position, lineEnd, currentPathObject.finalSpeed);
                             if (curveEndDistance <= distanceAccuracy)
@@ -392,11 +396,7 @@ namespace DMSH.Path
                         continue;
                     }
                 }
-
-                previousObject = currentPathObject;
             }
-
-
         }
         #endregion
     }
