@@ -15,6 +15,10 @@ namespace DMSH.Misc
         // Works only on unity editor, because we use gizmos
         public static bool debugDrawPSAllPoints         = false;
         public static bool debugDrawPSCurrentMovement   = false;
+        public static bool debugDrawPlayerDGUI = false;
+
+        public static bool cheatGod = false;
+        public static bool cheatInfiniteBoost = false;
 
         public static bool musicPlay = true;
         public static bool mainMenuAwakeAnimation = true;

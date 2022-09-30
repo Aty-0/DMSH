@@ -9,9 +9,6 @@ namespace DMSH.Objects.Bonuses
         protected void Start()
         {
             InitializeBasicBonusComponents();
-
-            PlayerController player = FindObjectOfType<PlayerController>();
-            player.maxScore += 1000;
         }
 
         public override void Use(PlayerController player)

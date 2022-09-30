@@ -1,18 +1,17 @@
 using UnityEngine;
 using UnityEngine.UI;
-using DMSH.Characters;
+using DMSH.Misc;
 
 namespace DMSH.UI.Events
 {
     public class PauseGodModeToggle : MonoBehaviour
     {
-        [SerializeField] private PlayerController _controller;
         [SerializeField] private Toggle _toggle;
 
         private void Start()
         {
             _toggle = GetComponent<Toggle>();
-            _toggle.isOn = _controller.CheatGod;
+            _toggle.isOn = GlobalSettings.cheatGod;
             _toggle.onValueChanged.AddListener(delegate
             {
                 ToggleValueChanged(_toggle);
@@ -21,7 +20,7 @@ namespace DMSH.UI.Events
 
         public void ToggleValueChanged(Toggle change)
         {
-            _controller.CheatGod = _toggle.isOn;
+            GlobalSettings.cheatGod = _toggle.isOn;
         }
     }
 }

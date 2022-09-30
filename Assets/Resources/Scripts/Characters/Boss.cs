@@ -18,9 +18,6 @@ namespace DMSH.Characters
 
         protected override void EnemyStart()
         {
-            _playerController = (PlayerController)FindObjectOfType(typeof(PlayerController));
-            _playerController.maxScore += 1000 + (int)(_lifes * ((_health / 1.5f) * 1000) + _lifes * 10000);
-
             _bossUI.SetActive(!_bossUI.activeSelf);
             _bossLifes.text = $"Lifes:{_lifes}";
             _bossName.text = bossName;

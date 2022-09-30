@@ -3,10 +3,6 @@ using UnityEngine;
 using DMSH.Misc;
 using DMSH.Path;
 
-// TODO: [freeMovement]
-//       Need use impulse for pushing bullet    
-//       We need to choise impulse direction 
-
 namespace DMSH.Objects
 {
     public class Bullet : MovableObject

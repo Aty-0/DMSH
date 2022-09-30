@@ -14,11 +14,12 @@ namespace DMSH.LevelSpecifics
         public List<GameObject> toSpawn = new List<GameObject>();
         public Timer timer;
 
-        [Header("Misc")]
-        [SerializeField] private StageSystem _stageSystem;
-
         [Tooltip("If spawner attached to point")]
         [SerializeField] private PathSystem _pathSystem;
+
+        [Header("Misc")]
+        [HideInInspector] [SerializeField] private StageSystem _stageSystem;
+
 
         protected void Start()
         {

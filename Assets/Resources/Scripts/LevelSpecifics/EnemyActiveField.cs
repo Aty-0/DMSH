@@ -22,32 +22,20 @@ namespace DMSH.LevelSpecifics
 
         protected void OnTriggerEnter2D(Collider2D collider)
         {
-            Component[] components = collider.gameObject.GetComponents<Component>();
+            var enemy = collider.GetComponent<Enemy>();
 
-            foreach (Component component in components)
-            {
-                switch (component)
-                {
-                    case Enemy enemy:
-                        enemy.ignoreHits = false;
-                        break;
-                }
-            }
+            if (enemy)
+                enemy.ignoreHits = false;
         }
 
         protected void OnTriggerExit2D(Collider2D collider)
         {
-            Component[] components = collider.gameObject.GetComponents<Component>();
+            var enemy = collider.GetComponent<Enemy>();
 
-            foreach (Component component in components)
-            {
-                switch (component)
-                {
-                    case Enemy enemy:
-                        enemy.ignoreHits = true;
-                        break;
-                }
-            }
+            if (enemy)
+                enemy.ignoreHits = true;
+
         }
+    
     }
 }

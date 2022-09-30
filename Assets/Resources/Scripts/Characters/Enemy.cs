@@ -202,9 +202,7 @@ namespace DMSH.Characters
 
         protected virtual void EnemyStart()
         {
-            _playerController = (PlayerController)FindObjectOfType(typeof(PlayerController));
-            if (_playerController)
-                _playerController.maxScore += 1000;
+
         }
 
         public virtual void OnShot()

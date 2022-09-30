@@ -53,33 +53,6 @@ namespace DMSH.Characters
                 UpdateHUD();
             }
         }
-
-        public bool CheatGod
-        {
-            get => _cheatGod;
-            set
-            {
-                _cheatGod = value;
-            }
-        }
-
-        public bool CheatInfBoost
-        {
-            get => _cheatInfiniteBoost;
-            set
-            {
-                _cheatInfiniteBoost = value;
-            }
-        }
-
-        public bool DebugGUI
-        {
-            get => _debugGUI;
-            set
-            {
-                _debugGUI = value;
-            }
-        }
         #endregion
 
         #region Constants
@@ -96,22 +69,13 @@ namespace DMSH.Characters
         public GameObject       respawnPoint = null;
         public PlayerInput      playerInput = null;
         public ScreenHandler    screenHandler = null;
+        
+        [SerializeField] private Vector2 _moveDirection = Vector2.zero;
+        [HideInInspector] [SerializeField] private bool _isDead = false;
+        [HideInInspector] [SerializeField] private CameraDeathAnimation _cameraDeathAnimation = null;
+        [HideInInspector] [SerializeField] private StageSystem _stageSystem = null;
 
-        public int maxScore = 0;
-
-        [SerializeField] private Vector2 _moveDirection;
-        [SerializeField] private bool _isDead = false;
-        [SerializeField] private CameraDeathAnimation _cameraDeathAnimation = null;
-
-        private Coroutine _showChapterNameCoroutine = null;
-        private Coroutine _slowMotionCoroutine = null;
-        private Coroutine _deathAwakeCoroutine = null;
-        private Coroutine _shotCoroutine = null;
-
-        [Header("Stage")]
-        [SerializeField] private StageSystem _stageSystem = null;
-
-        [Header("Statistics")]
+        [Header("Current statistics")]
         [SerializeField] private int _player_score = 0;
         [SerializeField] private int _player_life = PLAYER_MAX_LIFE;
         [SerializeField] private int _player_boost = PLAYER_MAX_BOOST;
@@ -119,13 +83,7 @@ namespace DMSH.Characters
         [Header("Boost")]
         [SerializeField] private float _boost_speed = 0.05f;
         [SerializeField] private float _saved_time_scale = 0.0f;
-
-        [Header("Cheats & Debug")]
-        [SerializeField] private bool _debugGUI = false;
-        [SerializeField] private GUIStyle _cheatGUIStyle = null;
-        [SerializeField] private bool _cheatGod = false;
-        [SerializeField] private bool _cheatInfiniteBoost = false;
-
+        
         [Header("UI")]
         [SerializeField] private Text _uiScoreText = null;
         [SerializeField] private Text _uiBoostGainText = null;
@@ -134,6 +92,7 @@ namespace DMSH.Characters
         [SerializeField] private Text _uiFpsCounterText = null;
         [SerializeField] private Text _uiChapterName = null;
         [SerializeField] private Image _uiSomeImage = null; // Image on the right screen corner
+        [SerializeField] private GUIStyle _cheatGUIStyle = null;
 
         [Header("UI Screens")]
         [SerializeField] private GameObject _uiPauseScreen = null;
@@ -160,6 +119,11 @@ namespace DMSH.Characters
 
         [Header("Particles")]
         [SerializeField] protected ParticleSystem _deathParticle = null;
+
+        private Coroutine _showChapterNameCoroutine = null;
+        private Coroutine _slowMotionCoroutine = null;
+        private Coroutine _deathAwakeCoroutine = null;
+        private Coroutine _shotCoroutine = null;
 
         protected void Start()
         {
@@ -283,7 +247,7 @@ namespace DMSH.Characters
             respawnPoint.transform.position = new Vector2((-viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x) / 1000, -viewportToWorldPointY.y / 1.2f);
 
             // Rescale pathSystem and change position for all point
-            foreach (PathSystem system in FindObjectsOfType<PathSystem>())
+            foreach (var system in FindObjectsOfType<PathSystem>())
             {
                 system.transform.localScale = new Vector3(aspectRatioWithImage, system.transform.localScale.y, 1);
                 // TODO: Positions
@@ -309,10 +273,9 @@ namespace DMSH.Characters
                 Time.fixedDeltaTime = 0.02F * Time.timeScale;
                 Time.timeScale += GlobalSettings.gameActiveAsInt * _boost_speed;
 
-
-                foreach (AudioSource s in FindObjectsOfType<AudioSource>())
-                    if (s.gameObject.tag != "NotGenericSound")
-                        s.pitch = Time.timeScale;
+                foreach (var sound in FindObjectsOfType<AudioSource>())
+                    if (sound.gameObject.tag != "NotGenericSound")
+                        sound.pitch = Time.timeScale;
 
                 if (isBoost)
                     _uiBoostGainText.text = $"{(int)(Time.timeScale * 100)}%";
@@ -327,7 +290,7 @@ namespace DMSH.Characters
 
         public void UseBoost()
         {
-            if ((Boost <= 0 && !_cheatInfiniteBoost) || Time.timeScale < 1.0f)
+            if ((Boost <= 0 && !GlobalSettings.cheatInfiniteBoost) || Time.timeScale < 1.0f)
                 return;
 
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
@@ -376,9 +339,9 @@ namespace DMSH.Characters
             Cursor.visible = true;
 
             // Disable all sounds in scene
-            foreach (AudioSource s in FindObjectsOfType<AudioSource>())
-                if (s.gameObject.tag != "NotGenericSound")
-                    s.Stop();
+            foreach (var sound in FindObjectsOfType<AudioSource>())
+                if (sound.gameObject.tag != "NotGenericSound")
+                    sound.Stop();
 
             // TODO: Change track 
             audioSourceMusic.Stop();
@@ -392,7 +355,7 @@ namespace DMSH.Characters
 
             // Show some results
             _uiCurrentScoreText.text += GetNumberWithZeros(Score);
-            _uiMaxScoreText.text += GetNumberWithZeros(maxScore);
+            //_uiMaxScoreText.text += GetNumberWithZeros(maxScore);
         }
 
         public void ShowPauseScreen()
@@ -447,13 +410,13 @@ namespace DMSH.Characters
 #if UNITY_EDITOR
         private void OnGUI()
         {
-            if (_cheatGod)
+            if (GlobalSettings.cheatGod)
                 GUI.Label(new Rect(0, 60, 500, 500), "[God]", _cheatGUIStyle);
 
-            if (_cheatInfiniteBoost)
+            if (GlobalSettings.cheatInfiniteBoost)
                 GUI.Label(new Rect(0, 80, 500, 500), "[Infinity boost]", _cheatGUIStyle);
 
-            if (_debugGUI)
+            if (GlobalSettings.debugDrawPlayerDGUI)
             {
                 GUI.Label(new Rect(100, 80, 500, 500),  $"DeltaTime: {Time.deltaTime}");
                 GUI.Label(new Rect(100, 120, 500, 500), $"Position: {rigidBody2D.position}");
@@ -530,7 +493,7 @@ namespace DMSH.Characters
                 return;
 
             // Subtract one life point 
-            if (!_cheatGod)
+            if (!GlobalSettings.cheatGod)
                 Life -= 1;
 
 
@@ -548,7 +511,7 @@ namespace DMSH.Characters
                 _slowMotionCoroutine = StartCoroutine(DoSlowMotion(false));
 
                 // Destroy all bullet cuz we are can teleport player into the bullet 
-                foreach (Bullet bullet in FindObjectsOfType<Bullet>())
+                foreach (var bullet in FindObjectsOfType<Bullet>())
                     if (bullet.isEnemyBullet &&
                         bullet.collisionDestroyBullet &&
                         bullet.pathSystem == null)
