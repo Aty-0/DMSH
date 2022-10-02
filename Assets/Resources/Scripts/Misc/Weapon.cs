@@ -80,8 +80,7 @@ namespace DMSH.Misc
                 Gizmos.DrawCube(_position, new Vector3(0.2f, 0.2f, 0.2f));
             }
         }
-
-        protected void FixedUpdate()
+        private void UpdateBulletSpawnPosition()
         {
             if (_weaponEnabled && canBeUsed)
             {
@@ -90,13 +89,21 @@ namespace DMSH.Misc
             }
         }
 
+        protected void FixedUpdate()
+        {
+            UpdateBulletSpawnPosition();
+        }
+
         private IEnumerator ShotC()
         {
             while (_weaponEnabled && canBeUsed)
             {
                 foreach (Action action in onShot)
                     action?.Invoke();
-                
+
+                // First update 
+                UpdateBulletSpawnPosition();
+
                 Instantiate(bulletPrefab, _position, Quaternion.identity);
 
                 if(_audioSource)
