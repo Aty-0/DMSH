@@ -16,28 +16,29 @@ namespace DMSH.Characters
     [RequireComponent(typeof(PlayerInput))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]
+    [RequireComponent(typeof(Weapon))]
 
     public class PlayerController : MovableObject
     {
         #region Public Values
         public int Life
         {
-            get => _player_life;
+            get => _life;
             set
             {
                 if (value >= PLAYER_MIN_LIFE)
-                    _player_life = value;
+                    _life = value;
 
                 UpdateHUD();
             }
         }
         public int Boost
         {
-            get => _player_boost;
+            get => _boost;
             set
             {
                 if (value >= PLAYER_MIN_LIFE)
-                    _player_boost = value;
+                    _boost = value;
 
                 UpdateHUD();
             }
@@ -45,39 +46,12 @@ namespace DMSH.Characters
 
         public int Score
         {
-            get => _player_score;
+            get => _score;
             set
             {
-                _player_score = value;
+                _score = value;
 
                 UpdateHUD();
-            }
-        }
-
-        public bool CheatGod
-        {
-            get => _cheatGod;
-            set
-            {
-                _cheatGod = value;
-            }
-        }
-
-        public bool CheatInfBoost
-        {
-            get => _cheatInfiniteBoost;
-            set
-            {
-                _cheatInfiniteBoost = value;
-            }
-        }
-
-        public bool DebugGUI
-        {
-            get => _debugGUI;
-            set
-            {
-                _debugGUI = value;
             }
         }
         #endregion
@@ -96,36 +70,21 @@ namespace DMSH.Characters
         public GameObject       respawnPoint = null;
         public PlayerInput      playerInput = null;
         public ScreenHandler    screenHandler = null;
+        
+        [SerializeField] private Vector2 _moveDirection = Vector2.zero;
+        [HideInInspector] [SerializeField] private bool _isDead = false;
+        [HideInInspector] [SerializeField] private CameraDeathAnimation _cameraDeathAnimation = null;
+        [HideInInspector] [SerializeField] private StageSystem _stageSystem = null;
 
-        public int maxScore = 0;
-
-        [SerializeField] private Vector2 _moveDirection;
-        [SerializeField] private bool _isDead = false;
-        [SerializeField] private CameraDeathAnimation _cameraDeathAnimation = null;
-
-        private Coroutine _showChapterNameCoroutine = null;
-        private Coroutine _slowMotionCoroutine = null;
-        private Coroutine _deathAwakeCoroutine = null;
-        private Coroutine _shotCoroutine = null;
-
-        [Header("Stage")]
-        [SerializeField] private StageSystem _stageSystem = null;
-
-        [Header("Statistics")]
-        [SerializeField] private int _player_score = 0;
-        [SerializeField] private int _player_life = PLAYER_MAX_LIFE;
-        [SerializeField] private int _player_boost = PLAYER_MAX_BOOST;
+        [Header("Current statistics")]
+        [SerializeField] private int _score = 0;
+        [SerializeField] private int _life = PLAYER_MAX_LIFE;
+        [SerializeField] private int _boost = PLAYER_MAX_BOOST;
 
         [Header("Boost")]
         [SerializeField] private float _boost_speed = 0.05f;
         [SerializeField] private float _saved_time_scale = 0.0f;
-
-        [Header("Cheats & Debug")]
-        [SerializeField] private bool _debugGUI = false;
-        [SerializeField] private GUIStyle _cheatGUIStyle = null;
-        [SerializeField] private bool _cheatGod = false;
-        [SerializeField] private bool _cheatInfiniteBoost = false;
-
+        
         [Header("UI")]
         [SerializeField] private Text _uiScoreText = null;
         [SerializeField] private Text _uiBoostGainText = null;
@@ -134,6 +93,7 @@ namespace DMSH.Characters
         [SerializeField] private Text _uiFpsCounterText = null;
         [SerializeField] private Text _uiChapterName = null;
         [SerializeField] private Image _uiSomeImage = null; // Image on the right screen corner
+        [SerializeField] private GUIStyle _cheatGUIStyle = null;
 
         [Header("UI Screens")]
         [SerializeField] private GameObject _uiPauseScreen = null;
@@ -142,12 +102,7 @@ namespace DMSH.Characters
         [SerializeField] private Text _uiMaxScoreText = null;
 
         [Header("Weapon")]
-        public bool weaponEnabled = false;
-        public Bullet bulletPrefab = null;
-        [SerializeField] private int _weaponType = 0;
-        [SerializeField] private float _weaponBoostGain = 0.0f;
-        [SerializeField] private GameObject _shotPoint = null;
-        [SerializeField] private float _shotFrequency = 0.07f;
+        public Weapon                   weapon;
 
         [Header("Resizable")]
         [SerializeField] private GameObject[] _wallsList = new GameObject[4];
@@ -160,6 +115,10 @@ namespace DMSH.Characters
 
         [Header("Particles")]
         [SerializeField] protected ParticleSystem _deathParticle = null;
+
+        private Coroutine _showChapterNameCoroutine = null;
+        private Coroutine _slowMotionCoroutine = null;
+        private Coroutine _deathAwakeCoroutine = null;
 
         protected void Start()
         {
@@ -183,6 +142,7 @@ namespace DMSH.Characters
             boxCollider2D = GetComponent<BoxCollider2D>();
             playerInput = GetComponent<PlayerInput>();
             logHandler = GetComponent<LogHandler>();
+            weapon = GetComponent<Weapon>();
             _stageSystem = FindObjectOfType<StageSystem>();
             screenHandler = gameObject.AddComponent<ScreenHandler>();
             screenHandler.onScreenResolutionChange.Add(OnResolutionScreenChange);
@@ -190,6 +150,7 @@ namespace DMSH.Characters
             _cameraDeathAnimation.animCamera = gameCamera;
             _cameraDeathAnimation.target = gameObject;
             _uiBoostGainText.text = "100%";
+
 
             // Set style for cheat gui
             _cheatGUIStyle.fontSize = 13;
@@ -283,22 +244,10 @@ namespace DMSH.Characters
             respawnPoint.transform.position = new Vector2((-viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x) / 1000, -viewportToWorldPointY.y / 1.2f);
 
             // Rescale pathSystem and change position for all point
-            foreach (PathSystem system in FindObjectsOfType<PathSystem>())
+            foreach (var system in FindObjectsOfType<PathSystem>())
             {
                 system.transform.localScale = new Vector3(aspectRatioWithImage, system.transform.localScale.y, 1);
                 // TODO: Positions
-            }
-        }
-        private IEnumerator Shot()
-        {
-            while (weaponEnabled)
-            {
-                Vector3 final_pos = _shotPoint != null ? _shotPoint.transform.position : new Vector3(rigidBody2D.position.x, rigidBody2D.position.y + boxCollider2D.size.y, 0);
-                Instantiate(bulletPrefab, final_pos, Quaternion.identity);
-
-                audioSourceWeapon.Play();
-
-                yield return new WaitForSeconds(_shotFrequency);
             }
         }
 
@@ -309,10 +258,9 @@ namespace DMSH.Characters
                 Time.fixedDeltaTime = 0.02F * Time.timeScale;
                 Time.timeScale += GlobalSettings.gameActiveAsInt * _boost_speed;
 
-
-                foreach (AudioSource s in FindObjectsOfType<AudioSource>())
-                    if (s.gameObject.tag != "NotGenericSound")
-                        s.pitch = Time.timeScale;
+                foreach (var sound in FindObjectsOfType<AudioSource>())
+                    if (sound.gameObject.tag != "NotGenericSound")
+                        sound.pitch = Time.timeScale;
 
                 if (isBoost)
                     _uiBoostGainText.text = $"{(int)(Time.timeScale * 100)}%";
@@ -327,7 +275,7 @@ namespace DMSH.Characters
 
         public void UseBoost()
         {
-            if ((Boost <= 0 && !_cheatInfiniteBoost) || Time.timeScale < 1.0f)
+            if ((Boost <= 0 && !GlobalSettings.cheatInfiniteBoost) || Time.timeScale < 1.0f)
                 return;
 
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
@@ -349,11 +297,10 @@ namespace DMSH.Characters
 
         private void OnShot(InputValue input)
         {
-            if (GlobalSettings.gameActiveAsBool)
-            {
-                weaponEnabled = input.isPressed;
-                _shotCoroutine = StartCoroutine(Shot());
-            }
+            if (GlobalSettings.gameActiveAsBool && input.isPressed)            
+                  weapon.Shot();            
+            else
+                  weapon.StopShooting();            
         }
 
         private void OnMoveH(InputValue input)
@@ -376,9 +323,9 @@ namespace DMSH.Characters
             Cursor.visible = true;
 
             // Disable all sounds in scene
-            foreach (AudioSource s in FindObjectsOfType<AudioSource>())
-                if (s.gameObject.tag != "NotGenericSound")
-                    s.Stop();
+            foreach (var sound in FindObjectsOfType<AudioSource>())
+                if (sound.gameObject.tag != "NotGenericSound")
+                    sound.Stop();
 
             // TODO: Change track 
             audioSourceMusic.Stop();
@@ -392,7 +339,7 @@ namespace DMSH.Characters
 
             // Show some results
             _uiCurrentScoreText.text += GetNumberWithZeros(Score);
-            _uiMaxScoreText.text += GetNumberWithZeros(maxScore);
+            //_uiMaxScoreText.text += GetNumberWithZeros(maxScore);
         }
 
         public void ShowPauseScreen()
@@ -422,13 +369,10 @@ namespace DMSH.Characters
             }
             else
             {
-                weaponEnabled = false;
+                weapon.StopShooting();
 
                 if (_deathAwakeCoroutine != null)
                     StopCoroutine(_deathAwakeCoroutine);
-
-                if (_shotCoroutine != null)
-                    StopCoroutine(_shotCoroutine);
 
                 // If we have enabled boost
                 if (_slowMotionCoroutine != null)
@@ -447,23 +391,23 @@ namespace DMSH.Characters
 #if UNITY_EDITOR
         private void OnGUI()
         {
-            if (_cheatGod)
+            if (GlobalSettings.cheatGod)
                 GUI.Label(new Rect(0, 60, 500, 500), "[God]", _cheatGUIStyle);
 
-            if (_cheatInfiniteBoost)
+            if (GlobalSettings.cheatInfiniteBoost)
                 GUI.Label(new Rect(0, 80, 500, 500), "[Infinity boost]", _cheatGUIStyle);
 
-            if (_debugGUI)
+            if (GlobalSettings.debugDrawPlayerDGUI)
             {
                 GUI.Label(new Rect(100, 80, 500, 500),  $"DeltaTime: {Time.deltaTime}");
                 GUI.Label(new Rect(100, 120, 500, 500), $"Position: {rigidBody2D.position}");
                 GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {rigidBody2D.velocity}");
-                GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weaponEnabled}");
+                GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weapon.weaponEnabled}");
                 GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
                 GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
                 GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActiveAsBool}");
-                GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {_weaponBoostGain}");
-                GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {_weaponType}");
+                GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {weapon.weaponBoostGain}");
+                GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {weapon.weaponType}");
             }
         }
 #endif
@@ -496,9 +440,7 @@ namespace DMSH.Characters
             if (_slowMotionCoroutine != null)
                 StopCoroutine(_slowMotionCoroutine);
 
-            weaponEnabled = false;
-            if (_shotCoroutine != null)
-                StopCoroutine(_shotCoroutine);
+            weapon.StopShooting();
 
             Life = PLAYER_MIN_LIFE;
 
@@ -530,7 +472,7 @@ namespace DMSH.Characters
                 return;
 
             // Subtract one life point 
-            if (!_cheatGod)
+            if (!GlobalSettings.cheatGod)
                 Life -= 1;
 
 
@@ -548,7 +490,7 @@ namespace DMSH.Characters
                 _slowMotionCoroutine = StartCoroutine(DoSlowMotion(false));
 
                 // Destroy all bullet cuz we are can teleport player into the bullet 
-                foreach (Bullet bullet in FindObjectsOfType<Bullet>())
+                foreach (var bullet in FindObjectsOfType<Bullet>())
                     if (bullet.isEnemyBullet &&
                         bullet.collisionDestroyBullet &&
                         bullet.pathSystem == null)
@@ -579,22 +521,10 @@ namespace DMSH.Characters
             _uiBoostText.text = Boost.ToString();
         }
 
-        // Thats thing should update some player components
+        // That thing should update some player components
         public void UpdateSettings()
         {
             audioSourceMusic.enabled = GlobalSettings.musicPlay;
-        }
-
-        public void AddWeaponBoost(float gain)
-        {
-            _weaponBoostGain += gain;
-            if (_weaponBoostGain >= 100.0f)
-            {
-                // TODO: Activate needed weapon type
-                _weaponBoostGain = 0.0f;
-                _weaponType += 1;
-            }
-
         }
     }
 }

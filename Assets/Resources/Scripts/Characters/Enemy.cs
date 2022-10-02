@@ -10,19 +10,17 @@ namespace DMSH.Characters
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(SpriteRenderer))]
+    [RequireComponent(typeof(Weapon))]
     public class Enemy : MovableObject
     {
         public const int MAX_RANDOM_DROP_SCORE_BONUS = 4;
         public const int MAX_RANDOM_DROP_WEAPON_BONUS = 4;
 
         [Header("Weapon")]
-        public float shotFrequency = 0.05f;
-        public bool weaponEnabled = false;
-        public Bullet bulletPrefab = null;
-        public bool canUseWeapon = true;
-        public bool ignoreHits = true;
-
+        public Weapon weapon;
+        
         [Header("Enemy")]
+        public bool ignoreHits = true;
         [SerializeField] protected SpriteRenderer _spriteRenderer = null;
         [SerializeField] protected bool weakType = false;
         [SerializeField] protected bool onLastPointWillDestroy = false;
@@ -45,7 +43,7 @@ namespace DMSH.Characters
         [Header("Sounds")]
         [SerializeField] protected AudioSource _deathAudioSource = null;
         [SerializeField] protected AudioSource _damageAudioSource = null;
-
+        
         protected void Start()
         {
             _rigidBody2D    = GetComponent<Rigidbody2D>();
@@ -53,6 +51,9 @@ namespace DMSH.Characters
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _deathParticle  = GetComponentInChildren<ParticleSystem>();
 
+            weapon          = GetComponent<Weapon>();
+            weapon.onShot.Add(OnShot);
+            
             _health = _maxHealth;
             ignoreHits = true;
 
@@ -83,30 +84,22 @@ namespace DMSH.Characters
 
         public void StartShot()
         {
-            OnStartShot();
-            weaponEnabled = true;
-            _shotCoroutine = StartCoroutine(Shot());
+            if (!weakType)
+            {
+                OnStartShot();
+                weapon.Shot();
+            }
         }
 
         public void StopShot()
         {
-            OnStopShot();
-            weaponEnabled = false;
-
-            if (_shotCoroutine != null)
-                StopCoroutine(_shotCoroutine);
-        }
-
-        private IEnumerator Shot()
-        {
-            while (GlobalSettings.gameActiveAsBool && (weaponEnabled && canUseWeapon && !_isDead))
+            if (!weakType)
             {
-                OnShot();
-                Vector2 final_pos = new Vector2(rigidBody2D.position.x, rigidBody2D.position.y - boxCollider2D.size.y);
-                Instantiate(bulletPrefab, final_pos, Quaternion.identity);
-                yield return new WaitForSeconds(shotFrequency);
+                OnStopShot();
+                weapon.StopShooting();
             }
         }
+
         public override void Unspawn()
         {
             Kill(false, true);
@@ -114,6 +107,8 @@ namespace DMSH.Characters
 
         public void Kill(bool givePlayerScore, bool unspawn = false)
         {
+            weapon.StopShooting();
+
             _lifes = 0;
             _health = 0;
             _isDead = true;
@@ -202,9 +197,7 @@ namespace DMSH.Characters
 
         protected virtual void EnemyStart()
         {
-            _playerController = (PlayerController)FindObjectOfType(typeof(PlayerController));
-            if (_playerController)
-                _playerController.maxScore += 1000;
+
         }
 
         public virtual void OnShot()
@@ -239,7 +232,6 @@ namespace DMSH.Characters
 
         public void DropBonus()
         {
-            //TODO: Drop point in random position by range
             if (_bonusWeaponBuff)
             {
                 for (int i = 0; i <= Random.Range(0, MAX_RANDOM_DROP_WEAPON_BONUS); i++)

@@ -58,8 +58,7 @@ namespace DMSH.Misc.Log
             }));
             consoleCommandsList.Add(new Tuple<string, Action>("dgui", () =>
             {
-                PlayerController player = FindObjectOfType<PlayerController>();
-                player.DebugGUI = !player.DebugGUI;
+                GlobalSettings.debugDrawPlayerDGUI = !GlobalSettings.debugDrawPlayerDGUI;
             }));
             consoleCommandsList.Add(new Tuple<string, Action>("tc", () =>
             {
@@ -79,13 +78,12 @@ namespace DMSH.Misc.Log
             }));
             consoleCommandsList.Add(new Tuple<string, Action>("god", () =>
             {
-                PlayerController player = FindObjectOfType<PlayerController>();
-                player.CheatGod = !player.CheatGod;
+                GlobalSettings.cheatGod = !GlobalSettings.cheatGod;
             }));
+
             consoleCommandsList.Add(new Tuple<string, Action>("infboost", () =>
             {
-                PlayerController player = FindObjectOfType<PlayerController>();
-                player.CheatInfBoost = !player.CheatInfBoost;
+                GlobalSettings.cheatInfiniteBoost = !GlobalSettings.cheatInfiniteBoost;
             }));
             consoleCommandsList.Add(new Tuple<string, Action>("killenemy", () =>
             {

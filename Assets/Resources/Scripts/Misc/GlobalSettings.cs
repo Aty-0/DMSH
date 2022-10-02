@@ -10,11 +10,16 @@ namespace DMSH.Misc
     [Serializable]
     public static class GlobalSettings
     {
-        public static bool debugDrawPSObjectInfo        = false;
         // TODO:
-        // Works only on unity editor, because we use gizmos
+        // Works only in unity editor, because we use gizmos
+        public static bool debugDrawWeaponPoints        = false;
+        public static bool debugDrawPSObjectInfo        = false;
         public static bool debugDrawPSAllPoints         = false;
         public static bool debugDrawPSCurrentMovement   = false;
+        public static bool debugDrawPlayerDGUI = false;
+
+        public static bool cheatGod = false;
+        public static bool cheatInfiniteBoost = false;
 
         public static bool musicPlay = true;
         public static bool mainMenuAwakeAnimation = true;
@@ -23,20 +28,9 @@ namespace DMSH.Misc
         // And on game load it's just stuck
         [NonSerialized] private static bool _gameActive = true;
 
+        public static int  gameActiveAsInt { get => Convert.ToInt32(_gameActive); }
+        public static bool gameActiveAsBool { get => _gameActive; }
 
-        public static int gameActiveAsInt
-        {
-            get => Convert.ToInt32(_gameActive);
-        }
-
-
-        // In this list we are collect all components before activate pause
-        // private static List<GameObject> _gameobjectBeforePause = new List<GameObject>();
-
-        public static bool gameActiveAsBool
-        {
-            get => _gameActive;
-        }
 
         public static void SetGameActive(bool gameActive)
         {

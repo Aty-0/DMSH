@@ -10,8 +10,8 @@ namespace DMSH.Misc
         public float size = 2.0f;
         public float speed = 3.0f;
 
-        [SerializeField] private Coroutine _coroutineZoom;
-        [SerializeField] private Coroutine _coroutineMoveToTarget;
+        private Coroutine _coroutineZoom;
+        private Coroutine _coroutineMoveToTarget;
 
         private IEnumerator Zoom()
         {
@@ -24,12 +24,12 @@ namespace DMSH.Misc
 
         private IEnumerator MoveToTarget()
         {
-            Vector2 target_pos = new Vector2(target.transform.position.x, target.transform.position.y);
-            Vector2 camera_pos = new Vector2(animCamera.transform.position.x, animCamera.transform.position.y);
-            while (camera_pos != target_pos)
+            var targetPos = new Vector2(target.transform.position.x, target.transform.position.y);
+            var cameraPos = new Vector2(animCamera.transform.position.x, animCamera.transform.position.y);
+            while (cameraPos != targetPos)
             {
-                camera_pos = Vector2.Lerp(camera_pos, target_pos + Random.insideUnitCircle, speed * Time.deltaTime);
-                animCamera.transform.position = new Vector3(camera_pos.x, camera_pos.y, animCamera.transform.position.z);
+                cameraPos = Vector2.Lerp(cameraPos, targetPos + Random.insideUnitCircle, speed * Time.deltaTime);
+                animCamera.transform.position = new Vector3(cameraPos.x, cameraPos.y, animCamera.transform.position.z);
 
                 yield return new WaitForSeconds(0.01f);
             }
