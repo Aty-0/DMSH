@@ -232,7 +232,6 @@ namespace DMSH.Characters
 
         public void DropBonus()
         {
-            //TODO: Drop point in random position by range
             if (_bonusWeaponBuff)
             {
                 for (int i = 0; i <= Random.Range(0, MAX_RANDOM_DROP_WEAPON_BONUS); i++)
