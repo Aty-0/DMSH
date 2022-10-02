@@ -282,7 +282,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'Max Score:'
+  m_Text: 'Max:'
 --- !u!1 &161329163035517374
 GameObject:
   m_ObjectHideFlags: 0
@@ -2173,6 +2173,7 @@ GameObject:
   - component: {fileID: 1093675251195469083}
   - component: {fileID: 2154399824976697551}
   - component: {fileID: 879949775040380336}
+  - component: {fileID: 6554189413946908200}
   m_Layer: 5
   m_Name: UIStatusWIP
   m_TagString: Untagged
@@ -2195,10 +2196,10 @@ RectTransform:
   m_Father: {fileID: 157083971599072985}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -724.0801, y: -1526.145}
-  m_SizeDelta: {x: -1448.1556, y: 44.16284}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 0, y: 18.477722}
+  m_SizeDelta: {x: 1920, y: 36.99}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2154399824976697551
 CanvasRenderer:
@@ -2221,7 +2222,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.34117648}
+  m_Color: {r: 1, g: 1, b: 1, a: 0.39607844}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -2229,19 +2230,31 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: a3dae25178504ad4a83d4a403e7a9a31, type: 3}
-    m_FontSize: 23
+    m_Font: {fileID: 12800000, guid: fee2114d3682b7f47be4494eb287c135, type: 3}
+    m_FontSize: 17
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 40
-    m_Alignment: 6
+    m_Alignment: 7
     m_AlignByGeometry: 0
     m_RichText: 1
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'build: nas rano'
+  m_Text: V
+--- !u!114 &6554189413946908200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3356197715122447639}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 09cb230f6e5e89c44a20716a3a39972d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3601704950139085329
 GameObject:
   m_ObjectHideFlags: 0
@@ -3698,13 +3711,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 6654912975423603207, guid: ef383ec845594c74397b1f79482af380, type: 3}
-  weaponBoostGain: 0
   shotFrequency: 0.07
-  shotPoint: {fileID: 7150887283382471543}
   canBeUsed: 1
-  _weaponType: 0
   _weaponEnabled: 0
   _audioSource: {fileID: 5971732964917514378}
+  weaponBoostGain: 0
+  _weaponType: 0
+  shotPoint: {fileID: 7150887283382471543}
+  _useOwner: 0
+  _boxCollider2D: {fileID: 0}
+  _position: {x: 0, y: 0, z: 0}
 --- !u!1 &5158097134975063080
 GameObject:
   m_ObjectHideFlags: 0
