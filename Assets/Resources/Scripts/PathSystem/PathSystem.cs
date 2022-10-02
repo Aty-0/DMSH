@@ -39,11 +39,10 @@ namespace DMSH.Path
         public float lifeTime = 0.0f;
         private Timer _lifetimeTimer = null;
 
-        [Header("Current")]
-        // TODO: [HideInInspector] 
-        public PathPoint currentPathPoint = null;
-        public PathPoint nextPathPoint = null;
-        public MovableObject currentPathObject = null;
+        //[Header("Current")]
+        [HideInInspector] public PathPoint currentPathPoint = null;
+        [HideInInspector] public PathPoint nextPathPoint = null;
+        [HideInInspector] public MovableObject currentPathObject = null;
 
         [Header("Callbacks")]
         public List<Action> onMovableObjectsAdded = new List<Action>();
@@ -82,6 +81,7 @@ namespace DMSH.Path
             movableObject.pathSystem = this;
             movableObject.name = $"{movableObject.name}{spawnedObjectCount}";
             movableObject.transform.parent = transform.parent;
+            
             movablePathObjectsList.Add(movableObject);
             if (spawnedObjectCount == objectCount)
                 _spawnerTimer.EndTimer();

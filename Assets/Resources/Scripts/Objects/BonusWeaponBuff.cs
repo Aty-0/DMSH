@@ -18,7 +18,7 @@ namespace DMSH.Objects.Bonuses
                 Debug.Assert(player);
                 audioSource.Play();
                 Destroy(gameObject, audioSource.clip.length);
-                player.AddWeaponBoost(Random.Range(0.5f, 4.0f));
+                player.weapon.AddWeaponBoost(Random.Range(0.5f, 4.0f));
                 gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
                 gameObject.GetComponent<SpriteRenderer>().enabled = false;
                 gameObject.GetComponent<Collider2D>().enabled = false;
