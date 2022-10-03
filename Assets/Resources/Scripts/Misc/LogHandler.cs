@@ -65,10 +65,40 @@ namespace DMSH.Misc.Log
 
             // ?
             Konsole.Konsole.RegisterCommand("tmessages", _ => drawLogMessages = !drawLogMessages);
-            Konsole.Konsole.RegisterCommand("dgui", _ => GlobalSettings.debugDrawPlayerDGUI = !GlobalSettings.debugDrawPlayerDGUI);
+
             Konsole.Konsole.RegisterCommand("testLog", _ => Debug.Log("Hi"));
             Konsole.Konsole.RegisterCommand("testassert", _ => Debug.Assert(false, "Assert Hi"));
             Konsole.Konsole.RegisterCommand("testexception", _ => Debug.LogException(new NotImplementedException()));
+
+            Konsole.Konsole.RegisterCommand("debugDrawPlayerDGUI", context =>
+            {
+                GlobalSettings.debugDrawPlayerDGUI = !GlobalSettings.debugDrawPlayerDGUI;
+                context.Log($"{TextTags.Bold("DebugDrawPlayerDGUI")} is {(GlobalSettings.debugDrawPlayerDGUI ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
+            });
+
+            Konsole.Konsole.RegisterCommand("debugDrawPSAllPoints", context =>
+            {
+                GlobalSettings.debugDrawPSAllPoints = !GlobalSettings.debugDrawPSAllPoints;
+                context.Log($"{TextTags.Bold("debugDrawPSAllPoints")} is {(GlobalSettings.debugDrawPSAllPoints ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
+            });
+
+            Konsole.Konsole.RegisterCommand("debugDrawPSCurrentMovement", context =>
+            {
+                GlobalSettings.debugDrawPSCurrentMovement = !GlobalSettings.debugDrawPSCurrentMovement;
+                context.Log($"{TextTags.Bold("debugDrawPSCurrentMovement")} is {(GlobalSettings.debugDrawPSCurrentMovement ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
+            });
+
+            Konsole.Konsole.RegisterCommand("debugDrawPSObjectInfo", context =>
+            {
+                GlobalSettings.debugDrawPSObjectInfo = !GlobalSettings.debugDrawPSObjectInfo;
+                context.Log($"{TextTags.Bold("debugDrawPSObjectInfo")} is {(GlobalSettings.debugDrawPSObjectInfo ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
+            });
+
+            Konsole.Konsole.RegisterCommand("debugDrawWeaponPoints", context =>
+            {
+                GlobalSettings.debugDrawWeaponPoints = !GlobalSettings.debugDrawWeaponPoints;
+                context.Log($"{TextTags.Bold("debugDrawWeaponPoints")} is {(GlobalSettings.debugDrawWeaponPoints ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
+            });
         }
 
         protected void OnGUI()
