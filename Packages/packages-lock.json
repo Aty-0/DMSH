@@ -1,5 +1,12 @@
 {
   "dependencies": {
+    "com.kitakun.konsole": {
+      "version": "https://github.com/kitakun/Konsole.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "2e62a8678f5f9effdf2eee9a38399685c777a08a"
+    },
     "com.unity.2d.animation": {
       "version": "8.0.3",
       "depth": 0,

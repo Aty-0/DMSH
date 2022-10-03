@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "com.kitakun.konsole": "https://github.com/kitakun/Konsole.git",
     "com.unity.2d.animation": "8.0.3",
     "com.unity.2d.pixel-perfect": "5.0.1",
     "com.unity.2d.psdimporter": "7.0.2",
