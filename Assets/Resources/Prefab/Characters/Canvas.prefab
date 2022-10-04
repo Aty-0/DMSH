@@ -148,7 +148,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: a3dae25178504ad4a83d4a403e7a9a31, type: 3}
-    m_FontSize: 30
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -230,7 +230,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: a3dae25178504ad4a83d4a403e7a9a31, type: 3}
-    m_FontSize: 30
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -533,122 +533,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!1 &902511315630483003
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 7971098738495770552}
-  - component: {fileID: 1011342712829546106}
-  - component: {fileID: 534302955833573255}
-  m_Layer: 5
-  m_Name: Kawai_nyaa (3)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &7971098738495770552
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 902511315630483003}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4813038100114290594}
-  m_RootOrder: 2
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -22.499992, y: 0}
-  m_SizeDelta: {x: 45.00001, y: 0.0000019073486}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &1011342712829546106
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 902511315630483003}
-  m_CullTransparentMesh: 1
---- !u!114 &534302955833573255
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 902511315630483003}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0.16355896, a: 0.28235295}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: cdfb74c8466b14048a4a5488e185a817, type: 3}
-    m_FontSize: 11
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 0
-    m_MaxSize: 40
-    m_Alignment: 7
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000,.\u3000---\u3000,\r\n\u3000\u3000\u3000\u3000\u3000\u3000
-    -''\u30C6''\xB4\u3000\u3000_\u3000\u3000 \u3000 \u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000,r'\uFF67'
-    ,r\uFF0F\uFF0F ,\u3000, \u3000 \u3000 \uFF40!\r\n\u3000\u3000 \u3000 \u3000 \xB4
-    ' /,'/_\uFF68,\uFF72\u3000!\u3000| \u3000 |\u3000\u3000\u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000
-    l1,l \uFF8A.\uFF64\uFF40|/| /\u30C8\uFF68._|\u3000\u3000\u3000|\r\n\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3003 l l\uFF6D\uFF5D\u3000 ', -\uFF64.V/\u3000/\u3000|\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
-    \uFF4C|\u3000l\u3000 '\u3000\u3000 \uFF15i\uFF82\u3000 \u30CE\u3000\uFF8A|\r\n\u3000\u3000\u3000\u3000\u3000
-    \u3000 \u30FD\uFF84l\u30FD\uFF40\u3000\u3000 \uFF0F,.-\uFF7C\u30A4\u2033\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3000 \uFF40\xA8\u4EC1'-'\uFF95\u3001 \u3000\u3000\u3000\u3000\u3000\r\n\u3000\u3000\u3000\u3000
-    \u3000 \u3000 \u3000 ,r=\uFF86.\u30FD\uFF64\u3000\u3000l\r\n\u3000\u3000\u3000\u3000\u3000\u3000_,..
-    \u30A4\u3000\u3000\u3000\u30FD\uFF40\u3001\u3000\u30FD \u3000\u3000\u3000\r\n\u3000\u3000\u3000\u3000\u3000f-r'/\uFF5C
-    \u3000 \u3000 l\u3000|\u3000\u3000 |\r\n\u3000\u3000\u3000\u3000\u3000|\u3000!\u2032|\u3000\u3000\u3000\u3000|\u3000|\uFF3F__{\r\n.\u3000\u3000\u3000\u3000
-    {|_\uFF63\u3000\uFF5C\u3000\u3000\u3000 ,L. -\uFFE2\uFF98\r\n\u3000\u3000\u3000\u3000
-    \u304F \uFF68\u3000\uFF5C\u3000\u3000\u3000 l\u3000\u3000 \u3000 l\r\n\u3000\u3000
-    \u3000 \u3000 \u3015.\u3000 |\u3000\u3000 \u3000 |\u3000\u3000 \u3000 |\r\n\u3000\u3000\u3000
-    \uFF0F\uFF68\u2032\uFF5C\u3000\u3000\u3000 |\u3000\u3000 \u30FD\uFF89\r\n\u3000\u3000
-    / ,//\u3000\u3000|\u3000\u3000\u3000\u3000|\u3000\u3000\u3000 \u30FD\r\n\u3000\u3000
-    \uFF40\xA8./\u3000\u3000 |\u3000\u3000\u3000\u3000|\u3000\u3000\u3000\u3000\uFF40\u3001\r\n\u3000\u3000\u3000\u3000|\u3000
-    \u3000 |\u3000\u3000\u3000\u3000|\u3000\u3000\u3000\u3000\u3000l\u3001\r\n\u3000\u3000\u3000
-    ,\uFF8A\u3000\u3000 l\u3000\u3000 \u3000 \uFF89\u3000\u3000_,. -.- \u3009\r\n\u3000\u3000\uFF0F,-\u3000.\uFF63\u3000\u3000\u3000\u30E0\u2010
-    \xB4\u3000\u3000\u30FD'\r\n\u3000 \uFF40\u30BD\u3000\u3000\u3000\u3000 \u30C8--\u30A4\u3000\u3000\u3000\u3000
-    _,.-,\u3009\r\n\u3000\u3000 \uFF40\u30FD\uFF64__\u3000\u3000 \u30FD\u30B7\uFF3F_,..,.-\u2010'\uFFE3\r\n\u3000\u3000\u3000\u3000\u3000
-    l \uFFE3\xB4\u3000\u3000 |\u3000 /\r\n\u3000 \u3000 \u3000 \u3000 l\u3000\u3000
-    \u3000 \uFF5C /\r\n\u3000\u3000\u3000 \u3000 \u3000 l.\u3000\u3000\u3000 |\u3000\u2032\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
-    l \u3000 \u3000 l. l\r\n.\u3000\u3000\u3000\u3000\u3000 \u3000 l.\u3000 \u3000
-    l \uFF40\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000 l\u3000\u3000\u3000
-    l. \u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000 \u3000 l-\u4E00\u30FCl\uFFE3l\u3001\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3000 l\u3000\u3000\u3000 l.\u3000 l\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \uFF4C\u3000\u3000\u3000|\u3000\u3000 l\r\n.\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    |\u3000\u3000 |\u3001\u3000\u3000l.\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3000 l.\u3000\u3000| \u30FD.\u3000 \uFF40\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000|\u3000\u3000|\u3000
-    \uFF40\u3001\u3000,\u309D.\r\n.\u3000\u3000\u3000\u3000\u3000\u3000\u3000 \u3000
-    |\u3000\u3000|\u3000\u3000 l / \u3000 \uFF3C\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000,!\u3000,.-l.\u3000
-    /\uFF7F\u3000 \uFF0F\u3000\u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \uFF0F\uFF9D\xB4\u3000\u3000l.\u30CE\u3000\u3000/\u3000\u3000\uFF0F\r\n\u3000\u3000\u3000\u3000,r
-    \xB4\u3000 _,. -\u4E00\uFF8D.\uFF3F/ \u3000 /\r\n\u3000\u3000\u3000/\u30FC--\u2010
-    \xB4\uFF3F\uFF3F........)-\u4E00 \xB4\r\n\u3000\u3000\u3000\u3000\uFFE3\uFFE3"
 --- !u!1 &1093470307463574243
 GameObject:
   m_ObjectHideFlags: 0
@@ -725,122 +609,6 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1 &1123755086979676935
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2559416620511289672}
-  - component: {fileID: 3805831329471222424}
-  - component: {fileID: 5193174370307235472}
-  m_Layer: 5
-  m_Name: Kawai_nyaa (4)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2559416620511289672
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1123755086979676935}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4813038100114290594}
-  m_RootOrder: 3
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -30, y: 0}
-  m_SizeDelta: {x: 60, y: 0.0000019073486}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &3805831329471222424
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1123755086979676935}
-  m_CullTransparentMesh: 1
---- !u!114 &5193174370307235472
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1123755086979676935}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0.16355896, a: 0.2}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: cdfb74c8466b14048a4a5488e185a817, type: 3}
-    m_FontSize: 11
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 0
-    m_MaxSize: 40
-    m_Alignment: 7
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000,.\u3000---\u3000,\r\n\u3000\u3000\u3000\u3000\u3000\u3000
-    -''\u30C6''\xB4\u3000\u3000_\u3000\u3000 \u3000 \u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000,r'\uFF67'
-    ,r\uFF0F\uFF0F ,\u3000, \u3000 \u3000 \uFF40!\r\n\u3000\u3000 \u3000 \u3000 \xB4
-    ' /,'/_\uFF68,\uFF72\u3000!\u3000| \u3000 |\u3000\u3000\u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000
-    l1,l \uFF8A.\uFF64\uFF40|/| /\u30C8\uFF68._|\u3000\u3000\u3000|\r\n\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3003 l l\uFF6D\uFF5D\u3000 ', -\uFF64.V/\u3000/\u3000|\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
-    \uFF4C|\u3000l\u3000 '\u3000\u3000 \uFF15i\uFF82\u3000 \u30CE\u3000\uFF8A|\r\n\u3000\u3000\u3000\u3000\u3000
-    \u3000 \u30FD\uFF84l\u30FD\uFF40\u3000\u3000 \uFF0F,.-\uFF7C\u30A4\u2033\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3000 \uFF40\xA8\u4EC1'-'\uFF95\u3001 \u3000\u3000\u3000\u3000\u3000\r\n\u3000\u3000\u3000\u3000
-    \u3000 \u3000 \u3000 ,r=\uFF86.\u30FD\uFF64\u3000\u3000l\r\n\u3000\u3000\u3000\u3000\u3000\u3000_,..
-    \u30A4\u3000\u3000\u3000\u30FD\uFF40\u3001\u3000\u30FD \u3000\u3000\u3000\r\n\u3000\u3000\u3000\u3000\u3000f-r'/\uFF5C
-    \u3000 \u3000 l\u3000|\u3000\u3000 |\r\n\u3000\u3000\u3000\u3000\u3000|\u3000!\u2032|\u3000\u3000\u3000\u3000|\u3000|\uFF3F__{\r\n.\u3000\u3000\u3000\u3000
-    {|_\uFF63\u3000\uFF5C\u3000\u3000\u3000 ,L. -\uFFE2\uFF98\r\n\u3000\u3000\u3000\u3000
-    \u304F \uFF68\u3000\uFF5C\u3000\u3000\u3000 l\u3000\u3000 \u3000 l\r\n\u3000\u3000
-    \u3000 \u3000 \u3015.\u3000 |\u3000\u3000 \u3000 |\u3000\u3000 \u3000 |\r\n\u3000\u3000\u3000
-    \uFF0F\uFF68\u2032\uFF5C\u3000\u3000\u3000 |\u3000\u3000 \u30FD\uFF89\r\n\u3000\u3000
-    / ,//\u3000\u3000|\u3000\u3000\u3000\u3000|\u3000\u3000\u3000 \u30FD\r\n\u3000\u3000
-    \uFF40\xA8./\u3000\u3000 |\u3000\u3000\u3000\u3000|\u3000\u3000\u3000\u3000\uFF40\u3001\r\n\u3000\u3000\u3000\u3000|\u3000
-    \u3000 |\u3000\u3000\u3000\u3000|\u3000\u3000\u3000\u3000\u3000l\u3001\r\n\u3000\u3000\u3000
-    ,\uFF8A\u3000\u3000 l\u3000\u3000 \u3000 \uFF89\u3000\u3000_,. -.- \u3009\r\n\u3000\u3000\uFF0F,-\u3000.\uFF63\u3000\u3000\u3000\u30E0\u2010
-    \xB4\u3000\u3000\u30FD'\r\n\u3000 \uFF40\u30BD\u3000\u3000\u3000\u3000 \u30C8--\u30A4\u3000\u3000\u3000\u3000
-    _,.-,\u3009\r\n\u3000\u3000 \uFF40\u30FD\uFF64__\u3000\u3000 \u30FD\u30B7\uFF3F_,..,.-\u2010'\uFFE3\r\n\u3000\u3000\u3000\u3000\u3000
-    l \uFFE3\xB4\u3000\u3000 |\u3000 /\r\n\u3000 \u3000 \u3000 \u3000 l\u3000\u3000
-    \u3000 \uFF5C /\r\n\u3000\u3000\u3000 \u3000 \u3000 l.\u3000\u3000\u3000 |\u3000\u2032\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
-    l \u3000 \u3000 l. l\r\n.\u3000\u3000\u3000\u3000\u3000 \u3000 l.\u3000 \u3000
-    l \uFF40\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000 l\u3000\u3000\u3000
-    l. \u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000 \u3000 l-\u4E00\u30FCl\uFFE3l\u3001\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3000 l\u3000\u3000\u3000 l.\u3000 l\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \uFF4C\u3000\u3000\u3000|\u3000\u3000 l\r\n.\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    |\u3000\u3000 |\u3001\u3000\u3000l.\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3000 l.\u3000\u3000| \u30FD.\u3000 \uFF40\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000|\u3000\u3000|\u3000
-    \uFF40\u3001\u3000,\u309D.\r\n.\u3000\u3000\u3000\u3000\u3000\u3000\u3000 \u3000
-    |\u3000\u3000|\u3000\u3000 l / \u3000 \uFF3C\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000,!\u3000,.-l.\u3000
-    /\uFF7F\u3000 \uFF0F\u3000\u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \uFF0F\uFF9D\xB4\u3000\u3000l.\u30CE\u3000\u3000/\u3000\u3000\uFF0F\r\n\u3000\u3000\u3000\u3000,r
-    \xB4\u3000 _,. -\u4E00\uFF8D.\uFF3F/ \u3000 /\r\n\u3000\u3000\u3000/\u30FC--\u2010
-    \xB4\uFF3F\uFF3F........)-\u4E00 \xB4\r\n\u3000\u3000\u3000\u3000\uFFE3\uFFE3"
 --- !u!1 &1290218258723797126
 GameObject:
   m_ObjectHideFlags: 0
@@ -1441,7 +1209,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: a3dae25178504ad4a83d4a403e7a9a31, type: 3}
-    m_FontSize: 30
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -1717,7 +1485,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -7.4999924, y: 0}
+  m_AnchoredPosition: {x: -7.5, y: 0}
   m_SizeDelta: {x: 15, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4410285922747365201
@@ -1750,7 +1518,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: cdfb74c8466b14048a4a5488e185a817, type: 3}
-    m_FontSize: 11
+    m_FontSize: 10
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -1952,7 +1720,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 360, y: 60}
+  m_SizeDelta: {x: 248, y: 32.0405}
   m_Pivot: {x: 1, y: 0}
 --- !u!222 &7569206102350473222
 CanvasRenderer:
@@ -1984,7 +1752,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: a3dae25178504ad4a83d4a403e7a9a31, type: 3}
-    m_FontSize: 30
+    m_FontSize: 20
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -2064,7 +1832,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: a3dae25178504ad4a83d4a403e7a9a31, type: 3}
-    m_FontSize: 30
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -2502,16 +2270,14 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5453442186598357277}
-  - {fileID: 6097407965107324461}
-  - {fileID: 7971098738495770552}
-  - {fileID: 2559416620511289672}
+  - {fileID: 4148357594971249876}
   m_Father: {fileID: 4813038099463782103}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 0, y: 0.0000010058284}
+  m_AnchoredPosition: {x: -0.119903564, y: 0.04058838}
+  m_SizeDelta: {x: -0.24333, y: -0.080139}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4813038100114290596
 CanvasRenderer:
@@ -2543,7 +2309,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: cdfb74c8466b14048a4a5488e185a817, type: 3}
-    m_FontSize: 20
+    m_FontSize: 10
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -3024,6 +2790,122 @@ MonoBehaviour:
   m_Text: 'Pause
 
 '
+--- !u!1 &6478579540466213939
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4148357594971249876}
+  - component: {fileID: 7833182008464443281}
+  - component: {fileID: 6182331012100772765}
+  m_Layer: 5
+  m_Name: Kawai_nyaa (2)
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4148357594971249876
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6478579540466213939}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4813038100114290594}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -30.899994, y: 0}
+  m_SizeDelta: {x: 15, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &7833182008464443281
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6478579540466213939}
+  m_CullTransparentMesh: 1
+--- !u!114 &6182331012100772765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6478579540466213939}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 0.7264151, g: 0.18845676, b: 0.18845676, a: 0.5372549}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_FontData:
+    m_Font: {fileID: 12800000, guid: cdfb74c8466b14048a4a5488e185a817, type: 3}
+    m_FontSize: 10
+    m_FontStyle: 0
+    m_BestFit: 0
+    m_MinSize: 0
+    m_MaxSize: 40
+    m_Alignment: 7
+    m_AlignByGeometry: 0
+    m_RichText: 1
+    m_HorizontalOverflow: 0
+    m_VerticalOverflow: 0
+    m_LineSpacing: 1
+  m_Text: "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000,.\u3000---\u3000,\r\n\u3000\u3000\u3000\u3000\u3000\u3000
+    -''\u30C6''\xB4\u3000\u3000_\u3000\u3000 \u3000 \u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000,r'\uFF67'
+    ,r\uFF0F\uFF0F ,\u3000, \u3000 \u3000 \uFF40!\r\n\u3000\u3000 \u3000 \u3000 \xB4
+    ' /,'/_\uFF68,\uFF72\u3000!\u3000| \u3000 |\u3000\u3000\u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000
+    l1,l \uFF8A.\uFF64\uFF40|/| /\u30C8\uFF68._|\u3000\u3000\u3000|\r\n\u3000\u3000\u3000\u3000\u3000\u3000
+    \u3003 l l\uFF6D\uFF5D\u3000 ', -\uFF64.V/\u3000/\u3000|\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
+    \uFF4C|\u3000l\u3000 '\u3000\u3000 \uFF15i\uFF82\u3000 \u30CE\u3000\uFF8A|\r\n\u3000\u3000\u3000\u3000\u3000
+    \u3000 \u30FD\uFF84l\u30FD\uFF40\u3000\u3000 \uFF0F,.-\uFF7C\u30A4\u2033\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
+    \u3000 \uFF40\xA8\u4EC1'-'\uFF95\u3001 \u3000\u3000\u3000\u3000\u3000\r\n\u3000\u3000\u3000\u3000
+    \u3000 \u3000 \u3000 ,r=\uFF86.\u30FD\uFF64\u3000\u3000l\r\n\u3000\u3000\u3000\u3000\u3000\u3000_,..
+    \u30A4\u3000\u3000\u3000\u30FD\uFF40\u3001\u3000\u30FD \u3000\u3000\u3000\r\n\u3000\u3000\u3000\u3000\u3000f-r'/\uFF5C
+    \u3000 \u3000 l\u3000|\u3000\u3000 |\r\n\u3000\u3000\u3000\u3000\u3000|\u3000!\u2032|\u3000\u3000\u3000\u3000|\u3000|\uFF3F__{\r\n.\u3000\u3000\u3000\u3000
+    {|_\uFF63\u3000\uFF5C\u3000\u3000\u3000 ,L. -\uFFE2\uFF98\r\n\u3000\u3000\u3000\u3000
+    \u304F \uFF68\u3000\uFF5C\u3000\u3000\u3000 l\u3000\u3000 \u3000 l\r\n\u3000\u3000
+    \u3000 \u3000 \u3015.\u3000 |\u3000\u3000 \u3000 |\u3000\u3000 \u3000 |\r\n\u3000\u3000\u3000
+    \uFF0F\uFF68\u2032\uFF5C\u3000\u3000\u3000 |\u3000\u3000 \u30FD\uFF89\r\n\u3000\u3000
+    / ,//\u3000\u3000|\u3000\u3000\u3000\u3000|\u3000\u3000\u3000 \u30FD\r\n\u3000\u3000
+    \uFF40\xA8./\u3000\u3000 |\u3000\u3000\u3000\u3000|\u3000\u3000\u3000\u3000\uFF40\u3001\r\n\u3000\u3000\u3000\u3000|\u3000
+    \u3000 |\u3000\u3000\u3000\u3000|\u3000\u3000\u3000\u3000\u3000l\u3001\r\n\u3000\u3000\u3000
+    ,\uFF8A\u3000\u3000 l\u3000\u3000 \u3000 \uFF89\u3000\u3000_,. -.- \u3009\r\n\u3000\u3000\uFF0F,-\u3000.\uFF63\u3000\u3000\u3000\u30E0\u2010
+    \xB4\u3000\u3000\u30FD'\r\n\u3000 \uFF40\u30BD\u3000\u3000\u3000\u3000 \u30C8--\u30A4\u3000\u3000\u3000\u3000
+    _,.-,\u3009\r\n\u3000\u3000 \uFF40\u30FD\uFF64__\u3000\u3000 \u30FD\u30B7\uFF3F_,..,.-\u2010'\uFFE3\r\n\u3000\u3000\u3000\u3000\u3000
+    l \uFFE3\xB4\u3000\u3000 |\u3000 /\r\n\u3000 \u3000 \u3000 \u3000 l\u3000\u3000
+    \u3000 \uFF5C /\r\n\u3000\u3000\u3000 \u3000 \u3000 l.\u3000\u3000\u3000 |\u3000\u2032\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
+    l \u3000 \u3000 l. l\r\n.\u3000\u3000\u3000\u3000\u3000 \u3000 l.\u3000 \u3000
+    l \uFF40\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000 l\u3000\u3000\u3000
+    l. \u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000 \u3000 l-\u4E00\u30FCl\uFFE3l\u3001\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
+    \u3000 l\u3000\u3000\u3000 l.\u3000 l\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
+    \uFF4C\u3000\u3000\u3000|\u3000\u3000 l\r\n.\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
+    |\u3000\u3000 |\u3001\u3000\u3000l.\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000
+    \u3000 l.\u3000\u3000| \u30FD.\u3000 \uFF40\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000|\u3000\u3000|\u3000
+    \uFF40\u3001\u3000,\u309D.\r\n.\u3000\u3000\u3000\u3000\u3000\u3000\u3000 \u3000
+    |\u3000\u3000|\u3000\u3000 l / \u3000 \uFF3C\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000,!\u3000,.-l.\u3000
+    /\uFF7F\u3000 \uFF0F\u3000\u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000
+    \uFF0F\uFF9D\xB4\u3000\u3000l.\u30CE\u3000\u3000/\u3000\u3000\uFF0F\r\n\u3000\u3000\u3000\u3000,r
+    \xB4\u3000 _,. -\u4E00\uFF8D.\uFF3F/ \u3000 /\r\n\u3000\u3000\u3000/\u30FC--\u2010
+    \xB4\uFF3F\uFF3F........)-\u4E00 \xB4\r\n\u3000\u3000\u3000\u3000\uFFE3\uFFE3"
 --- !u!1 &6523795314322156347
 GameObject:
   m_ObjectHideFlags: 0
@@ -3303,7 +3185,7 @@ MonoBehaviour:
       m_Calls: []
   m_FontData:
     m_Font: {fileID: 12800000, guid: a3dae25178504ad4a83d4a403e7a9a31, type: 3}
-    m_FontSize: 30
+    m_FontSize: 25
     m_FontStyle: 0
     m_BestFit: 0
     m_MinSize: 0
@@ -3979,7 +3861,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000015258789, y: -5}
+  m_AnchoredPosition: {x: 0.000015258789, y: -120.1}
   m_SizeDelta: {x: -10.000027, y: 199.7414}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &2778920571740204219
@@ -4008,122 +3890,6 @@ MonoBehaviour:
   m_ChildScaleWidth: 0
   m_ChildScaleHeight: 0
   m_ReverseArrangement: 0
---- !u!1 &8300287182813445464
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 6097407965107324461}
-  - component: {fileID: 901750309413651453}
-  - component: {fileID: 795733834773622782}
-  m_Layer: 5
-  m_Name: Kawai_nyaa (2)
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &6097407965107324461
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8300287182813445464}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 4813038100114290594}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -14.999992, y: 0}
-  m_SizeDelta: {x: 30.000015, y: 0.0000019073486}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &901750309413651453
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8300287182813445464}
-  m_CullTransparentMesh: 1
---- !u!114 &795733834773622782
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8300287182813445464}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0.16355896, a: 0.44705883}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_FontData:
-    m_Font: {fileID: 12800000, guid: cdfb74c8466b14048a4a5488e185a817, type: 3}
-    m_FontSize: 11
-    m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 0
-    m_MaxSize: 40
-    m_Alignment: 7
-    m_AlignByGeometry: 0
-    m_RichText: 1
-    m_HorizontalOverflow: 0
-    m_VerticalOverflow: 0
-    m_LineSpacing: 1
-  m_Text: "\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000,.\u3000---\u3000,\r\n\u3000\u3000\u3000\u3000\u3000\u3000
-    -''\u30C6''\xB4\u3000\u3000_\u3000\u3000 \u3000 \u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000,r'\uFF67'
-    ,r\uFF0F\uFF0F ,\u3000, \u3000 \u3000 \uFF40!\r\n\u3000\u3000 \u3000 \u3000 \xB4
-    ' /,'/_\uFF68,\uFF72\u3000!\u3000| \u3000 |\u3000\u3000\u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000
-    l1,l \uFF8A.\uFF64\uFF40|/| /\u30C8\uFF68._|\u3000\u3000\u3000|\r\n\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3003 l l\uFF6D\uFF5D\u3000 ', -\uFF64.V/\u3000/\u3000|\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
-    \uFF4C|\u3000l\u3000 '\u3000\u3000 \uFF15i\uFF82\u3000 \u30CE\u3000\uFF8A|\r\n\u3000\u3000\u3000\u3000\u3000
-    \u3000 \u30FD\uFF84l\u30FD\uFF40\u3000\u3000 \uFF0F,.-\uFF7C\u30A4\u2033\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3000 \uFF40\xA8\u4EC1'-'\uFF95\u3001 \u3000\u3000\u3000\u3000\u3000\r\n\u3000\u3000\u3000\u3000
-    \u3000 \u3000 \u3000 ,r=\uFF86.\u30FD\uFF64\u3000\u3000l\r\n\u3000\u3000\u3000\u3000\u3000\u3000_,..
-    \u30A4\u3000\u3000\u3000\u30FD\uFF40\u3001\u3000\u30FD \u3000\u3000\u3000\r\n\u3000\u3000\u3000\u3000\u3000f-r'/\uFF5C
-    \u3000 \u3000 l\u3000|\u3000\u3000 |\r\n\u3000\u3000\u3000\u3000\u3000|\u3000!\u2032|\u3000\u3000\u3000\u3000|\u3000|\uFF3F__{\r\n.\u3000\u3000\u3000\u3000
-    {|_\uFF63\u3000\uFF5C\u3000\u3000\u3000 ,L. -\uFFE2\uFF98\r\n\u3000\u3000\u3000\u3000
-    \u304F \uFF68\u3000\uFF5C\u3000\u3000\u3000 l\u3000\u3000 \u3000 l\r\n\u3000\u3000
-    \u3000 \u3000 \u3015.\u3000 |\u3000\u3000 \u3000 |\u3000\u3000 \u3000 |\r\n\u3000\u3000\u3000
-    \uFF0F\uFF68\u2032\uFF5C\u3000\u3000\u3000 |\u3000\u3000 \u30FD\uFF89\r\n\u3000\u3000
-    / ,//\u3000\u3000|\u3000\u3000\u3000\u3000|\u3000\u3000\u3000 \u30FD\r\n\u3000\u3000
-    \uFF40\xA8./\u3000\u3000 |\u3000\u3000\u3000\u3000|\u3000\u3000\u3000\u3000\uFF40\u3001\r\n\u3000\u3000\u3000\u3000|\u3000
-    \u3000 |\u3000\u3000\u3000\u3000|\u3000\u3000\u3000\u3000\u3000l\u3001\r\n\u3000\u3000\u3000
-    ,\uFF8A\u3000\u3000 l\u3000\u3000 \u3000 \uFF89\u3000\u3000_,. -.- \u3009\r\n\u3000\u3000\uFF0F,-\u3000.\uFF63\u3000\u3000\u3000\u30E0\u2010
-    \xB4\u3000\u3000\u30FD'\r\n\u3000 \uFF40\u30BD\u3000\u3000\u3000\u3000 \u30C8--\u30A4\u3000\u3000\u3000\u3000
-    _,.-,\u3009\r\n\u3000\u3000 \uFF40\u30FD\uFF64__\u3000\u3000 \u30FD\u30B7\uFF3F_,..,.-\u2010'\uFFE3\r\n\u3000\u3000\u3000\u3000\u3000
-    l \uFFE3\xB4\u3000\u3000 |\u3000 /\r\n\u3000 \u3000 \u3000 \u3000 l\u3000\u3000
-    \u3000 \uFF5C /\r\n\u3000\u3000\u3000 \u3000 \u3000 l.\u3000\u3000\u3000 |\u3000\u2032\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
-    l \u3000 \u3000 l. l\r\n.\u3000\u3000\u3000\u3000\u3000 \u3000 l.\u3000 \u3000
-    l \uFF40\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000 l\u3000\u3000\u3000
-    l. \u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000 \u3000 l-\u4E00\u30FCl\uFFE3l\u3001\r\n.\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3000 l\u3000\u3000\u3000 l.\u3000 l\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \uFF4C\u3000\u3000\u3000|\u3000\u3000 l\r\n.\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    |\u3000\u3000 |\u3001\u3000\u3000l.\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \u3000 l.\u3000\u3000| \u30FD.\u3000 \uFF40\u3001\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000|\u3000\u3000|\u3000
-    \uFF40\u3001\u3000,\u309D.\r\n.\u3000\u3000\u3000\u3000\u3000\u3000\u3000 \u3000
-    |\u3000\u3000|\u3000\u3000 l / \u3000 \uFF3C\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000\u3000,!\u3000,.-l.\u3000
-    /\uFF7F\u3000 \uFF0F\u3000\u30FD\r\n\u3000\u3000\u3000\u3000\u3000\u3000\u3000
-    \uFF0F\uFF9D\xB4\u3000\u3000l.\u30CE\u3000\u3000/\u3000\u3000\uFF0F\r\n\u3000\u3000\u3000\u3000,r
-    \xB4\u3000 _,. -\u4E00\uFF8D.\uFF3F/ \u3000 /\r\n\u3000\u3000\u3000/\u30FC--\u2010
-    \xB4\uFF3F\uFF3F........)-\u4E00 \xB4\r\n\u3000\u3000\u3000\u3000\uFFE3\uFFE3"
 --- !u!1 &9049215136400657690
 GameObject:
   m_ObjectHideFlags: 0
