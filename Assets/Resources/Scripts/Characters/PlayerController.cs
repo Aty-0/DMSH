@@ -70,7 +70,6 @@ namespace DMSH.Characters
         public SpriteRenderer   spriteRenderer = null;
         public Camera           gameCamera = null;
         public LogHandler       logHandler = null;
-        public GameObject       respawnPoint = null;
         public PlayerInput      playerInput = null;
         public ResizableGameElements resizableGameElements = null;
 
@@ -116,8 +115,6 @@ namespace DMSH.Characters
         private Text _uiFpsCounterText = null;
         [SerializeField] 
         private Text _uiChapterName = null;
-        [SerializeField] 
-        private Image _uiSomeImage = null; // Image on the right screen corner
         [SerializeField] 
         private GUIStyle _cheatGUIStyle = null;
 
@@ -174,11 +171,8 @@ namespace DMSH.Characters
             weapon = GetComponent<Weapon>();
             _stageSystem = FindObjectOfType<StageSystem>();
 
-            resizableGameElements = gameObject.AddComponent<ResizableGameElements>();
-
+            resizableGameElements = GetComponent<ResizableGameElements>();
             resizableGameElements.gameCamera = gameCamera;
-            resizableGameElements.respawnPoint = respawnPoint;
-            resizableGameElements.someImage = _uiSomeImage;
             resizableGameElements.Initialize();
 
             _cameraDeathAnimation = gameObject.AddComponent<CameraDeathAnimation>();
@@ -195,7 +189,7 @@ namespace DMSH.Characters
             Cursor.visible = false;
 
             // Set respawnPoint position
-            gameObject.transform.position = respawnPoint.transform.position;
+            gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
 
         }
         public void ShowChapterName()
@@ -521,7 +515,7 @@ namespace DMSH.Characters
                     }
                 }
                 // Set spawn point position to player 
-                gameObject.transform.position = respawnPoint.transform.position;
+                gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
             }
         }
 

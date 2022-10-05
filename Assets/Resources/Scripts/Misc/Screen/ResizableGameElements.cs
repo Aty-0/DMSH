@@ -7,22 +7,22 @@ namespace DMSH.Misc.Screen
 {
     public class ResizableGameElements : MonoBehaviour
     {
+        public GameObject respawnPoint = null;
+
+        [HideInInspector]
         public ScreenHandler screenHandler = null;
-
-        [HideInInspector]
-        public Image  someImage;
-
-        [HideInInspector]
-        public Camera gameCamera;
-
-        [HideInInspector]
-        public GameObject respawnPoint;
-
-        [SerializeField]
-        private GameObject[] _wallsList = new GameObject[4];
 
         [SerializeField]
         private GameObject _background = null;
+
+        [SerializeField]
+        private Image _uiSomeImage = null; // Image on the right screen corner
+
+        [HideInInspector]
+        public Camera gameCamera = null;
+
+        [SerializeField]
+        private GameObject[] _wallsList = new GameObject[4];      
 
         [SerializeField]
         private float resultPoint = 0.0f;
@@ -42,6 +42,18 @@ namespace DMSH.Misc.Screen
             screenHandler = gameObject.AddComponent<ScreenHandler>();
             screenHandler.onScreenResolutionChange.Add(OnResolutionScreenChange);
             GenerateInvisibleWalls();
+            CheckComponentsOnExist();
+        }
+        private void CheckComponentsOnExist()
+        {
+            if (_background == null)
+                Debug.LogError("ResizableGameElements: Background is null");
+
+            if (_uiSomeImage == null)
+                Debug.LogError("ResizableGameElements: SomeImage is null");
+
+            if (respawnPoint == null)
+                Debug.LogError("ResizableGameElements: Respawn point is null");
         }
 
         private void OnResolutionScreenChange()
@@ -51,8 +63,8 @@ namespace DMSH.Misc.Screen
                 gameCamera.ViewportToWorldPoint(new Vector2(0, 1)).y, 0);
 
             // Try to translate rectTransform to world coords            
-            float imageRectWInWp = GetWorldRect(someImage.rectTransform).width;
-            float imageRectHInWp = GetWorldRect(someImage.rectTransform).height;
+            float imageRectWInWp = GetWorldRect(_uiSomeImage.rectTransform).width;
+            float imageRectHInWp = GetWorldRect(_uiSomeImage.rectTransform).height;
 
             resultPoint = (resolutionInWorldPoint.x - (imageRectWInWp * 0.01f) * 1.3f);
 
