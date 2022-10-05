@@ -1,6 +1,6 @@
 using UnityEngine;
 using DMSH.Characters;
-using DMSH.Misc;
+using DMSH.Gameplay;
 
 namespace DMSH.Objects.Bonuses
 {
@@ -15,7 +15,9 @@ namespace DMSH.Objects.Bonuses
             var player = collider.gameObject.GetComponent<PlayerController>();
 
             if (player)
+            {
                 Use(player);
+            }
         }
 
         public virtual void Use(PlayerController player)

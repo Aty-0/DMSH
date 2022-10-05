@@ -3,7 +3,7 @@ using UnityEngine;
 using DMSH.Characters;
 using DMSH.Objects.Bonuses;
 
-namespace DMSH.Misc
+namespace DMSH.Gameplay
 {
     public class BonusMagnet : MonoBehaviour
     {
@@ -20,7 +20,9 @@ namespace DMSH.Misc
 
                 var distance = Vector3.Distance(bonus.transform.position, gameObject.transform.position);
                 if (distance <= 0.6f)
+                {
                     bonus.Use(gameObject.transform.parent.GetComponent<PlayerController>());
+                }
             }
         }
     }

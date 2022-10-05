@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using DMSH.Misc;
 using DMSH.Path;
+using DMSH.Gameplay;
 
 namespace DMSH.Objects
 {
@@ -14,9 +15,12 @@ namespace DMSH.Objects
         public bool freeMovement = false;
         public Timer timer = null;
 
-        [SerializeField] private Vector2 _bullet_dir = new Vector2(0, 1);
-        [SerializeField] private float _rotation_speed = 300.0f;
-        [SerializeField] private TrailRenderer _trailRenderer = null;
+        [SerializeField] 
+        private Vector2 _bullet_dir = new Vector2(0, 1);
+        [SerializeField] 
+        private float _rotation_speed = 300.0f;
+        [SerializeField]
+        private TrailRenderer _trailRenderer = null;
 
         protected void Start()
         {
@@ -75,13 +79,17 @@ namespace DMSH.Objects
             rigidBody2D.MoveRotation(rigidBody2D.rotation + (_rotation_speed * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt));
 
             if (freeMovement == true)
+            {
                 rigidBody2D.MovePosition(rigidBody2D.position + ((_bullet_dir * speed) * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt));
+            }
         }
 
         protected void OnCollisionEnter2D(Collision2D collision)
         {
             if (collisionDestroyBullet)
+            {
                 Unspawn();
+            }
         }
     }
 }

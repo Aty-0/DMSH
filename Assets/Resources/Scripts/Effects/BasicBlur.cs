@@ -7,9 +7,12 @@ namespace DMSH.Effects
     public class BasicBlur : MonoBehaviour
     {
         public Material shaderMaterial;
-        [Range(0.00f, 10.0f)] public float quality = 4;
-        [Range(0.00f, 100.0f)] public float size = 20;
-        [Range(0.00f, 100.0f)] public float directions = 16;
+        [Range(0.00f, 10.0f)] 
+        public float quality = 4;
+        [Range(0.00f, 100.0f)]
+        public float size = 20;
+        [Range(0.00f, 100.0f)]
+        public float directions = 16;
 
         protected void OnRenderImage(RenderTexture source, RenderTexture destination)
         {

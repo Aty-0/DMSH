@@ -2,15 +2,19 @@ using System.Collections;
 using UnityEngine;
 using TMPro;
 
-namespace DMSH.Misc
+namespace DMSH.Misc.Animated
 {
     public class DamageStatusText : MonoBehaviour
     {
         public string text = string.Empty;
         public float fontSize = 12.0f;
-        [SerializeField] private TextMeshPro _textTMP;
-        [SerializeField] private Coroutine _fadeAnimationCoroutine;
-        [SerializeField] private Coroutine _goUpAnimationCoroutine;
+
+        [SerializeField] 
+        private TextMeshPro _textTMP;
+        [SerializeField] 
+        private Coroutine _fadeAnimationCoroutine;
+        [SerializeField] 
+        private Coroutine _goUpAnimationCoroutine;
 
         protected void Start()
         {

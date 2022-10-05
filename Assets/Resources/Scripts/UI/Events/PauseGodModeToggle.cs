@@ -6,7 +6,8 @@ namespace DMSH.UI.Events
 {
     public class PauseGodModeToggle : MonoBehaviour
     {
-        [SerializeField] private Toggle _toggle;
+        [SerializeField] 
+        private Toggle _toggle;
 
         private void Start()
         {

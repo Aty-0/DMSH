@@ -20,16 +20,29 @@ namespace DMSH.Path
     public abstract class MovableObject : MonoBehaviour, IMovableObject
     {
         [Header("Movable Object")]
-        [SerializeField] protected int _currentPoint = 0;
-        [SerializeField] protected int _currentCurvePoint = 0;
-        [SerializeField] protected float _speed = 10.0f;
-        [SerializeField] protected Rigidbody2D _rigidBody2D = null;
-        [SerializeField] protected BoxCollider2D _boxCollider2D = null;
-        [SerializeField] protected Vector3 _moveOffset = Vector3.zero;
-        [SerializeField] protected PathSystem _pathSystem = null;
-        [SerializeField] [HideInInspector] protected float _reduceSpeed  = 1.0f;
-        [SerializeField] [HideInInspector] protected float _augmentSpeed = 1.0f;
-        [SerializeField] [HideInInspector] protected float _finalSpeed = 0.0f;
+        [SerializeField] 
+        protected int _currentPoint = 0;
+        [SerializeField] 
+        protected int _currentCurvePoint = 0;
+        [SerializeField] 
+        protected float _speed = 10.0f;
+        [SerializeField] 
+        protected Rigidbody2D _rigidBody2D = null;
+        [SerializeField] 
+        protected BoxCollider2D _boxCollider2D = null;
+        [SerializeField] 
+        protected Vector3 _moveOffset = Vector3.zero;
+        [SerializeField] 
+        protected PathSystem _pathSystem = null;
+        [SerializeField] 
+        [HideInInspector] 
+        protected float _reduceSpeed  = 1.0f;
+        [SerializeField] 
+        [HideInInspector]
+        protected float _augmentSpeed = 1.0f;
+        [SerializeField] 
+        [HideInInspector]
+        protected float _finalSpeed = 0.0f;
 
         public int currentPoint { get { return _currentPoint; } set { _currentPoint = value; } }
         public int currentCurvePoint { get { return _currentCurvePoint; } set { _currentCurvePoint = value; } }

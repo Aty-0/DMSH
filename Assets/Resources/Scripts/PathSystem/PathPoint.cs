@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.Events;
-
-using DMSH.Misc;
+using DMSH.Gameplay;
 
 namespace DMSH.Path
 {

@@ -12,6 +12,7 @@ namespace DMSH.Misc
     {
         // TODO:
         // Works only in unity editor, because we use gizmos
+        public static bool debugDrawInvWallSI           = false;
         public static bool debugDrawWeaponPoints        = false;
         public static bool debugDrawPSObjectInfo        = false;
         public static bool debugDrawPSAllPoints         = false;
@@ -26,7 +27,8 @@ namespace DMSH.Misc
 
         // It's non serilized cuz we are constatly save the false state on pause
         // And on game load it's just stuck
-        [NonSerialized] private static bool _gameActive = true;
+        [NonSerialized]
+        private static bool _gameActive = true;
 
         public static int  gameActiveAsInt { get => Convert.ToInt32(_gameActive); }
         public static bool gameActiveAsBool { get => _gameActive; }

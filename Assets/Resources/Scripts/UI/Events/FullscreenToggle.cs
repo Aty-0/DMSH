@@ -5,7 +5,8 @@ namespace DMSH.UI.Events
 {
     public class FullscreenToggle : MonoBehaviour
     {
-        [SerializeField] private Toggle _toggle;
+        [SerializeField] 
+        private Toggle _toggle;
 
         protected void Start()
         {

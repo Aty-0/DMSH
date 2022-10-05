@@ -15,11 +15,20 @@ namespace DMSH.Misc.Log
         public bool drawConsole = false;
 
         [Header("Misc")]
-        [SerializeField] private Font _font;
-        [SerializeField] private int _fontSize;
-        [SerializeField] private int _savedGameActiveState;
-        [SerializeField] private bool _Resume = true;
-        [SerializeField] private bool _fpsCounter = false;
+        [SerializeField] 
+        private Font _font;
+
+        [SerializeField] 
+        private int _fontSize;
+
+        [SerializeField] 
+        private int _savedGameActiveState;
+
+        [SerializeField] 
+        private bool _Resume = true;
+
+        [SerializeField] 
+        private bool _fpsCounter = false;
 
         protected void Start()
         {
@@ -33,8 +42,8 @@ namespace DMSH.Misc.Log
                 FontSize = _fontSize,
                 DefaultTextFont = _font,
             });
-            Konsole.Konsole.RegisterCommand("fps", "Show/hide FPS indicator", _ => _fpsCounter = !_fpsCounter);
-            Konsole.Konsole.RegisterCommand("tc", "Stop all audio sources", _ =>
+            Konsole.Konsole.RegisterCommand("debugDrawFps", "Show/hide FPS indicator", _ => _fpsCounter = !_fpsCounter);
+            Konsole.Konsole.RegisterCommand("d_tc", "Stop all audio sources", _ =>
             {
                 foreach (var audioSource in FindObjectsOfType<AudioSource>())
                 {
@@ -42,20 +51,20 @@ namespace DMSH.Misc.Log
                 }
                 _Resume = !_Resume;
             });
-            Konsole.Konsole.RegisterCommand("killplayer", _ => FindObjectOfType<PlayerController>().Kill());
-            Konsole.Konsole.RegisterCommand("god", context =>
+            Konsole.Konsole.RegisterCommand("g_killPlayer", _ => FindObjectOfType<PlayerController>().Kill());
+            Konsole.Konsole.RegisterCommand("g_god", context =>
             {
                 GlobalSettings.cheatGod = !GlobalSettings.cheatGod;
                 context.Log($"{TextTags.Bold("GodMode")} is {(GlobalSettings.cheatGod ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
             
-            Konsole.Konsole.RegisterCommand("infboost", context =>
+            Konsole.Konsole.RegisterCommand("g_infboost", context =>
             {
                 GlobalSettings.cheatInfiniteBoost = !GlobalSettings.cheatInfiniteBoost;
                 context.Log($"{TextTags.Bold("InfiniteBoost")} is {(GlobalSettings.cheatInfiniteBoost ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
             
-            Konsole.Konsole.RegisterCommand("infboost", _ =>
+            Konsole.Konsole.RegisterCommand("g_killAllEnemy", _ =>
             {
                 foreach (var enemy in FindObjectsOfType<Enemy>())
                 {
@@ -64,7 +73,7 @@ namespace DMSH.Misc.Log
             });
 
             // ?
-            Konsole.Konsole.RegisterCommand("tmessages", _ => drawLogMessages = !drawLogMessages);
+            Konsole.Konsole.RegisterCommand("tm", _ => drawLogMessages = !drawLogMessages);
 
             Konsole.Konsole.RegisterCommand("testLog", _ => Debug.Log("Hi"));
             Konsole.Konsole.RegisterCommand("testassert", _ => Debug.Assert(false, "Assert Hi"));
@@ -93,11 +102,17 @@ namespace DMSH.Misc.Log
                 GlobalSettings.debugDrawPSObjectInfo = !GlobalSettings.debugDrawPSObjectInfo;
                 context.Log($"{TextTags.Bold("debugDrawPSObjectInfo")} is {(GlobalSettings.debugDrawPSObjectInfo ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
-
+            
             Konsole.Konsole.RegisterCommand("debugDrawWeaponPoints", context =>
             {
                 GlobalSettings.debugDrawWeaponPoints = !GlobalSettings.debugDrawWeaponPoints;
                 context.Log($"{TextTags.Bold("debugDrawWeaponPoints")} is {(GlobalSettings.debugDrawWeaponPoints ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
+            });
+
+            Konsole.Konsole.RegisterCommand("debugDrawInvWallSI", context =>
+            {
+                GlobalSettings.debugDrawInvWallSI = !GlobalSettings.debugDrawInvWallSI;
+                context.Log($"{TextTags.Bold("debugDrawInvWallSI")} is {(GlobalSettings.debugDrawInvWallSI ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
         }
 
@@ -135,15 +150,6 @@ namespace DMSH.Misc.Log
             {
                 GUILayout.BeginArea(new Rect(0, 30, 500, 500));
                 GUILayout.Label($"FPS:{(int)(1f / Time.unscaledDeltaTime)}", textStyle);
-                GUILayout.EndArea();
-            }
-
-            if (drawLogMessages)
-            {
-                textStyle.normal.textColor = new Color(255, 97, 0);
-
-                GUILayout.BeginArea(new Rect(Screen.width - 100, 0, 500, 500));
-                GUILayout.Label($"gameActive: {GlobalSettings.gameActiveAsBool}", textStyle);
                 GUILayout.EndArea();
             }
         }
