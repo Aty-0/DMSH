@@ -22,7 +22,7 @@ namespace DMSH.Misc.Log
         private int _fontSize;
 
         [SerializeField] 
-        private int _savedGameActiveState;
+        private bool _savedGameActiveState;
 
         [SerializeField] 
         private bool _Resume = true;
@@ -51,7 +51,16 @@ namespace DMSH.Misc.Log
                 }
                 _Resume = !_Resume;
             });
-            Konsole.Konsole.RegisterCommand("g_killPlayer", _ => FindObjectOfType<PlayerController>().Kill());
+
+            Konsole.Konsole.RegisterCommand("g_killPlayer", context =>
+            {
+                FindObjectOfType<PlayerController>().Kill();
+
+                drawConsole = false;
+                Konsole.Konsole.ToggleConsole();
+                Cursor.visible = true;
+            });
+
             Konsole.Konsole.RegisterCommand("g_god", context =>
             {
                 GlobalSettings.cheatGod = !GlobalSettings.cheatGod;
@@ -131,17 +140,16 @@ namespace DMSH.Misc.Log
                 {
                     drawConsole = !drawConsole;
                     Konsole.Konsole.ToggleConsole();
-                    Cursor.visible = !_Resume || (drawConsole || !Convert.ToBoolean(_savedGameActiveState));
+                    Cursor.visible = !_Resume || (drawConsole || !GlobalSettings.gameActiveAsBool);
 
                     if (_Resume)
                     {
                         if (drawConsole)
                         {
-                            //FIX ME: I'm too lazy to fix type
-                            _savedGameActiveState = GlobalSettings.gameActiveAsInt;
+                            _savedGameActiveState = GlobalSettings.gameActiveAsBool;
                         }
 
-                        GlobalSettings.SetGameActive(_savedGameActiveState == 1 && !drawConsole);
+                        GlobalSettings.SetGameActive(_savedGameActiveState == true && !drawConsole);
                     }
                 }
             }
