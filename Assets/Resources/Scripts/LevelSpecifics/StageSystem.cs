@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
-using DMSH.Misc;
+using DMSH.Gameplay;
 using DMSH.Path;
 
 namespace DMSH.LevelSpecifics.Stage
@@ -33,8 +33,10 @@ namespace DMSH.LevelSpecifics.Stage
         public Stage currentStage = null;
         public Timer timer;
 
-        [SerializeField] private int _stageListIndex = 0;
-        [SerializeField] private int _stagesPassed = 0;
+        [SerializeField] 
+        private int _stageListIndex = 0;
+        [SerializeField] 
+        private int _stagesPassed = 0;
 
         [Header("Events")]
         public List<Action> onTimerStart = new List<Action>();
@@ -46,7 +48,9 @@ namespace DMSH.LevelSpecifics.Stage
 
             // Disable all path system
             foreach (var go in GetComponents<PathSystem>())
+            {
                 go.gameObject.SetActive(false);
+            }
 
             // Get timer, set events
             timer = GetComponent<Timer>();
@@ -65,7 +69,9 @@ namespace DMSH.LevelSpecifics.Stage
                 Debug.Log($"[StageSystem] Added pass | Count: {currentStage.stageObjects.Count} Index: {_stageListIndex} Stage passes: {_stagesPassed}");
                 // If all scenario lists passed we are passed this stage
                 if (_stagesPassed == currentStage.stageObjects.Count)
+                {
                     StagePassed();
+                }
             }
         }
 
@@ -76,7 +82,9 @@ namespace DMSH.LevelSpecifics.Stage
             currentStage.isDone = true;
 
             foreach (GameObject go in currentStage.stageObjects)
+            {
                 go.SetActive(false);
+            }
 
             _stageListIndex++;
             _stagesPassed = 0;
@@ -102,14 +110,19 @@ namespace DMSH.LevelSpecifics.Stage
                 Debug.Log($"[StageSystem] Choice stage... Index: {stagesList.IndexOf(st)} Stage objects count: {st.stageObjects.Count}");
                 // If current stage is passed we are go to another
                 if (st.isDone)
+                {
                     continue;
+                }
+
                 currentStage = st;
                 break;
             }
 
             // Invoke action when timer is runned
             foreach (Action action in onTimerStart)
+            {
                 action?.Invoke();
+            }
         }
 
         // Dynamicly add pack and activate it
@@ -125,10 +138,15 @@ namespace DMSH.LevelSpecifics.Stage
         {
             PathSystem ps = null;
 
+            // If we are created root for path system
             if (go.GetType() == typeof(GameObject))
-                ps = go.GetComponentInChildren<PathSystem>(); // Legacy pack style        
+            {
+                ps = go.GetComponentInChildren<PathSystem>();        
+            }
             else
+            {
                 ps = go.GetComponent<PathSystem>();
+            }
 
             Debug.Assert(ps);
 
@@ -145,12 +163,16 @@ namespace DMSH.LevelSpecifics.Stage
         {
             // Invoke action when timer is ended
             foreach (Action action in onTimerEnd)
+            {
                 action?.Invoke();
+            }
 
             if (currentStage != null)
             {
                 if (currentStage.isDone)
+                {
                     return;
+                }
 
                 // Remove all null objects 
                 currentStage.stageObjects.RemoveAll(o => o == null);
@@ -167,7 +189,9 @@ namespace DMSH.LevelSpecifics.Stage
 
                 // Activate objects in pack
                 foreach (GameObject go in currentStage.stageObjects.ToList())
+                {
                     Activate(go);
+                }
             }
             else
             {

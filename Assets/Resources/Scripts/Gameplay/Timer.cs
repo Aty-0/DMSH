@@ -1,8 +1,9 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using DMSH.Misc;
 
-namespace DMSH.Misc
+namespace DMSH.Gameplay
 {
     public class Timer : MonoBehaviour
     {
@@ -19,8 +20,10 @@ namespace DMSH.Misc
         public float tick = 1.0f;
 
         [Header("Debug")]
-        [SerializeField] private bool _isEnded = false;
-        [SerializeField] private float _currentTime = 0.0f;
+        [SerializeField] 
+        private bool _isEnded = false;
+        [SerializeField] 
+        private float _currentTime = 0.0f;
 
         public event Action StartEvent;
         public event Action UpdateEvent;

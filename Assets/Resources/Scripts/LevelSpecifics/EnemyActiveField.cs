@@ -5,12 +5,15 @@ namespace DMSH.LevelSpecifics
 {
     public class EnemyActiveField : MonoBehaviour
     {
-        [SerializeField] private PlayerController _playerController;
+        [SerializeField] 
+        private PlayerController _playerController;
 
         protected void Start()
         {
             _playerController = FindObjectOfType<PlayerController>();
-            _playerController.screenHandler.onScreenResolutionChange.Add(OnResolutionChange);
+
+            var screenHandler = _playerController.resizableGameElements.screenHandler;
+            screenHandler.onScreenResolutionChange.Add(OnResolutionChange);
         }
 
         private void OnResolutionChange()
@@ -25,7 +28,9 @@ namespace DMSH.LevelSpecifics
             var enemy = collider.GetComponent<Enemy>();
 
             if (enemy)
+            {
                 enemy.ignoreHits = false;
+            }
         }
 
         protected void OnTriggerExit2D(Collider2D collider)
@@ -33,7 +38,9 @@ namespace DMSH.LevelSpecifics
             var enemy = collider.GetComponent<Enemy>();
 
             if (enemy)
+            {
                 enemy.ignoreHits = true;
+            }
 
         }
     

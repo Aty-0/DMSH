@@ -3,7 +3,7 @@ using UnityEngine;
 
 using DMSH.LevelSpecifics.Stage;
 using DMSH.Path;
-using DMSH.Misc;
+using DMSH.Gameplay;
 
 namespace DMSH.LevelSpecifics
 {
@@ -15,10 +15,13 @@ namespace DMSH.LevelSpecifics
         public Timer timer;
 
         [Tooltip("If spawner attached to point")]
-        [SerializeField] private PathSystem _pathSystem;
+        [SerializeField]
+        private PathSystem _pathSystem;
 
         [Header("Misc")]
-        [HideInInspector] [SerializeField] private StageSystem _stageSystem;
+        [HideInInspector] 
+        [SerializeField] 
+        private StageSystem _stageSystem;
 
 
         protected void Start()
@@ -26,7 +29,9 @@ namespace DMSH.LevelSpecifics
             _stageSystem = FindObjectOfType<StageSystem>();
             timer = GetComponent<Timer>();
             if (timer)
+            {
                 timer.EndEvent += Spawn;
+            }
 
             _pathSystem = GetComponentInParent<PathSystem>();
 
@@ -50,15 +55,22 @@ namespace DMSH.LevelSpecifics
         {
             if (!isDone)
             {
-                foreach (GameObject go in toSpawn)
+                foreach (var go in toSpawn)
                 {
                     if (go)
                     {
-                        if (go.scene.name == null) // this is prefab
+                        // If it's prefab we are create it
+                        if (go.scene.name == null) 
+                        {
                             _stageSystem.AddToStage(Instantiate(go));
+                        }
                         else
-                             if (!go.activeSelf)
+                        {
+                            if (!go.activeSelf)
+                            {
                                 _stageSystem.AddToStage(go);
+                            }
+                        }
                     }
                 }
 

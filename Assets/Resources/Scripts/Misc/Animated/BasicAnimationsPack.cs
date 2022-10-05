@@ -2,7 +2,7 @@
 using UnityEngine.UI;
 using System.Collections;
 
-namespace DMSH.Misc
+namespace DMSH.Misc.Animated
 {
     public static class BasicAnimationsPack
     {

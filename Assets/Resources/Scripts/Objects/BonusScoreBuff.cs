@@ -1,6 +1,6 @@
 using UnityEngine;
-using DMSH.Misc;
 using DMSH.Characters;
+using DMSH.Misc.Animated;
 
 namespace DMSH.Objects.Bonuses
 {

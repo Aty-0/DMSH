@@ -2,8 +2,9 @@ using System.Collections;
 using UnityEngine;
 
 using DMSH.Path;
-using DMSH.Misc;
+using DMSH.Gameplay;
 using DMSH.Objects;
+using DMSH.Misc.Animated;
 
 namespace DMSH.Characters
 {
@@ -21,28 +22,44 @@ namespace DMSH.Characters
         
         [Header("Enemy")]
         public bool ignoreHits = true;
-        [SerializeField] protected SpriteRenderer _spriteRenderer = null;
-        [SerializeField] protected bool weakType = false;
-        [SerializeField] protected bool onLastPointWillDestroy = false;
-        [SerializeField] protected bool _isDead = false;
-        [SerializeField] protected int _lifes = 1;
-        [SerializeField] protected float _maxHealth = 0.0f;
-        [SerializeField] protected float _health = 0.0f;
-        [SerializeField] protected float _reduceHealth = 1.5f;
-        [SerializeField] protected bool _showDamageStatusText = true;
+        [SerializeField] 
+        protected SpriteRenderer _spriteRenderer = null;
+        [SerializeField] 
+        protected bool weakType = false;
+        [SerializeField] 
+        protected bool onLastPointWillDestroy = false;
+        [SerializeField] 
+        protected bool _isDead = false;
+        [SerializeField] 
+        protected int _lifes = 1;
+        [SerializeField] 
+        protected float _maxHealth = 0.0f;
+        [SerializeField] 
+        protected float _health = 0.0f;
+        [SerializeField] 
+        protected float _reduceHealth = 1.5f;
+        [SerializeField] 
+        protected bool _showDamageStatusText = true;
 
         [Header("Bonus")]
-        [SerializeField] protected GameObject _bonusWeaponBuff = null;
-        [SerializeField] protected GameObject _bonusScoreBuff = null;
+        [SerializeField] 
+        protected GameObject _bonusWeaponBuff = null;
+        [SerializeField] 
+        protected GameObject _bonusScoreBuff = null;
 
         [Header("Misc")]
-        [SerializeField] protected PlayerController _playerController = null;
-        [SerializeField] protected ParticleSystem _deathParticle = null;
-        [SerializeField] protected Coroutine _shotCoroutine = null;
+        [SerializeField] 
+        protected PlayerController _playerController = null;
+        [SerializeField] 
+        protected ParticleSystem _deathParticle = null;
+        [SerializeField] 
+        protected Coroutine _shotCoroutine = null;
 
         [Header("Sounds")]
-        [SerializeField] protected AudioSource _deathAudioSource = null;
-        [SerializeField] protected AudioSource _damageAudioSource = null;
+        [SerializeField] 
+        protected AudioSource _deathAudioSource = null;
+        [SerializeField] 
+        protected AudioSource _damageAudioSource = null;
         
         protected void Start()
         {
@@ -65,11 +82,15 @@ namespace DMSH.Characters
             switch (enemyScriptedBehavior)
             {
                 case EnemyScriptedBehavior.StartShot:
+                {
                     StartShot();
                     break;
+                }
                 case EnemyScriptedBehavior.StopShot:
+                {
                     StopShot();
                     break;
+                }
             }
         }
 
@@ -114,11 +135,17 @@ namespace DMSH.Characters
             _isDead = true;
 
             if (!unspawn)
+            {
                 OnDieCompletely();
+            }
 
             if (givePlayerScore)
+            {
                 if (_playerController)
+                {
                     _playerController.Score += 1000;
+                }
+            }
 
             _deathAudioSource?.Play();
             if (_deathParticle && !unspawn)
@@ -161,15 +188,21 @@ namespace DMSH.Characters
                     OnDie();
 
                     if (_lifes == 0)
+                    {
                         Kill(true);
+                    }
 
                     if (_showDamageStatusText)
+                    {
                         CreateDamageStatusText("Dead");
+                    }
                 }
                 else
                 {
                     if (_showDamageStatusText)
+                    {
                         CreateDamageStatusText($"-{_reduceHealth} HP");
+                    }
 
                     _health -= _reduceHealth;
                 }
@@ -184,13 +217,19 @@ namespace DMSH.Characters
                 switch (component)
                 {
                     case PlayerController p:
+                    {
                         if (weakType)
+                        {
                             Kill(false);
+                        }
                         break;
+                    }
                     case Bullet b:
+                    {
                         Destroy(b);
                         Damage();
                         break;
+                    }
                 }
             }
         }

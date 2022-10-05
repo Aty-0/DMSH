@@ -5,9 +5,12 @@ using UnityEngine.InputSystem;
 
 using DMSH.Path;
 using DMSH.Misc;
+using DMSH.Misc.Screen;
+using DMSH.Misc.Animated;
 using DMSH.Misc.Log;
 using DMSH.Objects;
 using DMSH.LevelSpecifics.Stage;
+using DMSH.Gameplay;
 
 namespace DMSH.Characters
 {
@@ -67,54 +70,78 @@ namespace DMSH.Characters
         public SpriteRenderer   spriteRenderer = null;
         public Camera           gameCamera = null;
         public LogHandler       logHandler = null;
-        public GameObject       respawnPoint = null;
         public PlayerInput      playerInput = null;
-        public ScreenHandler    screenHandler = null;
-        
-        [SerializeField] private Vector2 _moveDirection = Vector2.zero;
-        [HideInInspector] [SerializeField] private bool _isDead = false;
-        [HideInInspector] [SerializeField] private CameraDeathAnimation _cameraDeathAnimation = null;
-        [HideInInspector] [SerializeField] private StageSystem _stageSystem = null;
+        public ResizableGameElements resizableGameElements = null;
+
+        [SerializeField] 
+        private Vector2 _moveDirection = Vector2.zero;
+
+        [HideInInspector] 
+        [SerializeField] 
+        private bool _isDead = false;
+
+        [HideInInspector] 
+        [SerializeField] 
+        private CameraDeathAnimation _cameraDeathAnimation = null;
+
+        [HideInInspector] 
+        [SerializeField] 
+        private StageSystem _stageSystem = null;
 
         [Header("Current statistics")]
-        [SerializeField] private int _score = 0;
-        [SerializeField] private int _life = PLAYER_MAX_LIFE;
-        [SerializeField] private int _boost = PLAYER_MAX_BOOST;
+        [SerializeField] 
+        private int _score = 0;
+        [SerializeField] 
+        private int _life = PLAYER_MAX_LIFE;
+        [SerializeField] 
+        private int _boost = PLAYER_MAX_BOOST;
 
         [Header("Boost")]
-        [SerializeField] private float _boost_speed = 0.05f;
-        [SerializeField] private float _saved_time_scale = 0.0f;
+        [SerializeField] 
+        private float _boost_speed = 0.05f;
+        [SerializeField] 
+        private float _saved_time_scale = 0.0f;
         
         [Header("UI")]
-        [SerializeField] private Text _uiScoreText = null;
-        [SerializeField] private Text _uiBoostGainText = null;
-        [SerializeField] private Text _uiBoostText = null;
-        [SerializeField] private Text _uiLifeText = null;
-        [SerializeField] private Text _uiFpsCounterText = null;
-        [SerializeField] private Text _uiChapterName = null;
-        [SerializeField] private Image _uiSomeImage = null; // Image on the right screen corner
-        [SerializeField] private GUIStyle _cheatGUIStyle = null;
+        [SerializeField] 
+        private Text _uiScoreText = null;
+        [SerializeField] 
+        private Text _uiBoostGainText = null;
+        [SerializeField] 
+        private Text _uiBoostText = null;
+        [SerializeField] 
+        private Text _uiLifeText = null;
+        [SerializeField] 
+        private Text _uiFpsCounterText = null;
+        [SerializeField] 
+        private Text _uiChapterName = null;
+        [SerializeField] 
+        private GUIStyle _cheatGUIStyle = null;
 
         [Header("UI Screens")]
-        [SerializeField] private GameObject _uiPauseScreen = null;
-        [SerializeField] private GameObject _uiDeathScreen = null;
-        [SerializeField] private Text _uiCurrentScoreText = null; // Only for death screen
-        [SerializeField] private Text _uiMaxScoreText = null;
+        [SerializeField] 
+        private GameObject _uiPauseScreen = null;
+        [SerializeField] 
+        private GameObject _uiDeathScreen = null;
+        [SerializeField] 
+        private Text _uiCurrentScoreText = null; // Only for death screen
+        [SerializeField] 
+        private Text _uiMaxScoreText = null;
 
         [Header("Weapon")]
         public Weapon                   weapon;
 
-        [Header("Resizable")]
-        [SerializeField] private GameObject[] _wallsList = new GameObject[4];
-        [SerializeField] private GameObject _background = null;
-
         [Header("Sounds")]
-        [SerializeField] private AudioSource audioSourceWeapon = null;
-        [SerializeField] private AudioSource audioSourceDeath = null;
-        [SerializeField] private AudioSource audioSourceMusic = null;
+        [SerializeField] 
+        private AudioSource audioSourceWeapon = null;
+        [SerializeField] 
+        private AudioSource audioSourceDeath = null;
+        [SerializeField] 
+        private AudioSource audioSourceMusic = null;
 
         [Header("Particles")]
-        [SerializeField] protected ParticleSystem _deathParticle = null;
+        [SerializeField] 
+        protected ParticleSystem _deathParticle = null;
 
         private Coroutine _showChapterNameCoroutine = null;
         private Coroutine _slowMotionCoroutine = null;
@@ -125,7 +152,6 @@ namespace DMSH.Characters
             // First initialize
             PrepareComponents();
             UpdateHUD();
-            GenerateInvisibleWalls();
             UpdateSettings();
 
             // Set timer callback for stage system
@@ -144,13 +170,16 @@ namespace DMSH.Characters
             logHandler = GetComponent<LogHandler>();
             weapon = GetComponent<Weapon>();
             _stageSystem = FindObjectOfType<StageSystem>();
-            screenHandler = gameObject.AddComponent<ScreenHandler>();
-            screenHandler.onScreenResolutionChange.Add(OnResolutionScreenChange);
+
+            resizableGameElements = GetComponent<ResizableGameElements>();
+            resizableGameElements.gameCamera = gameCamera;
+            resizableGameElements.Initialize();
+
             _cameraDeathAnimation = gameObject.AddComponent<CameraDeathAnimation>();
             _cameraDeathAnimation.animCamera = gameCamera;
             _cameraDeathAnimation.target = gameObject;
-            _uiBoostGainText.text = "100%";
 
+            _uiBoostGainText.text = "100%";
 
             // Set style for cheat gui
             _cheatGUIStyle.fontSize = 13;
@@ -160,7 +189,7 @@ namespace DMSH.Characters
             Cursor.visible = false;
 
             // Set respawnPoint position
-            gameObject.transform.position = respawnPoint.transform.position;
+            gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
 
         }
         public void ShowChapterName()
@@ -172,21 +201,14 @@ namespace DMSH.Characters
         public void RemoveChapterName()
         {
             if (_showChapterNameCoroutine != null)
+            {
                 StopCoroutine(_showChapterNameCoroutine);
+            }
+
             _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(_uiChapterName, 15));
         }
 
-        private void GenerateInvisibleWalls()
-        {
-            for (int i = 0; i <= 3; i++)
-            {
-                _wallsList[i] = new GameObject($"InvisibleWall_{i}");
-                var local_boxCollider2D = _wallsList[i].AddComponent<BoxCollider2D>();
-                local_boxCollider2D.size = gameCamera.ViewportToWorldPoint(i <= 1 ? new Vector2(1, 0) : new Vector2(0, 1)) * 2;
-                local_boxCollider2D.size += i <= 1 ? new Vector2(0.0f, 0.1f) : new Vector2(0.1f, 0.0f);
-                _wallsList[i].layer = LayerMask.NameToLayer("InvisibleWall");
-            }
-        }
+      
 
         protected void FixedUpdate()
         {
@@ -196,61 +218,11 @@ namespace DMSH.Characters
         protected void Update()
         {
             if (_uiFpsCounterText)
+            {
                 _uiFpsCounterText.text = $"FPS:{(int)(1f / Time.unscaledDeltaTime)}";
-
-            CheckBounds();
-        }
-        
-        private void CheckBounds()
-        {
-            Vector3 posInScreen = gameCamera.WorldToScreenPoint(transform.position);
-            Vector3 rightWall = gameCamera.WorldToScreenPoint(_wallsList[2].transform.position);
-
-            if ((posInScreen.x > rightWall.x || posInScreen.x < 0) ||
-                (posInScreen.y > Screen.height || posInScreen.y < 0))
-            {
-                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, respawnPoint.transform.position,
-                    Time.deltaTime * 2 * Vector3.Distance(gameObject.transform.position, respawnPoint.transform.position));
             }
         }
-
-        private void UpdateInvisibleWallsPosition(Vector3 ViewportToWorldPointX, Vector3 ViewportToWorldPointY, Vector3 viewportToWorldPointXWithImage)
-        {
-            _wallsList[0].transform.position = ViewportToWorldPointY;
-            _wallsList[1].transform.position = -ViewportToWorldPointY;
-            _wallsList[2].transform.position = viewportToWorldPointXWithImage;
-            _wallsList[3].transform.position = -ViewportToWorldPointX;
-        }
-
-        private void OnResolutionScreenChange()
-        {
-            // Get viewport world points
-            Vector3 viewportToWorldPointX = new Vector2(gameCamera.ViewportToWorldPoint(new Vector2(1, 0)).x, 0);
-            Vector3 viewportToWorldPointY = new Vector2(0, gameCamera.ViewportToWorldPoint(new Vector2(0, 1)).y);
-            Vector3 viewportToWorldPointXWithImage = viewportToWorldPointX - new Vector3(viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 20.0f, 0, 0);
-            float aspectRatioWithImage = (Vector3.Distance(-viewportToWorldPointX, viewportToWorldPointXWithImage) / Vector3.Distance(viewportToWorldPointY, -viewportToWorldPointY)) + _uiSomeImage.rectTransform.sizeDelta.x * 2;
-            UpdateInvisibleWallsPosition(viewportToWorldPointX, viewportToWorldPointY, viewportToWorldPointXWithImage);
-
-            // I guess it's not correct way to implement background restretch
-            if (_background)
-            {
-                _background.transform.localScale = new Vector3(aspectRatioWithImage, Vector3.Distance(viewportToWorldPointY, viewportToWorldPointY), 1);
-                _background.transform.position = new Vector3(gameCamera.transform.position.x + -viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x * 9.2f, gameCamera.transform.position.y, 5);
-            }
-            
-            UpdateInvisibleWallsPosition(viewportToWorldPointX, viewportToWorldPointY, viewportToWorldPointXWithImage);
-    
-            // Set screen middle position for respawn point
-            respawnPoint.transform.position = new Vector2((-viewportToWorldPointX.x * _uiSomeImage.rectTransform.sizeDelta.x) / 1000, -viewportToWorldPointY.y / 1.2f);
-
-            // Rescale pathSystem and change position for all point
-            foreach (var system in FindObjectsOfType<PathSystem>())
-            {
-                system.transform.localScale = new Vector3(aspectRatioWithImage, system.transform.localScale.y, 1);
-                // TODO: Positions
-            }
-        }
-
+   
         private IEnumerator DoSlowMotion(bool isBoost = true)
         {
             while (Time.timeScale < 1.0f)
@@ -259,11 +231,17 @@ namespace DMSH.Characters
                 Time.timeScale += GlobalSettings.gameActiveAsInt * _boost_speed;
 
                 foreach (var sound in FindObjectsOfType<AudioSource>())
+                {
                     if (sound.gameObject.tag != "NotGenericSound")
+                    {
                         sound.pitch = Time.timeScale;
+                    }
+                }
 
                 if (isBoost)
+                {
                     _uiBoostGainText.text = $"{(int)(Time.timeScale * 100)}%";
+                }
 
                 yield return new WaitForSeconds(.1f);
             }
@@ -276,14 +254,18 @@ namespace DMSH.Characters
         public void UseBoost()
         {
             if ((Boost <= 0 && !GlobalSettings.cheatInfiniteBoost) || Time.timeScale < 1.0f)
+            {
                 return;
-
+            }
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
+            {
                 if (bullet.isEnemyBullet &&
                     bullet.collisionDestroyBullet &&
                     bullet.pathSystem == null)
+                {
                     bullet.SqueezeAndDestroy();
-
+                }
+            }
             Boost--;
             Time.timeScale = 0.05f;
             _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
@@ -292,15 +274,21 @@ namespace DMSH.Characters
         private void OnUseBoost(InputValue input)
         {
             if (GlobalSettings.gameActiveAsBool)
+            {
                 UseBoost();
+            }
         }
 
         private void OnShot(InputValue input)
         {
-            if (GlobalSettings.gameActiveAsBool && input.isPressed)            
-                  weapon.Shot();            
+            if (GlobalSettings.gameActiveAsBool && input.isPressed)
+            {
+                weapon.Shot();
+            }
             else
-                  weapon.StopShooting();            
+            {
+                weapon.StopShooting();
+            }
         }
 
         private void OnMoveH(InputValue input)
@@ -324,8 +312,12 @@ namespace DMSH.Characters
 
             // Disable all sounds in scene
             foreach (var sound in FindObjectsOfType<AudioSource>())
+            {
                 if (sound.gameObject.tag != "NotGenericSound")
+                {
                     sound.Stop();
+                }
+            }
 
             // TODO: Change track 
             audioSourceMusic.Stop();
@@ -346,7 +338,9 @@ namespace DMSH.Characters
         {
             // Save the last time scale state
             if (_uiPauseScreen.activeSelf == false)
+            {
                 _saved_time_scale = Time.timeScale;
+            }
 
             // Enable or disable pause menu
             _uiPauseScreen.SetActive(!_uiPauseScreen.activeSelf);
@@ -361,9 +355,12 @@ namespace DMSH.Characters
                 // Enable boost if we are exit from pause menu and if we hasnt enable boost
                 // in game we are skip the loop because loop work if Time.timeScale < 1.0f
                 _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
+
                 // Enable death animation
                 if (spriteRenderer.color.a < 0.9f)
+                {
                     _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(spriteRenderer));
+                }
 
                 audioSourceMusic.Play();
             }
@@ -372,11 +369,15 @@ namespace DMSH.Characters
                 weapon.StopShooting();
 
                 if (_deathAwakeCoroutine != null)
+                {
                     StopCoroutine(_deathAwakeCoroutine);
+                }
 
                 // If we have enabled boost
                 if (_slowMotionCoroutine != null)
+                {
                     StopCoroutine(_slowMotionCoroutine);
+                }
 
                 audioSourceMusic.Pause();
             }
@@ -392,10 +393,14 @@ namespace DMSH.Characters
         private void OnGUI()
         {
             if (GlobalSettings.cheatGod)
+            {
                 GUI.Label(new Rect(0, 60, 500, 500), "[God]", _cheatGUIStyle);
+            }
 
             if (GlobalSettings.cheatInfiniteBoost)
+            {
                 GUI.Label(new Rect(0, 80, 500, 500), "[Infinity boost]", _cheatGUIStyle);
+            }
 
             if (GlobalSettings.debugDrawPlayerDGUI)
             {
@@ -426,7 +431,9 @@ namespace DMSH.Characters
                             break;
                         case Bullet b:
                             if (b.isEnemyBullet)
+                            {
                                 Damage();
+                            }
                             break;
                     }
                 }
@@ -438,7 +445,9 @@ namespace DMSH.Characters
             _cameraDeathAnimation.Play();
 
             if (_slowMotionCoroutine != null)
+            {
                 StopCoroutine(_slowMotionCoroutine);
+            }
 
             weapon.StopShooting();
 
@@ -469,17 +478,23 @@ namespace DMSH.Characters
 
             // Don't continue if we are dead or in god mode
             if (/*_debug_god || */_isDead == true)
+            {
                 return;
+            }
 
             // Subtract one life point 
             if (!GlobalSettings.cheatGod)
+            {
                 Life -= 1;
+            }
 
 
             // If life equal or less MIN_LIFE we are disable player components
             // Or we are teleport player to spawn point
             if (Life == PLAYER_MIN_LIFE)
+            {
                 Kill();
+            }
             else
             {
                 _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(spriteRenderer));
@@ -491,13 +506,16 @@ namespace DMSH.Characters
 
                 // Destroy all bullet cuz we are can teleport player into the bullet 
                 foreach (var bullet in FindObjectsOfType<Bullet>())
+                {
                     if (bullet.isEnemyBullet &&
                         bullet.collisionDestroyBullet &&
                         bullet.pathSystem == null)
+                    {
                         bullet.SqueezeAndDestroy();
-
+                    }
+                }
                 // Set spawn point position to player 
-                gameObject.transform.position = respawnPoint.transform.position;
+                gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
             }
         }
 
@@ -508,7 +526,9 @@ namespace DMSH.Characters
             string text = string.Empty;
             // Fill string by UI_ZEROS_SCORE_TEXT count subtract number length 
             for (int i = 0; i <= UI_ZEROS_SCORE_TEXT - num.ToString().Length; i++)
+            {
                 text += "0";
+            }
             // Add number
             text += num.ToString();
             return text;
