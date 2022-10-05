@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Bagheads.UnityConsole;
+using Bagheads.UnityConsole.Data;
+
+using System;
 using UnityEngine;
 
 using DMSH.Characters;
-
-using Konsole;
-using Konsole.Data;
 
 namespace DMSH.Misc.Log
 {
@@ -28,13 +28,13 @@ namespace DMSH.Misc.Log
 
         private void IntegrateKonsoleCommands()
         {
-            Konsole.Konsole.IntegrateInExistingCanvas(new IntegrationOptions
+            Konsole.IntegrateInExistingCanvas(new IntegrationOptions
             {
                 FontSize = _fontSize,
                 DefaultTextFont = _font,
             });
-            Konsole.Konsole.RegisterCommand("fps", "Show/hide FPS indicator", _ => _fpsCounter = !_fpsCounter);
-            Konsole.Konsole.RegisterCommand("tc", "Stop all audio sources", _ =>
+            Konsole.RegisterCommand("fps", "Show/hide FPS indicator", _ => _fpsCounter = !_fpsCounter);
+            Konsole.RegisterCommand("tc", "Stop all audio sources", _ =>
             {
                 foreach (var audioSource in FindObjectsOfType<AudioSource>())
                 {
@@ -42,20 +42,20 @@ namespace DMSH.Misc.Log
                 }
                 _Resume = !_Resume;
             });
-            Konsole.Konsole.RegisterCommand("killplayer", _ => FindObjectOfType<PlayerController>().Kill());
-            Konsole.Konsole.RegisterCommand("god", context =>
+            Konsole.RegisterCommand("killplayer", _ => FindObjectOfType<PlayerController>().Kill());
+            Konsole.RegisterCommand("god", context =>
             {
                 GlobalSettings.cheatGod = !GlobalSettings.cheatGod;
                 context.Log($"{TextTags.Bold("GodMode")} is {(GlobalSettings.cheatGod ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
             
-            Konsole.Konsole.RegisterCommand("infboost", context =>
+            Konsole.RegisterCommand("infboost", context =>
             {
                 GlobalSettings.cheatInfiniteBoost = !GlobalSettings.cheatInfiniteBoost;
                 context.Log($"{TextTags.Bold("InfiniteBoost")} is {(GlobalSettings.cheatInfiniteBoost ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
             
-            Konsole.Konsole.RegisterCommand("infboost", _ =>
+            Konsole.RegisterCommand("infboost", _ =>
             {
                 foreach (var enemy in FindObjectsOfType<Enemy>())
                 {
@@ -64,37 +64,37 @@ namespace DMSH.Misc.Log
             });
 
             // ?
-            Konsole.Konsole.RegisterCommand("tmessages", _ => drawLogMessages = !drawLogMessages);
+            Konsole.RegisterCommand("tmessages", _ => drawLogMessages = !drawLogMessages);
 
-            Konsole.Konsole.RegisterCommand("testLog", _ => Debug.Log("Hi"));
-            Konsole.Konsole.RegisterCommand("testassert", _ => Debug.Assert(false, "Assert Hi"));
-            Konsole.Konsole.RegisterCommand("testexception", _ => Debug.LogException(new NotImplementedException()));
+            Konsole.RegisterCommand("testLog", _ => Debug.Log("Hi"));
+            Konsole.RegisterCommand("testassert", _ => Debug.Assert(false, "Assert Hi"));
+            Konsole.RegisterCommand("testexception", _ => Debug.LogException(new NotImplementedException()));
 
-            Konsole.Konsole.RegisterCommand("debugDrawPlayerDGUI", context =>
+            Konsole.RegisterCommand("debugDrawPlayerDGUI", context =>
             {
                 GlobalSettings.debugDrawPlayerDGUI = !GlobalSettings.debugDrawPlayerDGUI;
                 context.Log($"{TextTags.Bold("DebugDrawPlayerDGUI")} is {(GlobalSettings.debugDrawPlayerDGUI ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
 
-            Konsole.Konsole.RegisterCommand("debugDrawPSAllPoints", context =>
+            Konsole.RegisterCommand("debugDrawPSAllPoints", context =>
             {
                 GlobalSettings.debugDrawPSAllPoints = !GlobalSettings.debugDrawPSAllPoints;
                 context.Log($"{TextTags.Bold("debugDrawPSAllPoints")} is {(GlobalSettings.debugDrawPSAllPoints ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
 
-            Konsole.Konsole.RegisterCommand("debugDrawPSCurrentMovement", context =>
+            Konsole.RegisterCommand("debugDrawPSCurrentMovement", context =>
             {
                 GlobalSettings.debugDrawPSCurrentMovement = !GlobalSettings.debugDrawPSCurrentMovement;
                 context.Log($"{TextTags.Bold("debugDrawPSCurrentMovement")} is {(GlobalSettings.debugDrawPSCurrentMovement ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
 
-            Konsole.Konsole.RegisterCommand("debugDrawPSObjectInfo", context =>
+            Konsole.RegisterCommand("debugDrawPSObjectInfo", context =>
             {
                 GlobalSettings.debugDrawPSObjectInfo = !GlobalSettings.debugDrawPSObjectInfo;
                 context.Log($"{TextTags.Bold("debugDrawPSObjectInfo")} is {(GlobalSettings.debugDrawPSObjectInfo ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
 
-            Konsole.Konsole.RegisterCommand("debugDrawWeaponPoints", context =>
+            Konsole.RegisterCommand("debugDrawWeaponPoints", context =>
             {
                 GlobalSettings.debugDrawWeaponPoints = !GlobalSettings.debugDrawWeaponPoints;
                 context.Log($"{TextTags.Bold("debugDrawWeaponPoints")} is {(GlobalSettings.debugDrawWeaponPoints ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
@@ -115,7 +115,7 @@ namespace DMSH.Misc.Log
                 if (Event.current.keyCode == KeyCode.BackQuote && Event.current.isKey)
                 {
                     drawConsole = !drawConsole;
-                    Konsole.Konsole.ToggleConsole();
+                    Konsole.ToggleConsole();
                     Cursor.visible = !_Resume || (drawConsole || !Convert.ToBoolean(_savedGameActiveState));
 
                     if (_Resume)
