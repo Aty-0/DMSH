@@ -11,10 +11,14 @@ namespace DMSH.Characters
         public string bossName = "NoName";
 
         [Header("UI")]
-        [SerializeField] private GameObject _bossUI;
-        [SerializeField] private Text _bossName;
-        [SerializeField] private Text _bossLifes;
-        [SerializeField] private Image _bossHealthBar;
+        [SerializeField]
+        private GameObject _bossUI;
+        [SerializeField]
+        private Text _bossName;
+        [SerializeField] 
+        private Text _bossLifes;
+        [SerializeField] 
+        private Image _bossHealthBar;
 
         protected override void EnemyStart()
         {
@@ -39,10 +43,14 @@ namespace DMSH.Characters
 
             // Clear scene from bullets
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
+            {
                 if (bullet.isEnemyBullet &&
                     bullet.collisionDestroyBullet &&
                     bullet.pathSystem == null)
+                {
                     bullet.Unspawn();
+                }
+            }
         }
 
         public override void OnDieCompletely()

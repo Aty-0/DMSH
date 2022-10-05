@@ -1,11 +1,13 @@
 using UnityEngine;
 
-namespace DMSH.Misc
+namespace DMSH.Misc.Animated
 {
     public class CubeRotate : MonoBehaviour
     {
-        [SerializeField] private Vector3 _currentEulerAngles;
-        [SerializeField] private float _speed = 10.0f;
+        [SerializeField] 
+        private Vector3 _currentEulerAngles;
+        [SerializeField]
+        private float _speed = 10.0f;
 
         protected void Update()
         {

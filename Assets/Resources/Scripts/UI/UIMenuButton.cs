@@ -1,14 +1,19 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using DMSH.Misc;
+
+using DMSH.Misc.Animated;
+
+// TODO: Drag, drop
 
 namespace DMSH.UI
 {
     [AddComponentMenu("UI/DMSH/UIMenuButton", 0)]
     public class UIMenuButton : Button, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
+        [SerializeField]
         private Text _text;
+
         private Coroutine _colorCoroutine = null;
         private Coroutine _scaleCoroutine = null;
 
@@ -20,10 +25,14 @@ namespace DMSH.UI
             transform.localScale = Vector3.one;
 
             if (_colorCoroutine != null)
+            {
                 StopCoroutine(_colorCoroutine);
+            }
 
             if (_scaleCoroutine != null)
+            {
                 StopCoroutine(_scaleCoroutine);
+            }
         }
 
         protected Vector3 GetDragDirection(Vector3 dragVector)
@@ -61,33 +70,38 @@ namespace DMSH.UI
         {
             // If we are already have coroutine we are disable it 
             if (_colorCoroutine != null)
+            {
                 StopCoroutine(_colorCoroutine);
+            }
 
             // When we are disable previous animation we are start new
             _colorCoroutine = StartCoroutine(BasicAnimationsPack.SmoothChangeToColorForText(_text, colors.highlightedColor));
 
             //Same logic for this coroutine 
             if (_scaleCoroutine != null)
+            {
                 StopCoroutine(_scaleCoroutine);
+            }
 
             _scaleCoroutine = StartCoroutine(BasicAnimationsPack.SmoothResize(transform));
-
-
-
         }
 
         public override void OnPointerExit(PointerEventData eventData)
         {
             // If we are already have coroutine we are disable it 
             if (_colorCoroutine != null)
+            {
                 StopCoroutine(_colorCoroutine);
+            }
 
             // When we are disable previous animation we are start new
             _colorCoroutine = StartCoroutine(BasicAnimationsPack.SmoothChangeToColorForText(_text, colors.normalColor, 3.5f));
 
             // Same logic for this coroutine 
             if (_scaleCoroutine != null)
+            {
                 StopCoroutine(_scaleCoroutine);
+            }
 
             _scaleCoroutine = StartCoroutine(BasicAnimationsPack.SmoothResize(transform, 1.0f));
         }

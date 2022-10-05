@@ -1,11 +1,11 @@
 {
   "dependencies": {
-    "com.kitakun.konsole": {
+    "com.bagheads.konsole": {
       "version": "https://github.com/kitakun/Konsole.git",
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "2e62a8678f5f9effdf2eee9a38399685c777a08a"
+      "hash": "5e57e97f1fcdb10754ac9c0908991d303a6e1c48"
     },
     "com.unity.2d.animation": {
       "version": "8.0.3",

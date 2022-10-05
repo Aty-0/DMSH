@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class UIBuildVersionText : MonoBehaviour
 {
+    [SerializeField]
     private Text _text;
 
     protected void Start()

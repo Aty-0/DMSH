@@ -1,10 +1,11 @@
-using UnityEngine;
-using DMSH.Objects;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
+using DMSH.Misc;
+using DMSH.Objects;
 
-namespace DMSH.Misc
+namespace DMSH.Gameplay
 {
     // TODO: Weapon diffrent types
     public class Weapon : MonoBehaviour
@@ -16,22 +17,28 @@ namespace DMSH.Misc
         public Bullet        bulletPrefab = null;
         public float         shotFrequency = 0.07f;
         public bool          canBeUsed = true;
-        [SerializeField] private bool        _weaponEnabled = false;
-        [SerializeField] private AudioSource _audioSource;
+        [SerializeField] 
+        private bool        _weaponEnabled = false;
+        [SerializeField] 
+        private AudioSource _audioSource;
 
         public List<Action>  onShot = new List<Action>();
 
         [Header("Weapon upgrage")]
         public float        weaponBoostGain = 0.0f;
-        [SerializeField] private int         _weaponType = 0;
+        [SerializeField] 
+        private int         _weaponType = 0;
 
         // When we are not set the shot point 
         // Then we are going to use owner game object and his BoxCollider2D size
         [Header("Shot Point")]
         public Transform     shotPoint = null;
-        [SerializeField] private bool _useOwner;
-        [SerializeField] private BoxCollider2D _boxCollider2D;
-        [SerializeField] private Vector3       _position;
+        [SerializeField] 
+        private bool _useOwner;
+        [SerializeField] 
+        private BoxCollider2D _boxCollider2D;
+        [SerializeField] 
+        private Vector3       _position;
 
         private Coroutine   _shotCoroutine;
 
@@ -66,8 +73,10 @@ namespace DMSH.Misc
         public void StopShooting()
         {
             _weaponEnabled = false;
-            if(_shotCoroutine != null)
+            if (_shotCoroutine != null)
+            {
                 StopCoroutine(_shotCoroutine);
+            }
         }
 
         protected void OnDrawGizmos()
@@ -99,15 +108,19 @@ namespace DMSH.Misc
             while (_weaponEnabled && canBeUsed)
             {
                 foreach (Action action in onShot)
+                {
                     action?.Invoke();
+                }
 
                 // First update 
                 UpdateBulletSpawnPosition();
 
                 Instantiate(bulletPrefab, _position, Quaternion.identity);
 
-                if(_audioSource)
+                if (_audioSource)
+                {
                     _audioSource.Play();
+                }
 
                 yield return new WaitForSeconds(shotFrequency);
             }

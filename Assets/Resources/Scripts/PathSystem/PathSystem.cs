@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 using DMSH.Misc;
+using DMSH.Gameplay;
 using DMSH.LevelSpecifics.Stage;
 
 
@@ -13,7 +14,10 @@ namespace DMSH.Path
     public class PathSystem : MonoBehaviour
     {        
         [Header("Main")]
-        [HideInInspector] public StageSystem stageSystem = null;
+
+        [HideInInspector]
+        public StageSystem stageSystem = null;
+
         public ObservedList<MovableObject> movablePathObjectsList = new ObservedList<MovableObject>();
         public List<PathPoint> pathPointsList = new List<PathPoint>();
         public bool loop = true;
@@ -40,9 +44,12 @@ namespace DMSH.Path
         private Timer _lifetimeTimer = null;
 
         //[Header("Current")]
-        [HideInInspector] public PathPoint currentPathPoint = null;
-        [HideInInspector] public PathPoint nextPathPoint = null;
-        [HideInInspector] public MovableObject currentPathObject = null;
+        [HideInInspector]
+        public PathPoint currentPathPoint = null;
+        [HideInInspector] 
+        public PathPoint nextPathPoint = null;
+        [HideInInspector] 
+        public MovableObject currentPathObject = null;
 
         [Header("Callbacks")]
         public List<Action> onMovableObjectsAdded = new List<Action>();
@@ -61,8 +68,12 @@ namespace DMSH.Path
 
             // Set to object what's path system he use
             foreach (var move_object in movablePathObjectsList)
+            {
                 if (move_object != null)
+                {
                     move_object.pathSystem = this;
+                }
+            }
         }
 
         public void OnLifetimeEnd()
@@ -70,10 +81,12 @@ namespace DMSH.Path
             loop = false;
 
             foreach (var mO in movablePathObjectsList.ToList())
+            {
                 mO.currentPoint = pathPointsList.Count - 1;
+            }
         }
 
-        #region Spawner
+#region Spawner
         private void SpawnObject()
         {
             spawnedObjectCount++;
@@ -84,9 +97,13 @@ namespace DMSH.Path
             
             movablePathObjectsList.Add(movableObject);
             if (spawnedObjectCount == objectCount)
+            {
                 _spawnerTimer.EndTimer();
+            }
             else
+            {
                 _spawnerTimer.ResetTimer();
+            }
         }
 
         public void EnableSpawner()
@@ -100,8 +117,12 @@ namespace DMSH.Path
                 Debug.Assert(objectPrefab != null);
                 _spawnerTimer.EndEvent += SpawnObject;
                 if (objectPrefab != null)
+                {
                     for (int i = 1; i <= objectCount && !_spawnerTimer.isEnded; i++)
+                    {
                         _spawnerTimer.StartTimer();
+                    }
+                }
             }
 
             if (lifeTime > 0.0f)
@@ -118,23 +139,33 @@ namespace DMSH.Path
         public void UpdateElementChangedCallback()
         {
             foreach (Action action in onMovableObjectsChanged)
+            {
                 action?.Invoke();
+            }
         }
 
         public void UpdateElementRemovedCallback()
         {
             foreach (Action action in onMovableObjectsRemoved)
+            {
                 action?.Invoke();
+            }
 
             foreach (PointAction pa in onLastMovableObjectReached)
+            {
                 if (movablePathObjectsList.Count == 0)
+                {
                     pa.action?.Invoke();
+                }
+            }
         }
 
         public void UpdateElementAddedCallback()
         {
             foreach (Action action in onMovableObjectsAdded)
+            {
                 action?.Invoke();
+            }
         }
 
         public void DetachObject(MovableObject movableObject)
@@ -170,25 +201,37 @@ namespace DMSH.Path
 
             // Invoke points events 
             if (point.eventSpecial?.GetPersistentEventCount() != 0)
+            {
                 point.eventSpecial.Invoke();
+            }
 
             // Invoke custom function only when last object reached needed point 
             if (movablePathObjectsList.IndexOf(move_object) == (movablePathObjectsList.Count - 1))
             {
                 foreach (PointAction pa in onLastMovableObjectReached)
+                {
                     if (currentPathPoint.gameObject == pa.pathPoint.gameObject)
+                    {
                         pa.action?.Invoke();
+                    }
+                }
             }
              
             // Invoke MovableObject events 
             move_object.OnReachedPointEvent(point.eventOnEndForAll);
 
             if (pathPointsList.IndexOf(point) == (pathPointsList.Count - 1))
+            {
                 move_object.OnReachedLastPoint();
+            }
             else if (pathPointsList.IndexOf(point) == 0)
+            {
                 move_object.OnReachedFirstPoint();
+            }
             else
+            {
                 move_object.OnReachedPoint();
+            }
 
             move_object.currentCurvePoint = 1;
             move_object.currentPoint++;
@@ -300,17 +343,21 @@ namespace DMSH.Path
             foreach (var mO in movablePathObjectsList.ToList())
             {
                 currentPathObject = mO;
-                
+
                 // If current path object is null we are skip this
                 if (currentPathObject == null)
+                {
                     continue;
+                }
 
                 // If we are have excess point
                 if (currentPathObject.currentPoint >= pathPointsList.Count)
                 {
                     // If loop on we are reset current point num 
                     if (loop)
+                    {
                         currentPathObject.currentPoint = 0;
+                    }
                     else
                     {
                         Debug.Log($"Unspawn: {currentPathObject.name}");
@@ -341,13 +388,19 @@ namespace DMSH.Path
                         Mathf.Clamp(distanceBetweenCurrentObjects, 0.0f, 1.0f / distanceBetweenObjects)), 0.001f, 1.0f);
                 }
                 else
+                {
                     currentPathObject.reduceSpeed = 1;
+                }
 
                 // Will boost up speed when object is stand behind 
                 if (distanceBetweenCurrentObjects > distanceBetweenObjects)
+                {
                     currentPathObject.augmentSpeed = Mathf.Clamp(Mathf.Clamp(distanceBetweenCurrentObjects, 1.0f, distanceBetweenCurrentObjects) / distanceBetweenObjects, 0.01f, 5.0f);
+                }
                 else
+                {
                     currentPathObject.augmentSpeed = 1;
+                }
 
                 // Calculate final speed 
                 currentPathObject.finalSpeed = (currentPathObject.speed * Time.deltaTime * currentPathObject.reduceSpeed * currentPathObject.augmentSpeed) * GlobalSettings.gameActiveAsInt;
@@ -366,7 +419,9 @@ namespace DMSH.Path
                             var curveEndDistance = Vector3.Distance(currentPathObject.transform.position, lineEnd);
                             currentPathObject.transform.position = Vector3.MoveTowards(currentPathObject.transform.position, lineEnd, currentPathObject.finalSpeed);
                             if (curveEndDistance <= distanceAccuracy)
+                            {
                                 currentPathObject.currentCurvePoint++;
+                            }
                         }
                         else
                         {

@@ -10,7 +10,8 @@ namespace DMSH.Misc
     {
         public delegate void ChangedDelegate(int index, T oldValue, T newValue);
 
-        [SerializeField] private List<T> _list = new List<T>();
+        [SerializeField] 
+        private List<T> _list = new List<T>();
 
         public event ChangedDelegate Changed;
         public event Action Added;
