@@ -533,6 +533,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _text: {fileID: 0}
 --- !u!1 &1093470307463574243
 GameObject:
   m_ObjectHideFlags: 0
@@ -660,6 +661,7 @@ GameObject:
   - component: {fileID: 386859477558106202}
   - component: {fileID: 386859477558106203}
   - component: {fileID: 386859477558106204}
+  - component: {fileID: 1873983408081715809}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -750,6 +752,95 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &1873983408081715809
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1324597046492736051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70cf974c3d23486a92bad9d7e035774c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _uiScoreText: {fileID: 386859477817497049}
+  _uiBoostGainText: {fileID: 3411127154762776398}
+  _uiBoostText: {fileID: 8017727714696632203}
+  _uiLifeText: {fileID: 386859477753556842}
+  _uiFpsCounterText: {fileID: 4875343207492331631}
+  _uiChapterName: {fileID: 7893457151672225935}
+  _cheatGUIStyle:
+    m_Name: 
+    m_Normal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Hover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Active:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Focused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnNormal:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnHover:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnActive:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_OnFocused:
+      m_Background: {fileID: 0}
+      m_ScaledBackgrounds: []
+      m_TextColor: {r: 0, g: 0, b: 0, a: 1}
+    m_Border:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Margin:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Padding:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Overflow:
+      m_Left: 0
+      m_Right: 0
+      m_Top: 0
+      m_Bottom: 0
+    m_Font: {fileID: 0}
+    m_FontSize: 0
+    m_FontStyle: 0
+    m_Alignment: 0
+    m_WordWrap: 0
+    m_RichText: 1
+    m_TextClipping: 0
+    m_ImagePosition: 0
+    m_ContentOffset: {x: 0, y: 0}
+    m_FixedWidth: 0
+    m_FixedHeight: 0
+    m_StretchWidth: 1
+    m_StretchHeight: 0
+  _uiPauseScreen: {fileID: 1751553568047604629}
+  _uiDeathScreen: {fileID: 3200462816621560470}
+  _uiCurrentScoreOnDeathText: {fileID: 1577688591765293370}
+  _uiMaxScoreText: {fileID: 7431086910141673474}
 --- !u!1 &1548305559953898980
 GameObject:
   m_ObjectHideFlags: 0
@@ -942,6 +1033,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _text: {fileID: 0}
 --- !u!1 &1751553568047604629
 GameObject:
   m_ObjectHideFlags: 0
@@ -3037,6 +3129,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _text: {fileID: 0}
 --- !u!1 &7078493256971929195
 GameObject:
   m_ObjectHideFlags: 0
@@ -3388,6 +3481,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _text: {fileID: 0}
 --- !u!1 &7589033670261380038
 GameObject:
   m_ObjectHideFlags: 0
@@ -3650,6 +3744,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  _text: {fileID: 0}
 --- !u!1 &7807206200252381790
 GameObject:
   m_ObjectHideFlags: 0
