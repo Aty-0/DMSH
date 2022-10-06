@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.InputSystem;
 
 using DMSH.Path;
@@ -11,6 +10,7 @@ using DMSH.Misc.Log;
 using DMSH.Objects;
 using DMSH.LevelSpecifics.Stage;
 using DMSH.Gameplay;
+using DMSH.UI;
 
 namespace DMSH.Characters
 {
@@ -101,32 +101,6 @@ namespace DMSH.Characters
         private float _boost_speed = 0.05f;
         [SerializeField] 
         private float _saved_time_scale = 0.0f;
-        
-        [Header("UI")]
-        [SerializeField] 
-        private Text _uiScoreText = null;
-        [SerializeField] 
-        private Text _uiBoostGainText = null;
-        [SerializeField] 
-        private Text _uiBoostText = null;
-        [SerializeField] 
-        private Text _uiLifeText = null;
-        [SerializeField] 
-        private Text _uiFpsCounterText = null;
-        [SerializeField] 
-        private Text _uiChapterName = null;
-        [SerializeField] 
-        private GUIStyle _cheatGUIStyle = null;
-
-        [Header("UI Screens")]
-        [SerializeField] 
-        private GameObject _uiPauseScreen = null;
-        [SerializeField] 
-        private GameObject _uiDeathScreen = null;
-        [SerializeField] 
-        private Text _uiCurrentScoreText = null; // Only for death screen
-        [SerializeField] 
-        private Text _uiMaxScoreText = null;
 
         [Header("Weapon")]
         public Weapon                   weapon;
@@ -179,12 +153,6 @@ namespace DMSH.Characters
             _cameraDeathAnimation.animCamera = gameCamera;
             _cameraDeathAnimation.target = gameObject;
 
-            _uiBoostGainText.text = "100%";
-
-            // Set style for cheat gui
-            _cheatGUIStyle.fontSize = 13;
-            _cheatGUIStyle.normal.textColor = new Color(255, 0, 0);
-
             // Don't show cursor when we are create the player 
             Cursor.visible = false;
 
@@ -194,8 +162,8 @@ namespace DMSH.Characters
         }
         public void ShowChapterName()
         {
-            _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(_uiChapterName, 255, 15));
-            _uiChapterName.text = $"Chapter {_stageSystem.CurrentStageIndex + 1} {_stageSystem.currentStage.name}";
+            _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(UI_Root.Get.UI_ChapterName, 255, 15));
+            UI_Root.Get.UI_ChapterName.text = $"Chapter {_stageSystem.CurrentStageIndex + 1} {_stageSystem.currentStage.name}";
         }
 
         public void RemoveChapterName()
@@ -205,24 +173,14 @@ namespace DMSH.Characters
                 StopCoroutine(_showChapterNameCoroutine);
             }
 
-            _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(_uiChapterName, 15));
+            _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(UI_Root.Get.UI_ChapterName, 15));
         }
-
-      
 
         protected void FixedUpdate()
         {
             _rigidBody2D.MovePosition(_rigidBody2D.position + ((_moveDirection * _speed) * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt));
         }
 
-        protected void Update()
-        {
-            if (_uiFpsCounterText)
-            {
-                _uiFpsCounterText.text = $"FPS:{(int)(1f / Time.unscaledDeltaTime)}";
-            }
-        }
-   
         private IEnumerator DoSlowMotion(bool isBoost = true)
         {
             while (Time.timeScale < 1.0f)
@@ -240,13 +198,13 @@ namespace DMSH.Characters
 
                 if (isBoost)
                 {
-                    _uiBoostGainText.text = $"{(int)(Time.timeScale * 100)}%";
+                    UI_Root.Get.UI_BoostGainText.text = $"{(int)(Time.timeScale * 100)}%";
                 }
 
                 yield return new WaitForSeconds(.1f);
             }
 
-            _uiBoostGainText.text = "100%";
+            UI_Root.Get.UI_BoostGainText.text = "100%";
 
             Time.timeScale = 1.0f;
         }
@@ -323,34 +281,34 @@ namespace DMSH.Characters
             audioSourceMusic.Stop();
              
             // Show death screen
-            _uiDeathScreen.SetActive(!_uiDeathScreen.activeSelf);
+            UI_Root.Get.UI_DeathScreen.SetActive(!UI_Root.Get.UI_DeathScreen.activeSelf);
 
             // Stop game world
             Time.timeScale = 1.0f;
             GlobalSettings.SetGameActive(false);
 
             // Show some results
-            _uiCurrentScoreText.text += GetNumberWithZeros(Score);
+            UI_Root.Get.UI_CurrentScoreOnDeathText.text += GetNumberWithZeros(Score);
             //_uiMaxScoreText.text += GetNumberWithZeros(maxScore);
         }
 
         public void ShowPauseScreen()
         {
             // Save the last time scale state
-            if (_uiPauseScreen.activeSelf == false)
+            if (UI_Root.Get.UI_PauseScreen.activeSelf == false)
             {
                 _saved_time_scale = Time.timeScale;
             }
 
             // Enable or disable pause menu
-            _uiPauseScreen.SetActive(!_uiPauseScreen.activeSelf);
-            Cursor.visible = _uiPauseScreen.activeSelf;
-            GlobalSettings.SetGameActive(!_uiPauseScreen.activeSelf);
+            UI_Root.Get.UI_PauseScreen.SetActive(!UI_Root.Get.UI_PauseScreen.activeSelf);
+            Cursor.visible = UI_Root.Get.UI_PauseScreen.activeSelf;
+            GlobalSettings.SetGameActive(!UI_Root.Get.UI_PauseScreen.activeSelf);
 
-            Time.timeScale = _uiPauseScreen.activeSelf == false ? _saved_time_scale : 1.0f;
+            Time.timeScale = UI_Root.Get.UI_PauseScreen.activeSelf == false ? _saved_time_scale : 1.0f;
 
             // TODO: Change track 
-            if (_uiPauseScreen.activeSelf == false)
+            if (UI_Root.Get.UI_PauseScreen.activeSelf == false)
             {
                 // Enable boost if we are exit from pause menu and if we hasnt enable boost
                 // in game we are skip the loop because loop work if Time.timeScale < 1.0f
@@ -383,7 +341,7 @@ namespace DMSH.Characters
             }
 
             playerInput.currentActionMap.Disable();
-            playerInput.SwitchCurrentActionMap(_uiPauseScreen.activeSelf == false ? "Player" : "Pause");
+            playerInput.SwitchCurrentActionMap(UI_Root.Get.UI_PauseScreen.activeSelf == false ? "Player" : "Pause");
             playerInput.currentActionMap.Enable();
 
             UpdateSettings();
@@ -394,12 +352,12 @@ namespace DMSH.Characters
         {
             if (GlobalSettings.cheatGod)
             {
-                GUI.Label(new Rect(0, 60, 500, 500), "[God]", _cheatGUIStyle);
+                GUI.Label(new Rect(0, 60, 500, 500), "[God]", UI_Root.Get.CheatGUIStyle);
             }
 
             if (GlobalSettings.cheatInfiniteBoost)
             {
-                GUI.Label(new Rect(0, 80, 500, 500), "[Infinity boost]", _cheatGUIStyle);
+                GUI.Label(new Rect(0, 80, 500, 500), "[Infinity boost]", UI_Root.Get.CheatGUIStyle);
             }
 
             if (GlobalSettings.debugDrawPlayerDGUI)
@@ -536,9 +494,11 @@ namespace DMSH.Characters
 
         public void UpdateHUD()
         {
-            _uiLifeText.text = Life.ToString();
-            _uiScoreText.text = GetNumberWithZeros(Score);
-            _uiBoostText.text = Boost.ToString();
+            var ui = UI_Root.Get;
+            
+            ui.UI_LifeText.text = Life.ToString();
+            ui.UI_ScoreText.text = GetNumberWithZeros(Score);
+            ui.UI_BoostText.text = Boost.ToString();
         }
 
         // That thing should update some player components
