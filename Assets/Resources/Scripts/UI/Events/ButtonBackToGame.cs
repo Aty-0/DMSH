@@ -7,9 +7,11 @@ namespace DMSH.UI.Events
     {
         [SerializeField] 
         private PlayerController _controller;
+        
         public void ButtonBackToGameEvent()
         {
-            _controller?.ShowPauseScreen();
+            if(_controller != null)
+                _controller.ShowPauseScreen();
         }
     }
 }

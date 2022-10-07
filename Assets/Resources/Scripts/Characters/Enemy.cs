@@ -147,8 +147,12 @@ namespace DMSH.Characters
                 }
             }
 
-            _deathAudioSource?.Play();
-            if (_deathParticle && !unspawn)
+            if (_deathAudioSource != null)
+            {
+                _deathAudioSource.Play();
+            }
+
+            if (_deathParticle != null && !unspawn)
             {
                 _pathSystem?.DetachObject(this);
                 _spriteRenderer.enabled = false;

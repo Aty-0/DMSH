@@ -45,8 +45,7 @@ namespace DMSH.Characters
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
             {
                 if (bullet.isEnemyBullet &&
-                    bullet.collisionDestroyBullet &&
-                    bullet.pathSystem == null)
+                    bullet.collisionDestroyBullet)
                 {
                     bullet.Unspawn();
                 }

@@ -144,7 +144,10 @@ namespace DMSH.Characters
             playerInput = GetComponent<PlayerInput>();
             logHandler = GetComponent<LogHandler>();
             weapon = GetComponent<Weapon>();
-            _stageSystem = FindObjectOfType<StageSystem>();
+
+            _stageSystem = StageSystem.Get;
+            if (_stageSystem == null)
+                Debug.LogError("No stage system in scene");
 
             resizableGameElements = GetComponent<ResizableGameElements>();
             resizableGameElements.gameCamera = gameCamera;
@@ -204,8 +207,7 @@ namespace DMSH.Characters
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
             {
                 if (bullet.isEnemyBullet &&
-                    bullet.collisionDestroyBullet &&
-                    bullet.pathSystem == null)
+                    bullet.collisionDestroyBullet)
                 {
                     bullet.SqueezeAndDestroy();
                 }
@@ -442,8 +444,7 @@ namespace DMSH.Characters
                 foreach (var bullet in FindObjectsOfType<Bullet>())
                 {
                     if (bullet.isEnemyBullet &&
-                        bullet.collisionDestroyBullet &&
-                        bullet.pathSystem == null)
+                        bullet.collisionDestroyBullet)
                     {
                         bullet.SqueezeAndDestroy();
                     }
