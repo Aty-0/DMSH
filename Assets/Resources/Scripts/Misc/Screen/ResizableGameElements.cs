@@ -16,6 +16,7 @@ namespace DMSH.Misc.Screen
     public class ResizableGameElements : MonoBehaviour
     {
         public GameObject respawnPoint = null;
+        public Vector3    resolutionInWorldPoint = Vector3.zero;
 
         [HideInInspector]
         public ScreenHandler screenHandler = null;
@@ -41,8 +42,6 @@ namespace DMSH.Misc.Screen
         [SerializeField]
         private float screenDistanceHeight;
 
-        [SerializeField]
-        private Vector3 resolutionInWorldPoint = Vector3.zero;
 
         [SerializeField]
         private List<Tuple<int,Vector3>> positionPSOnBegin = new List<Tuple<int, Vector3>>();
@@ -76,6 +75,8 @@ namespace DMSH.Misc.Screen
             screenHandler.onScreenResolutionChange.Add(OnResolutionScreenChange);
             GenerateInvisibleWalls();
             CheckComponentsOnExist();
+            // first 
+            UpdateResolutionInWorldPoint();
         }
 
         private void CheckComponentsOnExist()
@@ -89,12 +90,16 @@ namespace DMSH.Misc.Screen
             if (respawnPoint == null)
                 Debug.LogError("ResizableGameElements: Respawn point is null");
         }
+        private void UpdateResolutionInWorldPoint()
+        {
+            resolutionInWorldPoint = new Vector3(gameCamera.ViewportToWorldPoint(new Vector2(1, 0)).x,
+                    gameCamera.ViewportToWorldPoint(new Vector2(0, 1)).y, 0);
+        }
 
         private void OnResolutionScreenChange()
         {
             // Get actual resolution in world points
-            resolutionInWorldPoint = new Vector3(gameCamera.ViewportToWorldPoint(new Vector2(1, 0)).x,
-                gameCamera.ViewportToWorldPoint(new Vector2(0, 1)).y, 0);
+            UpdateResolutionInWorldPoint();
 
             // Try to translate rectTransform to world coords            
             float imageRectWInWp = GetWorldRect(_uiSomeImage.rectTransform).width;

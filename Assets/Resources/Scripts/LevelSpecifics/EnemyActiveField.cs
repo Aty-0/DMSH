@@ -1,5 +1,6 @@
 using UnityEngine;
 using DMSH.Characters;
+using DMSH.Misc.Screen;
 
 namespace DMSH.LevelSpecifics
 {
@@ -8,19 +9,20 @@ namespace DMSH.LevelSpecifics
         [SerializeField] 
         private PlayerController _playerController;
 
+        [SerializeField] 
+        private ResizableGameElements _resizableGameElements;
+
         protected void Start()
         {
             _playerController = FindObjectOfType<PlayerController>();
 
-            var screenHandler = _playerController.resizableGameElements.screenHandler;
-            screenHandler.onScreenResolutionChange.Add(OnResolutionChange);
+            _resizableGameElements = _playerController.resizableGameElements;
+            _resizableGameElements.screenHandler.onScreenResolutionChange.Add(OnResolutionChange);
         }
 
         private void OnResolutionChange()
         {
-            Vector3 ViewportToWorldPointX = new Vector2(_playerController.gameCamera.ViewportToWorldPoint(new Vector2(1, 0)).x, 0);
-            Vector3 ViewportToWorldPointY = new Vector2(0, _playerController.gameCamera.ViewportToWorldPoint(new Vector2(0, 1)).y);
-            gameObject.transform.localScale = new Vector3(ViewportToWorldPointX.x * 2, ViewportToWorldPointY.y * 2, 1);
+            gameObject.transform.localScale = new Vector3(_resizableGameElements.resolutionInWorldPoint.x * 2, _resizableGameElements.resolutionInWorldPoint.y * 2, 1);
         }
 
         protected void OnTriggerEnter2D(Collider2D collider)
