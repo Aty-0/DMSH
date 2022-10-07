@@ -1,4 +1,7 @@
-﻿using Scripts.Utils;
+﻿using DMSH.Misc;
+using DMSH.Misc.Animated;
+
+using Scripts.Utils;
 
 using System;
 
@@ -12,7 +15,6 @@ namespace DMSH.UI
         [Header("UI")]
         [SerializeField]
         private Text _uiScoreText = null;
-        public Text UI_ScoreText => _uiScoreText; 
         
         [SerializeField]
         private Text _uiBoostGainText = null;
@@ -20,18 +22,15 @@ namespace DMSH.UI
 
         [SerializeField]
         private Text _uiBoostText = null;
-        public Text UI_BoostText => _uiBoostText; 
         
         [SerializeField]
         private Text _uiLifeText = null;
-        public Text UI_LifeText => _uiLifeText;
         
         [SerializeField]
         private Text _uiFpsCounterText = null;
 
         [SerializeField]
         private Text _uiChapterName = null;
-        public Text UI_ChapterName => _uiChapterName;
 
         [SerializeField]
         private GUIStyle _cheatGUIStyle = null;
@@ -40,19 +39,22 @@ namespace DMSH.UI
         [Header("UI Screens")]
         [SerializeField]
         private GameObject _uiPauseScreen = null;
-        public GameObject UI_PauseScreen => _uiPauseScreen;
+        public bool IsPauseMenuOpened => _uiPauseScreen.activeSelf;
         
         [SerializeField]
         private GameObject _uiDeathScreen = null;
-        public GameObject UI_DeathScreen => _uiDeathScreen;
         
+        [Tooltip("Only for death screen")]
         [SerializeField]
-        private Text _uiCurrentScoreOnDeathText = null; // Only for death screen
-        public Text UI_CurrentScoreOnDeathText => _uiCurrentScoreOnDeathText; 
+        private Text _uiCurrentScoreOnDeathText = null;
         
         [SerializeField]
         private Text _uiMaxScoreText = null;
 
+        private Coroutine _showChapterNameCoroutine = null;
+
+        // unity
+        
         protected void Start()
         {
             _uiBoostGainText.text = "100%";
@@ -70,8 +72,45 @@ namespace DMSH.UI
             }
         }
 
-        // data
+        // pubic APIs
 
-        // public struct 
+        public void ShowChapterName(string chapterName)
+        {
+            _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(_uiChapterName, 255, 15));
+            _uiChapterName.text = chapterName;
+        }
+        
+        public void HideChapterName()
+        {
+            if (_showChapterNameCoroutine != null)
+            {
+                StopCoroutine(_showChapterNameCoroutine);
+            }
+
+            _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(_uiChapterName, 15));
+        }
+
+        public void TogglePauseScreen()
+        {
+            _uiPauseScreen.SetActive(!IsPauseMenuOpened);
+            Cursor.visible = IsPauseMenuOpened;
+            GlobalSettings.SetGameActive(!IsPauseMenuOpened);
+        }
+
+        public void SetDeathScreen(bool shouldBeVisible, string score = null)
+        {
+            _uiDeathScreen.SetActive(shouldBeVisible);
+            if (!string.IsNullOrEmpty(score))
+            {
+                _uiCurrentScoreOnDeathText.text = score;
+            }
+        }
+
+        public void UpdateGameHud(int life, string numberWithZeros, int boostValue)
+        {
+            _uiLifeText.text = life.ToString();
+            _uiScoreText.text = numberWithZeros;
+            _uiBoostText.text = boostValue.ToString();
+        }
     }
 }

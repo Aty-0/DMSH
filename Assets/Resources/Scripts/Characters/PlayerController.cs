@@ -12,6 +12,8 @@ using DMSH.LevelSpecifics.Stage;
 using DMSH.Gameplay;
 using DMSH.UI;
 
+using System.Text;
+
 namespace DMSH.Characters
 {
     [RequireComponent(typeof(SpriteRenderer))]
@@ -117,7 +119,6 @@ namespace DMSH.Characters
         [SerializeField] 
         protected ParticleSystem _deathParticle = null;
 
-        private Coroutine _showChapterNameCoroutine = null;
         private Coroutine _slowMotionCoroutine = null;
         private Coroutine _deathAwakeCoroutine = null;
 
@@ -129,8 +130,8 @@ namespace DMSH.Characters
             UpdateSettings();
 
             // Set timer callback for stage system
-            _stageSystem.onTimerStart.Add(ShowChapterName);
-            _stageSystem.onTimerEnd.Add(RemoveChapterName);
+            _stageSystem.onTimerStart.Add(() => UI_Root.Get.ShowChapterName($"Chapter {_stageSystem.CurrentStageIndex + 1} {_stageSystem.currentStage.name}"));
+            _stageSystem.onTimerEnd.Add(() => UI_Root.Get.HideChapterName());
         }
 
         private void PrepareComponents()
@@ -160,21 +161,6 @@ namespace DMSH.Characters
             gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
 
         }
-        public void ShowChapterName()
-        {
-            _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeText(UI_Root.Get.UI_ChapterName, 255, 15));
-            UI_Root.Get.UI_ChapterName.text = $"Chapter {_stageSystem.CurrentStageIndex + 1} {_stageSystem.currentStage.name}";
-        }
-
-        public void RemoveChapterName()
-        {
-            if (_showChapterNameCoroutine != null)
-            {
-                StopCoroutine(_showChapterNameCoroutine);
-            }
-
-            _showChapterNameCoroutine = StartCoroutine(BasicAnimationsPack.SmoothFadeText(UI_Root.Get.UI_ChapterName, 15));
-        }
 
         protected void FixedUpdate()
         {
@@ -190,7 +176,7 @@ namespace DMSH.Characters
 
                 foreach (var sound in FindObjectsOfType<AudioSource>())
                 {
-                    if (sound.gameObject.tag != "NotGenericSound")
+                    if (!sound.gameObject.CompareTag("NotGenericSound"))
                     {
                         sound.pitch = Time.timeScale;
                     }
@@ -271,7 +257,7 @@ namespace DMSH.Characters
             // Disable all sounds in scene
             foreach (var sound in FindObjectsOfType<AudioSource>())
             {
-                if (sound.gameObject.tag != "NotGenericSound")
+                if (!sound.gameObject.CompareTag("NotGenericSound"))
                 {
                     sound.Stop();
                 }
@@ -281,34 +267,32 @@ namespace DMSH.Characters
             audioSourceMusic.Stop();
              
             // Show death screen
-            UI_Root.Get.UI_DeathScreen.SetActive(!UI_Root.Get.UI_DeathScreen.activeSelf);
+            UI_Root.Get.SetDeathScreen(true, GetNumberWithZeros(Score));
 
             // Stop game world
             Time.timeScale = 1.0f;
             GlobalSettings.SetGameActive(false);
 
             // Show some results
-            UI_Root.Get.UI_CurrentScoreOnDeathText.text += GetNumberWithZeros(Score);
             //_uiMaxScoreText.text += GetNumberWithZeros(maxScore);
         }
 
         public void ShowPauseScreen()
         {
             // Save the last time scale state
-            if (UI_Root.Get.UI_PauseScreen.activeSelf == false)
+            if (!UI_Root.Get.IsPauseMenuOpened)
             {
                 _saved_time_scale = Time.timeScale;
             }
 
             // Enable or disable pause menu
-            UI_Root.Get.UI_PauseScreen.SetActive(!UI_Root.Get.UI_PauseScreen.activeSelf);
-            Cursor.visible = UI_Root.Get.UI_PauseScreen.activeSelf;
-            GlobalSettings.SetGameActive(!UI_Root.Get.UI_PauseScreen.activeSelf);
-
-            Time.timeScale = UI_Root.Get.UI_PauseScreen.activeSelf == false ? _saved_time_scale : 1.0f;
+            UI_Root.Get.TogglePauseScreen();
+            Time.timeScale = UI_Root.Get.IsPauseMenuOpened
+                ? 1f
+                : _saved_time_scale;
 
             // TODO: Change track 
-            if (UI_Root.Get.UI_PauseScreen.activeSelf == false)
+            if (!UI_Root.Get.IsPauseMenuOpened)
             {
                 // Enable boost if we are exit from pause menu and if we hasnt enable boost
                 // in game we are skip the loop because loop work if Time.timeScale < 1.0f
@@ -341,7 +325,7 @@ namespace DMSH.Characters
             }
 
             playerInput.currentActionMap.Disable();
-            playerInput.SwitchCurrentActionMap(UI_Root.Get.UI_PauseScreen.activeSelf == false ? "Player" : "Pause");
+            playerInput.SwitchCurrentActionMap(UI_Root.Get.IsPauseMenuOpened ? "Pause" : "Player");
             playerInput.currentActionMap.Enable();
 
             UpdateSettings();
@@ -377,22 +361,15 @@ namespace DMSH.Characters
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
+            // TODO change on IsAlive or IsDead
             if (!audioSourceDeath.isPlaying)
             {
-                Component[] components = collision.gameObject.GetComponents<Component>();
-                foreach (Component component in components)
+                var touchedMovableObjects = collision.gameObject.GetComponents<IMovableObject>();
+                foreach (var movableObject in touchedMovableObjects)
                 {
-                    switch (component)
+                    if(movableObject is Enemy or Bullet {isEnemyBullet: true})
                     {
-                        case Enemy b:
-                            Damage();
-                            break;
-                        case Bullet b:
-                            if (b.isEnemyBullet)
-                            {
-                                Damage();
-                            }
-                            break;
+                        Damage();
                     }
                 }
             }
@@ -428,6 +405,7 @@ namespace DMSH.Characters
 
             if (_deathParticle)
             {
+                // TODO store it in variable
                 ParticleSystemRenderer pr = _deathParticle.GetComponent<ParticleSystemRenderer>();
                 pr.material.color = Color.red;
                 _deathParticle.transform.position = rigidBody2D.transform.position;
@@ -436,9 +414,7 @@ namespace DMSH.Characters
 
             // Don't continue if we are dead or in god mode
             if (/*_debug_god || */_isDead == true)
-            {
                 return;
-            }
 
             // Subtract one life point 
             if (!GlobalSettings.cheatGod)
@@ -478,31 +454,28 @@ namespace DMSH.Characters
         }
 
         // Basic string tool to fill string with number also zeros 
-        public string GetNumberWithZeros(int num)
+        public static string GetNumberWithZeros(int num)
         {
             // Initialize empty string
-            string text = string.Empty;
+            var resultText = new StringBuilder();
             // Fill string by UI_ZEROS_SCORE_TEXT count subtract number length 
-            for (int i = 0; i <= UI_ZEROS_SCORE_TEXT - num.ToString().Length; i++)
+            var numLength = Mathf.Max(0, Mathf.Floor(Mathf.Log10(num) + 1));
+            for (var i = 0; i <= UI_ZEROS_SCORE_TEXT - numLength; i++)
             {
-                text += "0";
+                resultText.Append("0");
             }
             // Add number
-            text += num.ToString();
-            return text;
+            resultText.Append(num);
+            return resultText.ToString();
         }
 
-        public void UpdateHUD()
+        private void UpdateHUD()
         {
-            var ui = UI_Root.Get;
-            
-            ui.UI_LifeText.text = Life.ToString();
-            ui.UI_ScoreText.text = GetNumberWithZeros(Score);
-            ui.UI_BoostText.text = Boost.ToString();
+            UI_Root.Get.UpdateGameHud(Life, GetNumberWithZeros(Score), Boost);
         }
 
         // That thing should update some player components
-        public void UpdateSettings()
+        private void UpdateSettings()
         {
             audioSourceMusic.enabled = GlobalSettings.musicPlay;
         }
