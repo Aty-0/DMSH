@@ -6,6 +6,8 @@ using UnityEngine;
 using DMSH.Gameplay;
 using DMSH.Path;
 
+using Scripts.Utils;
+
 namespace DMSH.LevelSpecifics.Stage
 {
     [Serializable]
@@ -18,7 +20,7 @@ namespace DMSH.LevelSpecifics.Stage
 
     [DisallowMultipleComponent]
     [RequireComponent(typeof(Timer))]
-    public class StageSystem : MonoBehaviour
+    public class StageSystem : Instance<StageSystem>
     {
         public int CurrentStageIndex
         {

@@ -113,14 +113,19 @@ namespace DMSH.UI
         public override void OnPointerDown(PointerEventData eventData)
         {
             if (_colorCoroutine != null)
+            {
                 StopCoroutine(_colorCoroutine);
+            }
+
             _text.color = colors.pressedColor;
         }
 
         public override void OnPointerUp(PointerEventData eventData)
         {
             if (_colorCoroutine != null)
+            {
                 StopCoroutine(_colorCoroutine);
+            }
             _text.color = colors.highlightedColor;
         }
 

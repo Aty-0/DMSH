@@ -16,7 +16,8 @@ namespace DMSH.Path
         [Header("Main")]
 
         [HideInInspector]
-        public StageSystem stageSystem = null;
+        [SerializeField]
+        private StageSystem stageSystem = null;
 
         public ObservedList<MovableObject> movablePathObjectsList = new ObservedList<MovableObject>();
         public List<PathPoint> pathPointsList = new List<PathPoint>();
@@ -41,6 +42,7 @@ namespace DMSH.Path
 
         [Header("Lifetime")]
         public float lifeTime = 0.0f;
+        [SerializeField]
         private Timer _lifetimeTimer = null;
 
         //[Header("Current")]
@@ -63,8 +65,9 @@ namespace DMSH.Path
             movablePathObjectsList.Added += UpdateElementAddedCallback;
             movablePathObjectsList.Removed += OnMovablePathObjectsListElementRemoved;
 
-            stageSystem = FindObjectOfType<StageSystem>();
-            Debug.Assert(stageSystem != null, "No stage system in scene");
+            stageSystem = StageSystem.Get;
+            if (stageSystem == null)
+                Debug.LogError("No stage system in scene");
 
             // Set to object what's path system he use
             foreach (var move_object in movablePathObjectsList)

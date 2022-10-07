@@ -50,7 +50,7 @@ namespace DMSH.Gameplay
                 _useOwner = true;
                 shotPoint = transform;
                 _boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
-                Debug.Assert(_boxCollider2D);
+                Debug.Assert(_boxCollider2D != null);
             }
         }
 

@@ -18,7 +18,6 @@ namespace DMSH.LevelSpecifics
         [SerializeField]
         private PathSystem _pathSystem;
 
-        [Header("Misc")]
         [HideInInspector] 
         [SerializeField] 
         private StageSystem _stageSystem;
@@ -26,16 +25,18 @@ namespace DMSH.LevelSpecifics
 
         protected void Start()
         {
-            _stageSystem = FindObjectOfType<StageSystem>();
+            _stageSystem = StageSystem.Get;
+
             timer = GetComponent<Timer>();
-            if (timer)
+
+            if (timer != null)
             {
                 timer.EndEvent += Spawn;
             }
 
             _pathSystem = GetComponentInParent<PathSystem>();
 
-            if (_pathSystem)
+            if (_pathSystem != null)
             {
                 PointAction pa = new PointAction();
                 pa.action += Spawn;
@@ -48,7 +49,10 @@ namespace DMSH.LevelSpecifics
 
         public void StartTimer()
         {
-            timer?.StartTimer();
+            if (timer != null)
+            {
+                timer.StartTimer();
+            }
         }
 
         public void Spawn()

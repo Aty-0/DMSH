@@ -3,8 +3,16 @@ using UnityEngine.UI;
 
 using DMSH.Path;
 
+using System;
+using System.Collections.Generic;
+
 namespace DMSH.Misc.Screen
 {
+    // TODO: Resize all game object 
+    //       Why? Because on resizing path system we get is too long paths 
+    //       On very high resolutions we get slow and hard gameplay,
+    //       and objects will be is tiny
+
     public class ResizableGameElements : MonoBehaviour
     {
         public GameObject respawnPoint = null;
@@ -28,7 +36,32 @@ namespace DMSH.Misc.Screen
         private float resultPoint = 0.0f;
 
         [SerializeField]
+        private float screenDistanceWidth; // It's width to someImage
+
+        [SerializeField]
+        private float screenDistanceHeight;
+
+        [SerializeField]
         private Vector3 resolutionInWorldPoint = Vector3.zero;
+
+        [SerializeField]
+        private List<Tuple<int,Vector3>> positionPSOnBegin = new List<Tuple<int, Vector3>>();
+
+        protected void Update()
+        {
+            if (GlobalSettings.debugDrawInvWallSI)
+            {
+                Debug.DrawLine(new Vector3(resultPoint, -resolutionInWorldPoint.y, 0), new Vector3(resultPoint, resolutionInWorldPoint.y, 0));
+            }
+
+            foreach (var system in FindObjectsOfType<PathSystem>())
+            {
+                positionPSOnBegin.Add(Tuple.Create(system.gameObject.GetInstanceID(), system.transform.position));
+            }
+
+            UpdateBackgroundPosAndScale();
+            CheckBounds();
+        }
 
         public static Rect GetWorldRect(RectTransform rectTransform)
         {
@@ -44,6 +77,7 @@ namespace DMSH.Misc.Screen
             GenerateInvisibleWalls();
             CheckComponentsOnExist();
         }
+
         private void CheckComponentsOnExist()
         {
             if (_background == null)
@@ -64,7 +98,9 @@ namespace DMSH.Misc.Screen
 
             // Try to translate rectTransform to world coords            
             float imageRectWInWp = GetWorldRect(_uiSomeImage.rectTransform).width;
-            float imageRectHInWp = GetWorldRect(_uiSomeImage.rectTransform).height;
+
+            // TODO:
+            //float imageRectHInWp = GetWorldRect(_uiSomeImage.rectTransform).height;
 
             resultPoint = (resolutionInWorldPoint.x - (imageRectWInWp * 0.01f) * 1.3f);
 
@@ -76,34 +112,30 @@ namespace DMSH.Misc.Screen
             RestretchInvisibleWalls();
 
             // Set screen middle position for respawn point
-            respawnPoint.transform.position = new Vector2(-resolutionInWorldPoint.z / 2, -resolutionInWorldPoint.y / 1.2f);           
+            respawnPoint.transform.position = new Vector2(-resolutionInWorldPoint.z / 2, -resolutionInWorldPoint.y / 1.2f);
+            screenDistanceWidth = Vector3.Distance(-new Vector3(resolutionInWorldPoint.x, 0, 0), new Vector3(resultPoint, 0, 0)) * 0.1f;
+            screenDistanceHeight = Vector3.Distance(-new Vector3(0, resolutionInWorldPoint.y, 0), new Vector3(0, resolutionInWorldPoint.y, 0)) * 0.1f;
 
             // Rescale pathSystem and change position for all point
             foreach (var system in FindObjectsOfType<PathSystem>())
             {
-                //system.transform.localScale = new Vector3(aspectRatioWithImage, system.transform.localScale.y, 1);
-                // TODO: Positions
-            }
-        }
+                foreach (var pos in positionPSOnBegin)
+                {
+                    if (pos.Item1 == system.GetInstanceID())
+                    {
+                        system.transform.localPosition = new Vector3(pos.Item2.x + screenDistanceWidth, pos.Item2.y + screenDistanceHeight, 1);
+                    }
+                }
 
-        public void Update()
-        {
-            if (GlobalSettings.debugDrawInvWallSI)
-            {
-                Debug.DrawLine(new Vector3(resultPoint, -resolutionInWorldPoint.y, 0), new Vector3(resultPoint, resolutionInWorldPoint.y, 0));
+                system.transform.localScale = new Vector3(screenDistanceWidth, screenDistanceHeight, 1);
             }
-
-            UpdateBackgroundPosAndScale();
-            CheckBounds();
         }
 
         private void UpdateBackgroundPosAndScale()
         {
             if (_background)
             {
-                _background.transform.localScale = new Vector3((gameCamera.orthographicSize / 6) + Vector3.Distance(-new Vector3(resolutionInWorldPoint.x, 0, 0), new Vector3(resultPoint, 0, 0)) * 0.1f,
-                    (gameCamera.orthographicSize / 6) + Vector3.Distance(-new Vector3(0, resolutionInWorldPoint.y, 0), new Vector3(0, resolutionInWorldPoint.y, 0)) * 0.1f, 1);
-
+                _background.transform.localScale = new Vector3((gameCamera.orthographicSize / 6) + screenDistanceWidth, (gameCamera.orthographicSize / 6) + screenDistanceHeight, 1);
                 _background.transform.position = new Vector3(gameCamera.transform.position.x, gameCamera.transform.position.y, 5);
             }
         }
