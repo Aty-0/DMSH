@@ -1,4 +1,5 @@
 using UnityEngine;
+using Scripts.Utils;
 
 namespace DMSH.Path
 {
@@ -17,7 +18,7 @@ namespace DMSH.Path
     }
 
 
-    public abstract class MovableObject : MonoBehaviour, IMovableObject
+    public abstract class MovableObject : MonoBehaviourWithUniqueID, IMovableObject
     {
         [Header("Movable Object")]
         [SerializeField] 

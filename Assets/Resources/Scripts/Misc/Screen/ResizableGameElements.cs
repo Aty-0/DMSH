@@ -16,6 +16,8 @@ namespace DMSH.Misc.Screen
     public class ResizableGameElements : MonoBehaviour
     {
         public GameObject respawnPoint = null;
+
+        // X - Width, Y - Height, Z - Width to right image
         public Vector3    resolutionInWorldPoint = Vector3.zero;
 
         [HideInInspector]
@@ -42,24 +44,28 @@ namespace DMSH.Misc.Screen
         [SerializeField]
         private float screenDistanceHeight;
 
+        [SerializeField]
+        [HideInInspector]
+        private List<Tuple<string,Vector3>> initialPosition = new List<Tuple<string, Vector3>>();
 
         [SerializeField]
-        private List<Tuple<int,Vector3>> positionPSOnBegin = new List<Tuple<int, Vector3>>();
+        [HideInInspector]
+        private List<Tuple<string,Vector3>> initialScale = new List<Tuple<string, Vector3>>();
 
         protected void Update()
+        {
+            OnDrawDebug();
+
+            UpdateBackgroundPosAndScale();
+            // CheckBounds();
+        }
+
+        private void OnDrawDebug()
         {
             if (GlobalSettings.debugDrawInvWallSI)
             {
                 Debug.DrawLine(new Vector3(resultPoint, -resolutionInWorldPoint.y, 0), new Vector3(resultPoint, resolutionInWorldPoint.y, 0));
             }
-
-            foreach (var system in FindObjectsOfType<PathSystem>())
-            {
-                positionPSOnBegin.Add(Tuple.Create(system.gameObject.GetInstanceID(), system.transform.position));
-            }
-
-            UpdateBackgroundPosAndScale();
-            CheckBounds();
         }
 
         public static Rect GetWorldRect(RectTransform rectTransform)
@@ -75,8 +81,22 @@ namespace DMSH.Misc.Screen
             screenHandler.onScreenResolutionChange.Add(OnResolutionScreenChange);
             GenerateInvisibleWalls();
             CheckComponentsOnExist();
+
             // first 
             UpdateResolutionInWorldPoint();
+            OnResolutionScreenChange();
+
+            // Save initial position of PathSystems
+            foreach (var system in FindObjectsOfType<PathSystem>())
+            {
+                initialPosition.Add(Tuple.Create(system.ID, system.transform.position));
+            }
+
+            // Save initial scale of MovableObjects
+            foreach (var mo in FindObjectsOfType<MovableObject>())
+            {
+                initialScale.Add(Tuple.Create(mo.ID, mo.transform.localScale));
+            }
         }
 
         private void CheckComponentsOnExist()
@@ -121,18 +141,36 @@ namespace DMSH.Misc.Screen
             screenDistanceWidth = Vector3.Distance(-new Vector3(resolutionInWorldPoint.x, 0, 0), new Vector3(resultPoint, 0, 0)) * 0.1f;
             screenDistanceHeight = Vector3.Distance(-new Vector3(0, resolutionInWorldPoint.y, 0), new Vector3(0, resolutionInWorldPoint.y, 0)) * 0.1f;
 
-            // Rescale pathSystem and change position for all point
+            // Rescale pathSystem and change position for all points
             foreach (var system in FindObjectsOfType<PathSystem>())
             {
-                foreach (var pos in positionPSOnBegin)
+                Debug.Log($"ResizableGameElements: Rescale [PathSystem] object {system.name} id {system.ID}");
+                foreach (var pos in initialPosition)
                 {
-                    if (pos.Item1 == system.GetInstanceID())
+                    if (pos.Item1 == system.ID)
                     {
-                        system.transform.localPosition = new Vector3(pos.Item2.x + screenDistanceWidth, pos.Item2.y + screenDistanceHeight, 1);
+                        Debug.Log("ResizableGameElements: Passed");
+                        system.transform.localPosition = new Vector3(pos.Item2.x - screenDistanceWidth, pos.Item2.y + screenDistanceHeight, 1);
+                        break;
                     }
                 }
 
                 system.transform.localScale = new Vector3(screenDistanceWidth, screenDistanceHeight, 1);
+            }
+
+            // Rescale MovableObjects
+            foreach (var mo in FindObjectsOfType<MovableObject>())
+            {
+                Debug.Log($"ResizableGameElements: Rescale [MovableObject] object {mo.name} id {mo.ID}");
+                foreach (var scale in initialScale)
+                {
+                    if (scale.Item1 == mo.ID)
+                    {
+                        Debug.Log("ResizableGameElements: Passed");
+                        mo.transform.localScale = new Vector3(scale.Item2.x + screenDistanceWidth, scale.Item2.y + screenDistanceHeight, 1);
+                        break;
+                    }
+                }
             }
         }
 
@@ -148,9 +186,8 @@ namespace DMSH.Misc.Screen
         private void CheckBounds()
         {
             Vector3 posInScreen = gameCamera.WorldToScreenPoint(transform.position);
-            Vector3 rightWall = gameCamera.WorldToScreenPoint(_wallsList[2].transform.position);
-
-            if ((posInScreen.x > rightWall.x || posInScreen.x < 0) ||
+            
+            if ((posInScreen.x > resolutionInWorldPoint.z || posInScreen.x < 0) ||
                 (posInScreen.y > screenHandler.Height || posInScreen.y < 0))
             {
                 gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, respawnPoint.transform.position,
