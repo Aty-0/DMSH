@@ -8,10 +8,11 @@ using DMSH.Misc;
 using DMSH.Gameplay;
 using DMSH.LevelSpecifics.Stage;
 
+using Scripts.Utils;
 
 namespace DMSH.Path
 {  
-    public class PathSystem : MonoBehaviour
+    public class PathSystem : MonoBehaviourWithUniqueID
     {        
         [Header("Main")]
 
