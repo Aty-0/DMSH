@@ -133,13 +133,17 @@ namespace DMSH.Misc.Log
 
             if (Event.current.type == EventType.KeyUp)
             {
-                if (Event.current.keyCode == KeyCode.Escape && Event.current.isKey)
-                    drawConsole = false;
+                if (Event.current.keyCode == KeyCode.Escape
+                    && Event.current.isKey
+                    && Konsole.ConsoleInstance.IsShouldBeVisible)
+                {
+                    Konsole.ToggleConsole();
+                    drawConsole = Konsole.ConsoleInstance.IsShouldBeVisible;
+                }
 
                 if (Event.current.keyCode == KeyCode.BackQuote && Event.current.isKey)
                 {
-                    drawConsole = !drawConsole;
-                    Konsole.ToggleConsole();
+                    drawConsole = Konsole.ConsoleInstance.IsShouldBeVisible;
                     Cursor.visible = !_Resume || (drawConsole || !GlobalSettings.gameActiveAsBool);
 
                     if (_Resume)
