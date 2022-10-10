@@ -509,7 +509,7 @@ MonoBehaviour:
   drawLogMessages: 0
   drawConsole: 0
   _font: {fileID: 12800000, guid: a3dae25178504ad4a83d4a403e7a9a31, type: 3}
-  _fontSize: 24
+  _fontSize: 15
   _savedGameActiveState: 0
   _Resume: 1
   _fpsCounter: 0
