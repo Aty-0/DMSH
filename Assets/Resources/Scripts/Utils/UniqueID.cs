@@ -5,6 +5,7 @@ namespace Scripts.Utils
 {
     public class MonoBehaviourWithUniqueID : MonoBehaviour
     {
+        [Header("UniqueID")]
         [SerializeField] 
         private string _ID = Guid.NewGuid().ToString();
         public string ID => _ID;
