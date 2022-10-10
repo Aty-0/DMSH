@@ -105,7 +105,7 @@ namespace DMSH.Gameplay
 
         private IEnumerator ShotC()
         {
-            while (_weaponEnabled && canBeUsed)
+            while (GlobalSettings.gameActiveAsBool && _weaponEnabled && canBeUsed)
             {
                 foreach (Action action in onShot)
                 {
