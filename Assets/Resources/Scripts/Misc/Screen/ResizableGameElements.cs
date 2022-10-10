@@ -57,7 +57,7 @@ namespace DMSH.Misc.Screen
             OnDrawDebug();
 
             UpdateBackgroundPosAndScale();
-            // CheckBounds();
+            CheckBounds();
         }
 
         private void OnDrawDebug()
@@ -185,13 +185,15 @@ namespace DMSH.Misc.Screen
 
         private void CheckBounds()
         {
-            Vector3 posInScreen = gameCamera.WorldToScreenPoint(transform.position);
+            // Check player is still in screen coords
+            var playerPosition = transform.position;
             
-            if ((posInScreen.x > resolutionInWorldPoint.z || posInScreen.x < 0) ||
-                (posInScreen.y > screenHandler.Height || posInScreen.y < 0))
+            if ((playerPosition.x > resolutionInWorldPoint.z || playerPosition.x < -resolutionInWorldPoint.x) ||
+                (playerPosition.y > resolutionInWorldPoint.y || playerPosition.y < -resolutionInWorldPoint.y))
             {
-                gameObject.transform.position = Vector3.Lerp(gameObject.transform.position, respawnPoint.transform.position,
-                    Time.deltaTime * 2 * Vector3.Distance(gameObject.transform.position, respawnPoint.transform.position));
+                var point = new Vector3(resolutionInWorldPoint.z / 2, resolutionInWorldPoint.y / 2, 0);
+                var speed = Time.deltaTime * 2 * Vector3.Distance(playerPosition, point);
+                gameObject.transform.position = Vector3.Lerp(playerPosition, point, speed);
             }
         }
 
