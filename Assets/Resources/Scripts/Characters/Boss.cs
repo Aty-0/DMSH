@@ -44,8 +44,8 @@ namespace DMSH.Characters
             // Clear scene from bullets
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
             {
-                if (bullet.isEnemyBullet &&
-                    bullet.collisionDestroyBullet)
+                if (bullet.IsEnemyBullet &&
+                    bullet.IsCollisionDestroyBullet)
                 {
                     bullet.Unspawn();
                 }

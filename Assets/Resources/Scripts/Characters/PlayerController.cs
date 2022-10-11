@@ -12,6 +12,7 @@ using DMSH.LevelSpecifics.Stage;
 using DMSH.Gameplay;
 using DMSH.UI;
 
+using System;
 using System.Text;
 
 namespace DMSH.Characters
@@ -25,6 +26,8 @@ namespace DMSH.Characters
 
     public class PlayerController : MovableObject
     {
+        public static PlayerController Player { get; private set; }
+        
         #region Public Values
         public int Life
         {
@@ -122,6 +125,22 @@ namespace DMSH.Characters
         private Coroutine _slowMotionCoroutine = null;
         private Coroutine _deathAwakeCoroutine = null;
 
+        protected void OnEnable()
+        {
+            if (Player == null)
+            {
+                Player = this;
+            }
+        }
+
+        protected void OnDisable()
+        {
+            if (Player == this)
+            {
+                Player = null;
+            }
+        }
+
         protected void Start()
         {
             // First initialize
@@ -206,8 +225,8 @@ namespace DMSH.Characters
             }
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
             {
-                if (bullet.isEnemyBullet &&
-                    bullet.collisionDestroyBullet)
+                if (bullet.IsEnemyBullet &&
+                    bullet.IsCollisionDestroyBullet)
                 {
                     bullet.SqueezeAndDestroy();
                 }
@@ -351,12 +370,12 @@ namespace DMSH.Characters
                 GUI.Label(new Rect(100, 80, 500, 500),  $"DeltaTime: {Time.deltaTime}");
                 GUI.Label(new Rect(100, 120, 500, 500), $"Position: {rigidBody2D.position}");
                 GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {rigidBody2D.velocity}");
-                GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weapon.weaponEnabled}");
+                // GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weapon.weaponEnabled}");
                 GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
                 GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
                 GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActiveAsBool}");
                 GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {weapon.weaponBoostGain}");
-                GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {weapon.weaponType}");
+                // GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {weapon.weaponType}");
             }
         }
 #endif
@@ -369,7 +388,7 @@ namespace DMSH.Characters
                 var touchedMovableObjects = collision.gameObject.GetComponents<IMovableObject>();
                 foreach (var movableObject in touchedMovableObjects)
                 {
-                    if(movableObject is Enemy or Bullet {isEnemyBullet: true})
+                    if(movableObject is Enemy or Bullet {IsEnemyBullet: true})
                     {
                         Damage();
                     }
@@ -379,7 +398,10 @@ namespace DMSH.Characters
 
         public void Kill()
         {
-            _cameraDeathAnimation.Play();
+            if (_cameraDeathAnimation != null)
+            {
+                _cameraDeathAnimation.Play();
+            }
 
             if (_slowMotionCoroutine != null)
             {
@@ -443,8 +465,8 @@ namespace DMSH.Characters
                 // Destroy all bullet cuz we are can teleport player into the bullet 
                 foreach (var bullet in FindObjectsOfType<Bullet>())
                 {
-                    if (bullet.isEnemyBullet &&
-                        bullet.collisionDestroyBullet)
+                    if (bullet.IsEnemyBullet &&
+                        bullet.IsCollisionDestroyBullet)
                     {
                         bullet.SqueezeAndDestroy();
                     }

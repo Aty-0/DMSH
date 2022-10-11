@@ -465,6 +465,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a08ff090b950724d90418fb01356d18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: 5ff37ca4-0b8a-47c8-8c31-71b38ad4fe87
   _currentPoint: 0
   _currentCurvePoint: 0
   _speed: 7
@@ -622,17 +623,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6eddfee8d4bfa4e9d04377ab51c2de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 6654912975423603207, guid: ef383ec845594c74397b1f79482af380, type: 3}
+  m_firePattern: {fileID: 11400000, guid: 54d2358ebc5db2d44a54063bd44c4642, type: 2}
+  m_isEnemy: 0
   shotFrequency: 0.07
   canBeUsed: 1
   _weaponEnabled: 0
   _audioSource: {fileID: 5971732964917514378}
   weaponBoostGain: 0
-  _weaponType: 0
-  shotPoint: {fileID: 7150887283382471543}
+  ShotPoint: {fileID: 0}
   _useOwner: 0
   _boxCollider2D: {fileID: 0}
-  _position: {x: 0, y: 0, z: 0}
 --- !u!114 &5188588155356166229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -646,6 +646,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   respawnPoint: {fileID: 0}
+  resolutionInWorldPoint: {x: 0, y: 0, z: 0}
   screenHandler: {fileID: 0}
   _background: {fileID: 0}
   _uiSomeImage: {fileID: 0}
@@ -656,7 +657,8 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   resultPoint: 0
-  resolutionInWorldPoint: {x: 0, y: 0, z: 0}
+  screenDistanceWidth: 0
+  screenDistanceHeight: 0
 --- !u!1 &5158097134975063080
 GameObject:
   m_ObjectHideFlags: 0

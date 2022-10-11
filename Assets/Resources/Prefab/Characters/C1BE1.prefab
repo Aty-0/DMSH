@@ -307,6 +307,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b4cd95ed14883e458f7aa3443fec258, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: 1e7bc8e1-af5f-4eec-bd6e-583491e26e35
   _currentPoint: 0
   _currentCurvePoint: 0
   _speed: 7
@@ -445,17 +446,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6eddfee8d4bfa4e9d04377ab51c2de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletPrefab: {fileID: 207413880224101742, guid: 97eb3fb14d8798f44954fb57b1d6ed3f, type: 3}
+  m_firePattern: {fileID: 11400000, guid: 52b40da03bfa26e429284df524b5f9e2, type: 2}
   shotFrequency: 0.4
   canBeUsed: 1
   _weaponEnabled: 0
   _audioSource: {fileID: 0}
   weaponBoostGain: 0
-  _weaponType: 0
-  shotPoint: {fileID: 0}
+  ShotPoint: {fileID: 0}
   _useOwner: 0
   _boxCollider2D: {fileID: 0}
-  _position: {x: 0, y: 0, z: 0}
 --- !u!1001 &5799921381402374756
 PrefabInstance:
   m_ObjectHideFlags: 0

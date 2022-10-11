@@ -2,6 +2,7 @@
 using Bagheads.UnityConsole.Data;
 
 using System;
+
 using UnityEngine;
 
 using DMSH.Characters;
@@ -15,19 +16,19 @@ namespace DMSH.Misc.Log
         public bool drawConsole = false;
 
         [Header("Misc")]
-        [SerializeField] 
+        [SerializeField]
         private Font _font;
 
-        [SerializeField] 
+        [SerializeField]
         private int _fontSize;
 
-        [SerializeField] 
+        [SerializeField]
         private bool _savedGameActiveState;
 
-        [SerializeField] 
+        [SerializeField]
         private bool _Resume = true;
 
-        [SerializeField] 
+        [SerializeField]
         private bool _fpsCounter = false;
 
         protected void Start()
@@ -49,6 +50,7 @@ namespace DMSH.Misc.Log
                 {
                     audioSource.Stop();
                 }
+
                 _Resume = !_Resume;
             });
 
@@ -66,19 +68,25 @@ namespace DMSH.Misc.Log
                 GlobalSettings.cheatGod = !GlobalSettings.cheatGod;
                 context.Log($"{TextTags.Bold("GodMode")} is {(GlobalSettings.cheatGod ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
-            
+
             Konsole.RegisterCommand("g_infboost", context =>
             {
                 GlobalSettings.cheatInfiniteBoost = !GlobalSettings.cheatInfiniteBoost;
                 context.Log($"{TextTags.Bold("InfiniteBoost")} is {(GlobalSettings.cheatInfiniteBoost ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
-            
+
             Konsole.RegisterCommand("g_killAllEnemy", _ =>
             {
                 foreach (var enemy in FindObjectsOfType<Enemy>())
                 {
                     enemy.Kill(true);
                 }
+            });
+
+            Konsole.RegisterCommand("noclip", context =>
+            {
+                PlayerController.Player.boxCollider2D.enabled = !PlayerController.Player.boxCollider2D.enabled;
+                context.Log($"{TextTags.Bold("Noclip")} is {(PlayerController.Player.boxCollider2D.enabled ? "Enabled" : "Disabled")}");
             });
 
             // ?
@@ -111,7 +119,7 @@ namespace DMSH.Misc.Log
                 GlobalSettings.debugDrawPSObjectInfo = !GlobalSettings.debugDrawPSObjectInfo;
                 context.Log($"{TextTags.Bold("debugDrawPSObjectInfo")} is {(GlobalSettings.debugDrawPSObjectInfo ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
-            
+
             Konsole.RegisterCommand("debugDrawWeaponPoints", context =>
             {
                 GlobalSettings.debugDrawWeaponPoints = !GlobalSettings.debugDrawWeaponPoints;
@@ -161,7 +169,7 @@ namespace DMSH.Misc.Log
             if (_fpsCounter)
             {
                 GUILayout.BeginArea(new Rect(0, 30, 500, 500));
-                GUILayout.Label($"FPS:{(int)(1f / Time.unscaledDeltaTime)}", textStyle);
+                GUILayout.Label($"FPS:{(int) (1f / Time.unscaledDeltaTime)}", textStyle);
                 GUILayout.EndArea();
             }
         }
