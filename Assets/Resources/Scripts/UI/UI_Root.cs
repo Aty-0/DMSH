@@ -48,9 +48,6 @@ namespace DMSH.UI
         [SerializeField]
         private Text _uiCurrentScoreOnDeathText = null;
         
-        [SerializeField]
-        private Text _uiMaxScoreText = null;
-
         private Coroutine _showChapterNameCoroutine = null;
 
         // unity

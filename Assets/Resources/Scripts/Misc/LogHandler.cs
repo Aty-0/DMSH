@@ -38,6 +38,7 @@ namespace DMSH.Misc.Log
 
         private void IntegrateKonsoleCommands()
         {
+            Konsole.RemoveAllAnonymousCommands();
             Konsole.IntegrateInExistingCanvas(new IntegrationOptions
             {
                 FontSize = _fontSize,

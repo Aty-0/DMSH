@@ -112,7 +112,10 @@ namespace DMSH.Characters
 
         [Header("Sounds")]
         [SerializeField] 
+        #pragma warning disable CS0414
+        // ReSharper disable once NotAccessedField.Local
         private AudioSource audioSourceWeapon = null;
+        #pragma warning restore CS0414
         [SerializeField] 
         private AudioSource audioSourceDeath = null;
         [SerializeField] 

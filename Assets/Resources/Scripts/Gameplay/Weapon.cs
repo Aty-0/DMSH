@@ -80,10 +80,14 @@ namespace DMSH.Gameplay
 #if UNITY_EDITOR
         protected void OnDrawGizmosSelected()
         {
-            Gizmos.color = Color.red;
-            Gizmos.DrawCube(ShotPoint.transform.position, new Vector3(0.2f, 0.2f, 0.2f));
-            Gizmos.color = Color.cyan;
-            Gizmos.DrawCube(BulletSpawnPosition, new Vector3(0.2f, 0.2f, 0.2f));
+            if (ShotPoint != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawCube(ShotPoint.transform.position, new Vector3(0.2f, 0.2f, 0.2f));
+                
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawCube(BulletSpawnPosition, new Vector3(0.2f, 0.2f, 0.2f));
+            }
         }
 #endif
 

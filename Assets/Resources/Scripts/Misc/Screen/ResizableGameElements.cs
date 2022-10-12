@@ -80,7 +80,8 @@ namespace DMSH.Misc.Screen
             screenHandler = gameObject.AddComponent<ScreenHandler>();
             screenHandler.onScreenResolutionChange.Add(OnResolutionScreenChange);
             GenerateInvisibleWalls();
-            CheckComponentsOnExist();
+            if (!CheckComponentsOnExist())
+                return;
 
             // first 
             UpdateResolutionInWorldPoint();
@@ -99,16 +100,34 @@ namespace DMSH.Misc.Screen
             }
         }
 
-        private void CheckComponentsOnExist()
+        private bool CheckComponentsOnExist()
         {
+            var isFine = true;
+
             if (_background == null)
-                Debug.LogError("ResizableGameElements: Background is null");
+            {
+                Debug.LogWarning("ResizableGameElements: Background is null", this);
+                isFine = false;
+            }
 
             if (_uiSomeImage == null)
-                Debug.LogError("ResizableGameElements: SomeImage is null");
+            {
+                Debug.LogWarning("ResizableGameElements: SomeImage is null", this);
+                isFine = false;
+            }
 
             if (respawnPoint == null)
-                Debug.LogError("ResizableGameElements: Respawn point is null");
+            {
+                Debug.LogWarning("ResizableGameElements: Respawn point is null", this);
+                isFine = false;
+            }
+
+            enabled = isFine;
+            if (!isFine)
+            {
+                Debug.LogWarning("Disable component! It's not ready to be used.", this);
+            }
+            return isFine;
         }
         private void UpdateResolutionInWorldPoint()
         {
@@ -118,6 +137,9 @@ namespace DMSH.Misc.Screen
 
         private void OnResolutionScreenChange()
         {
+            if (!enabled)
+                return;
+            
             // Get actual resolution in world points
             UpdateResolutionInWorldPoint();
 

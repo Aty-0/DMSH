@@ -1,3 +1,5 @@
+using DMSH.Characters;
+
 using System.Collections;
 
 using UnityEngine;
@@ -127,7 +129,8 @@ namespace DMSH.Objects
         internal void OnCollisionEnter2D(Collision2D collision)
         {
             if (_collisionDestroyBullet
-                && ((IsEnemyBullet && collision.transform.CompareTag("Player")) || (!IsEnemyBullet && collision.transform.CompareTag("Enemy"))))
+                && ((IsEnemyBullet && collision.transform == PlayerController.Player.transform)
+                    || (!IsEnemyBullet && collision.transform.CompareTag("Enemy"))))
             {
                 Unspawn();
             }
