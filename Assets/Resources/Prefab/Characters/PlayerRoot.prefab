@@ -367,7 +367,6 @@ GameObject:
   - component: {fileID: 5158097134412944852}
   - component: {fileID: 5158097134412944855}
   - component: {fileID: 5158097134412944854}
-  - component: {fileID: 6314800984107476434}
   - component: {fileID: 5158097134412944853}
   - component: {fileID: 5158097134412944850}
   - component: {fileID: 5158097133963078073}
@@ -478,7 +477,6 @@ MonoBehaviour:
   _finalSpeed: 0
   spriteRenderer: {fileID: 0}
   gameCamera: {fileID: 0}
-  logHandler: {fileID: 0}
   playerInput: {fileID: 0}
   resizableGameElements: {fileID: 0}
   _moveDirection: {x: 0, y: 0}
@@ -495,25 +493,6 @@ MonoBehaviour:
   audioSourceDeath: {fileID: 1405310342865449243}
   audioSourceMusic: {fileID: 2028367241743458765}
   _deathParticle: {fileID: 5588012523781889869}
---- !u!114 &6314800984107476434
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5158097134412944873}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 503fbccd6feb4464885eca1a383154d8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  drawLogMessages: 0
-  drawConsole: 0
-  _font: {fileID: 12800000, guid: a3dae25178504ad4a83d4a403e7a9a31, type: 3}
-  _fontSize: 15
-  _savedGameActiveState: 0
-  _Resume: 1
-  _fpsCounter: 0
 --- !u!50 &5158097134412944853
 Rigidbody2D:
   serializedVersion: 4

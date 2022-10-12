@@ -12,13 +12,14 @@ using DMSH.LevelSpecifics.Stage;
 using DMSH.Gameplay;
 using DMSH.UI;
 
+using Scripts.Utils;
+
 using System;
 using System.Text;
 
 namespace DMSH.Characters
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    [RequireComponent(typeof(LogHandler))]
     [RequireComponent(typeof(PlayerInput))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]
@@ -74,7 +75,6 @@ namespace DMSH.Characters
         [Header("Global")]
         public SpriteRenderer   spriteRenderer = null;
         public Camera           gameCamera = null;
-        public LogHandler       logHandler = null;
         public PlayerInput      playerInput = null;
         public ResizableGameElements resizableGameElements = null;
 
@@ -164,16 +164,20 @@ namespace DMSH.Characters
             rigidBody2D = GetComponent<Rigidbody2D>();
             boxCollider2D = GetComponent<BoxCollider2D>();
             playerInput = GetComponent<PlayerInput>();
-            logHandler = GetComponent<LogHandler>();
             weapon = GetComponent<Weapon>();
 
             _stageSystem = StageSystem.Get;
             if (_stageSystem == null)
                 Debug.LogError("No stage system in scene");
 
-            resizableGameElements = GetComponent<ResizableGameElements>();
-            resizableGameElements.gameCamera = gameCamera;
-            resizableGameElements.Initialize();
+            if (TryGetComponent(out resizableGameElements))
+            {
+                resizableGameElements.gameCamera = gameCamera;
+                resizableGameElements.Initialize();
+                
+                // Set respawnPoint position
+                gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
+            }
 
             _cameraDeathAnimation = gameObject.AddComponent<CameraDeathAnimation>();
             _cameraDeathAnimation.animCamera = gameCamera;
@@ -181,15 +185,11 @@ namespace DMSH.Characters
 
             // Don't show cursor when we are create the player 
             Cursor.visible = false;
-
-            // Set respawnPoint position
-            gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
-
         }
 
         protected void FixedUpdate()
         {
-            _rigidBody2D.MovePosition(_rigidBody2D.position + ((_moveDirection * _speed) * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt));
+            _rigidBody2D.MoveRigidbodyInsideScreen(_moveDirection * _speed * GlobalSettings.gameActiveAsInt, gameCamera, UI_Root.Get.SidePanelRect.sizeDelta.x);
         }
 
         private IEnumerator DoSlowMotion(bool isBoost = true)
@@ -474,8 +474,11 @@ namespace DMSH.Characters
                         bullet.SqueezeAndDestroy();
                     }
                 }
-                // Set spawn point position to player 
-                gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
+                // Set spawn point position to player
+                if (resizableGameElements != null)
+                {
+                    gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
+                }
             }
         }
 

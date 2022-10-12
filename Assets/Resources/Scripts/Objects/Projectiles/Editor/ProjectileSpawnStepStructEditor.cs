@@ -13,7 +13,9 @@ namespace DMSH.Objects.Projectiles.Editor
         {
             var fieldsCount = 4;
 
+#pragma warning disable CS0618
             var angleConverterProperty = property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.RepeatType));
+#pragma warning restore CS0618
             var angleConversionValue = (BulletSpawnPatternScriptableObject.RepeatEnumType) angleConverterProperty.enumValueIndex;
             switch (angleConversionValue)
             {
@@ -54,7 +56,9 @@ namespace DMSH.Objects.Projectiles.Editor
             EditorGUI.PropertyField(patternRect, property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.bulletFlyPattern)));
             EditorGUI.PropertyField(angleOffsetRect, property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.AngleOffset)));
 
+#pragma warning disable CS0618
             var angleConverterProperty = property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.RepeatType));
+#pragma warning restore CS0618
             EditorGUI.PropertyField(repeatTypeRect, angleConverterProperty);
             var angleConversionValue = (BulletSpawnPatternScriptableObject.RepeatEnumType) angleConverterProperty.enumValueIndex;
             switch (angleConversionValue)
@@ -65,7 +69,9 @@ namespace DMSH.Objects.Projectiles.Editor
                 
                 case BulletSpawnPatternScriptableObject.RepeatEnumType.ForTimes:
                     var timesCount = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16);
+#pragma warning disable CS0618
                     EditorGUI.PropertyField(timesCount, property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.RepeatCount)));
+#pragma warning restore CS0618
                     break;
                 
                 default:
