@@ -15,26 +15,36 @@ MonoBehaviour:
   m_steps:
   - ToNextStepAfter: 0
     bulletFlyPattern: {fileID: 11400000, guid: 2470face4481c02488a236cd3242adb7, type: 2}
+    BulletSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    BulletSpriteColor: {r: 1, g: 0.28773582, b: 0.77836025, a: 1}
     RepeatType: 0
     RepeatCount: 0
     AngleOffset: -45
   - ToNextStepAfter: 0
     bulletFlyPattern: {fileID: 11400000, guid: 2470face4481c02488a236cd3242adb7, type: 2}
+    BulletSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    BulletSpriteColor: {r: 1, g: 0.28627452, b: 0.7764706, a: 1}
     RepeatType: 0
     RepeatCount: 0
     AngleOffset: -15
   - ToNextStepAfter: 0
     bulletFlyPattern: {fileID: 11400000, guid: 2470face4481c02488a236cd3242adb7, type: 2}
+    BulletSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    BulletSpriteColor: {r: 1, g: 0.28627452, b: 0.7764706, a: 1}
     RepeatType: 0
     RepeatCount: 0
     AngleOffset: 0
   - ToNextStepAfter: 0
     bulletFlyPattern: {fileID: 11400000, guid: 2470face4481c02488a236cd3242adb7, type: 2}
+    BulletSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    BulletSpriteColor: {r: 1, g: 0.28627452, b: 0.7764706, a: 1}
     RepeatType: 0
     RepeatCount: 0
     AngleOffset: 15
   - ToNextStepAfter: 0
     bulletFlyPattern: {fileID: 11400000, guid: 2470face4481c02488a236cd3242adb7, type: 2}
+    BulletSprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+    BulletSpriteColor: {r: 1, g: 0.28627452, b: 0.7764706, a: 1}
     RepeatType: 0
     RepeatCount: 0
     AngleOffset: 45

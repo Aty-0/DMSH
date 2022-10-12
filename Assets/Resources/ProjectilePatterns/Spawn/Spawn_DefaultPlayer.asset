@@ -15,6 +15,8 @@ MonoBehaviour:
   m_steps:
   - ToNextStepAfter: 0
     bulletFlyPattern: {fileID: 11400000, guid: fab238cb78ad3ff4cb4de1b2372aa500, type: 2}
+    BulletSprite: {fileID: 21300000, guid: c6394ff3d4c8512488bbf5a4470fb641, type: 3}
+    BulletSpriteColor: {r: 0.17475079, g: 0.26318562, b: 0.7264151, a: 1}
     RepeatType: 0
     RepeatCount: 0
     AngleOffset: 0

@@ -11,10 +11,16 @@ using DMSH.Objects.Projectiles;
 
 using Scripts.Utils.Pools;
 
+using System.Collections.Generic;
+
 namespace DMSH.Objects
 {
     public sealed class Bullet : MovableObject, IPooled
     {
+        [Header("Bullet.Graphics")]
+        [SerializeField]
+        private SpriteRenderer m_renderer;
+
         [Header("Bullet.Settings")]
         public bool IsEnemyBullet;
 
@@ -65,7 +71,7 @@ namespace DMSH.Objects
 
         [Header("Bullet.References")]
         [SerializeField]
-        private TrailRenderer _trailRenderer = null;
+        private TrailRenderer _trailRenderer;
         private Timer _timer;
 
         // unity
@@ -89,7 +95,13 @@ namespace DMSH.Objects
         {
             rigidBody2D = GetComponent<Rigidbody2D>();
             boxCollider2D = GetComponent<BoxCollider2D>();
-            _trailRenderer = GetComponentInChildren<TrailRenderer>();
+            if (_trailRenderer == null)
+            {
+                if (!TryGetComponent(out _trailRenderer))
+                {
+                    _trailRenderer = GetComponentInChildren<TrailRenderer>();
+                }
+            }
         }
 
         internal void OnDisable()
@@ -122,7 +134,7 @@ namespace DMSH.Objects
 
             if (IsMovesItself)
             {
-                rigidBody2D.MovePosition(rigidBody2D.position + _bulletDirection * speed * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt);
+                rigidBody2D.velocity = _bulletDirection * speed * GlobalSettings.gameActiveAsInt;
             }
         }
 
@@ -200,6 +212,27 @@ namespace DMSH.Objects
 
             ProjectileState = ProjectileStateStruct.CreateEmpty();
             Pattern = null;
+        }
+
+        private static Dictionary<Color, Gradient> GradientCache = new();
+
+        public void SetSprite(Sprite stepBulletSprite, Color stepBulletSpriteColor)
+        {
+            m_renderer.sprite = stepBulletSprite;
+            m_renderer.color = stepBulletSpriteColor;
+            if (_trailRenderer != null)
+            {
+                if (!GradientCache.TryGetValue(stepBulletSpriteColor, out var gradient))
+                {
+                    gradient = new Gradient();
+                    gradient.SetKeys(
+                        new GradientColorKey[] {new(stepBulletSpriteColor, 0.0f)},
+                        new GradientAlphaKey[] {new(1, 0.0f), new(0, 0.3f), new(0, 0.4f)}
+                    );
+                }
+
+                _trailRenderer.colorGradient = gradient;
+            }
         }
     }
 }

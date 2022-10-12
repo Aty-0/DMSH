@@ -66,6 +66,7 @@ namespace DMSH.Objects.Projectiles
 
             // set Mono properties
             firedBullet.Pattern = step.bulletFlyPattern;
+            firedBullet.SetSprite(step.BulletSprite, step.BulletSpriteColor);
             if (firedBullet.Pattern != null)
             {
                 firedBullet.Pattern.Tick(firedBullet);
@@ -93,6 +94,9 @@ namespace DMSH.Objects.Projectiles
 
             public ProjectileFlyBehaviorScriptableObject bulletFlyPattern;
 
+            public Sprite BulletSprite;
+            public Color BulletSpriteColor;
+            
             [Obsolete("Not implemented")]
             public RepeatEnumType RepeatType;
             [Obsolete("Not implemented")]
