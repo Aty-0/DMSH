@@ -1,58 +1,97 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+
 using UnityEngine;
+
 using DMSH.Misc;
 using DMSH.Objects;
+using DMSH.Objects.Projectiles;
+
+using Scripts.Utils.Pools;
 
 namespace DMSH.Gameplay
 {
-    // TODO: Weapon diffrent types
     public class Weapon : MonoBehaviour
     {
-        public bool         weaponEnabled { get => _weaponEnabled; private set { _weaponEnabled = value; } }
-        public int          weaponType{ get => _weaponType; private set { _weaponType = value; } }
-
         [Header("Weapon base")]
-        public Bullet        bulletPrefab = null;
-        public float         shotFrequency = 0.07f;
-        public bool          canBeUsed = true;
-        [SerializeField] 
-        private bool        _weaponEnabled = false;
-        [SerializeField] 
+        [SerializeField]
+        private BulletSpawnPatternScriptableObject m_firePattern;
+        public FireStateStruct PatternFireState;
+
+        [SerializeField]
+        private bool m_isEnemy = true;
+        
+        public float shotFrequency = 0.07f;
+        public bool canBeUsed = true;
+
+        [SerializeField]
+        private bool _weaponEnabled = false;
+
+        [SerializeField]
         private AudioSource _audioSource;
 
-        public List<Action>  onShot = new List<Action>();
+        public List<Action> onShot = new List<Action>();
 
         [Header("Weapon upgrage")]
-        public float        weaponBoostGain = 0.0f;
-        [SerializeField] 
-        private int         _weaponType = 0;
+        public float weaponBoostGain = 0.0f;
 
         // When we are not set the shot point 
         // Then we are going to use owner game object and his BoxCollider2D size
         [Header("Shot Point")]
-        public Transform     shotPoint = null;
-        [SerializeField] 
+        public Transform ShotPoint = null;
+
+        [SerializeField]
         private bool _useOwner;
-        [SerializeField] 
+
+        [SerializeField]
         private BoxCollider2D _boxCollider2D;
-        [SerializeField] 
-        private Vector3       _position;
 
-        private Coroutine   _shotCoroutine;
+        private Vector3 BulletSpawnPosition => _useOwner == false
+            ? ShotPoint.transform.position
+            : new Vector3(ShotPoint.transform.position.x, ShotPoint.transform.position.y - _boxCollider2D.size.y, 0);
 
-        protected void Start()
+        private Coroutine _shotCoroutine;
+
+        // unity
+
+        protected void OnEnable()
         {
+            PatternFireState = FireStateStruct.CreateEmpty();
+
             // If point is null then start point will be game object
-            if (shotPoint == null)
+            if (ShotPoint == null)
             {
                 _useOwner = true;
-                shotPoint = transform;
+                ShotPoint = transform;
                 _boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
                 Debug.Assert(_boxCollider2D != null);
             }
         }
+
+        protected void Update()
+        {
+            if (m_firePattern != null)
+            {
+                m_firePattern.Tick(this);
+            }
+        }
+
+#if UNITY_EDITOR
+        protected void OnDrawGizmosSelected()
+        {
+            if (ShotPoint != null)
+            {
+                Gizmos.color = Color.red;
+                Gizmos.DrawCube(ShotPoint.transform.position, new Vector3(0.2f, 0.2f, 0.2f));
+                
+                Gizmos.color = Color.cyan;
+                Gizmos.DrawCube(BulletSpawnPosition, new Vector3(0.2f, 0.2f, 0.2f));
+            }
+        }
+#endif
+
+        // public API
 
         public void AddWeaponBoost(float gain)
         {
@@ -60,16 +99,18 @@ namespace DMSH.Gameplay
             if (weaponBoostGain >= 100.0f)
             {
                 weaponBoostGain = 0.0f;
-                _weaponType += 1;
+                // _weaponType += 1;
             }
         }
 
+        [ContextMenu("DebugShoot_Start")]
         public void Shot()
         {
             _weaponEnabled = true;
             _shotCoroutine = StartCoroutine(ShotC());
         }
 
+        [ContextMenu("DebugShoot_Stop")]
         public void StopShooting()
         {
             _weaponEnabled = false;
@@ -79,47 +120,39 @@ namespace DMSH.Gameplay
             }
         }
 
-        protected void OnDrawGizmos()
+        public Bullet FireBullet()
         {
-            if (GlobalSettings.debugDrawWeaponPoints)
+            foreach (Action action in onShot)
             {
-                Gizmos.color = Color.red;
-                Gizmos.DrawCube(shotPoint.transform.position, new Vector3(0.2f, 0.2f, 0.2f));
-                Gizmos.color = Color.cyan;
-                Gizmos.DrawCube(_position, new Vector3(0.2f, 0.2f, 0.2f));
+                action?.Invoke();
             }
-        }
-        private void UpdateBulletSpawnPosition()
-        {
-            if (_weaponEnabled && canBeUsed)
+
+            var bullet = ProjectilePool.GetOrCreate();
+            bullet.transform.SetPositionAndRotation(BulletSpawnPosition, Quaternion.identity);
+            bullet.IsEnemyBullet = m_isEnemy;
+
+            if (_audioSource != null)
             {
-                _position = _useOwner == false ? shotPoint.transform.position :
-                    new Vector3(shotPoint.transform.position.x, shotPoint.transform.position.y - _boxCollider2D.size.y, 0);
+                _audioSource.Play();
             }
+
+            return bullet;
         }
 
-        protected void FixedUpdate()
-        {
-            UpdateBulletSpawnPosition();
-        }
+        // private
 
         private IEnumerator ShotC()
         {
-            while (_weaponEnabled && canBeUsed)
+            while (GlobalSettings.gameActiveAsBool && _weaponEnabled && canBeUsed)
             {
-                foreach (Action action in onShot)
+                if (m_firePattern != null)
                 {
-                    action?.Invoke();
+                    PatternFireState = FireStateStruct.CreateEmpty();
+                    m_firePattern.Tick(this);
                 }
-
-                // First update 
-                UpdateBulletSpawnPosition();
-
-                Instantiate(bulletPrefab, _position, Quaternion.identity);
-
-                if (_audioSource)
+                else
                 {
-                    _audioSource.Play();
+                    FireBullet();
                 }
 
                 yield return new WaitForSeconds(shotFrequency);

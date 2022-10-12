@@ -12,6 +12,11 @@ namespace DMSH.UI
 {
     public class UI_Root : Instance<UI_Root>
     {
+        [Header("Global UI")]
+        [SerializeField]
+        private RectTransform m_sideBarRect;
+        public RectTransform SidePanelRect => m_sideBarRect; 
+        
         [Header("UI")]
         [SerializeField]
         private Text _uiScoreText = null;
@@ -48,9 +53,6 @@ namespace DMSH.UI
         [SerializeField]
         private Text _uiCurrentScoreOnDeathText = null;
         
-        [SerializeField]
-        private Text _uiMaxScoreText = null;
-
         private Coroutine _showChapterNameCoroutine = null;
 
         // unity

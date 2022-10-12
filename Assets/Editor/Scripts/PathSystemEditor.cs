@@ -10,6 +10,8 @@ using UnityEngine.UIElements;
 using DMSH.Path;
 using DMSH.Misc;
 
+using UnityEditor.SceneManagement;
+
 #region Globals
 public enum PointsToolsCreationMode
 {
@@ -451,8 +453,8 @@ public class PathSystemEditor : Editor
                         psewindow?.Repaint();
                         EditorUtility.SetDirty(point);
 
-                        if(!Application.isPlaying)
-                            EditorApplication.MarkSceneDirty();
+                        if (!Application.isPlaying)
+                            EditorSceneManager.MarkAllScenesDirty();
                     }
 
                     if (EditorGUI.EndChangeCheck())

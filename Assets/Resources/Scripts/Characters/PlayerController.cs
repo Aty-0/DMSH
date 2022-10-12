@@ -12,12 +12,14 @@ using DMSH.LevelSpecifics.Stage;
 using DMSH.Gameplay;
 using DMSH.UI;
 
+using Scripts.Utils;
+
+using System;
 using System.Text;
 
 namespace DMSH.Characters
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    [RequireComponent(typeof(LogHandler))]
     [RequireComponent(typeof(PlayerInput))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]
@@ -25,6 +27,8 @@ namespace DMSH.Characters
 
     public class PlayerController : MovableObject
     {
+        public static PlayerController Player { get; private set; }
+        
         #region Public Values
         public int Life
         {
@@ -71,7 +75,6 @@ namespace DMSH.Characters
         [Header("Global")]
         public SpriteRenderer   spriteRenderer = null;
         public Camera           gameCamera = null;
-        public LogHandler       logHandler = null;
         public PlayerInput      playerInput = null;
         public ResizableGameElements resizableGameElements = null;
 
@@ -109,7 +112,10 @@ namespace DMSH.Characters
 
         [Header("Sounds")]
         [SerializeField] 
+        #pragma warning disable CS0414
+        // ReSharper disable once NotAccessedField.Local
         private AudioSource audioSourceWeapon = null;
+        #pragma warning restore CS0414
         [SerializeField] 
         private AudioSource audioSourceDeath = null;
         [SerializeField] 
@@ -121,6 +127,22 @@ namespace DMSH.Characters
 
         private Coroutine _slowMotionCoroutine = null;
         private Coroutine _deathAwakeCoroutine = null;
+
+        protected void OnEnable()
+        {
+            if (Player == null)
+            {
+                Player = this;
+            }
+        }
+
+        protected void OnDisable()
+        {
+            if (Player == this)
+            {
+                Player = null;
+            }
+        }
 
         protected void Start()
         {
@@ -142,16 +164,20 @@ namespace DMSH.Characters
             rigidBody2D = GetComponent<Rigidbody2D>();
             boxCollider2D = GetComponent<BoxCollider2D>();
             playerInput = GetComponent<PlayerInput>();
-            logHandler = GetComponent<LogHandler>();
             weapon = GetComponent<Weapon>();
 
             _stageSystem = StageSystem.Get;
             if (_stageSystem == null)
                 Debug.LogError("No stage system in scene");
 
-            resizableGameElements = GetComponent<ResizableGameElements>();
-            resizableGameElements.gameCamera = gameCamera;
-            resizableGameElements.Initialize();
+            if (TryGetComponent(out resizableGameElements))
+            {
+                resizableGameElements.gameCamera = gameCamera;
+                resizableGameElements.Initialize();
+                
+                // Set respawnPoint position
+                gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
+            }
 
             _cameraDeathAnimation = gameObject.AddComponent<CameraDeathAnimation>();
             _cameraDeathAnimation.animCamera = gameCamera;
@@ -159,15 +185,11 @@ namespace DMSH.Characters
 
             // Don't show cursor when we are create the player 
             Cursor.visible = false;
-
-            // Set respawnPoint position
-            gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
-
         }
 
         protected void FixedUpdate()
         {
-            _rigidBody2D.MovePosition(_rigidBody2D.position + ((_moveDirection * _speed) * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt));
+            _rigidBody2D.MoveRigidbodyInsideScreen(_moveDirection * _speed * GlobalSettings.gameActiveAsInt, gameCamera, UI_Root.Get.SidePanelRect.sizeDelta.x);
         }
 
         private IEnumerator DoSlowMotion(bool isBoost = true)
@@ -206,8 +228,8 @@ namespace DMSH.Characters
             }
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
             {
-                if (bullet.isEnemyBullet &&
-                    bullet.collisionDestroyBullet)
+                if (bullet.IsEnemyBullet &&
+                    bullet.IsCollisionDestroyBullet)
                 {
                     bullet.SqueezeAndDestroy();
                 }
@@ -351,12 +373,12 @@ namespace DMSH.Characters
                 GUI.Label(new Rect(100, 80, 500, 500),  $"DeltaTime: {Time.deltaTime}");
                 GUI.Label(new Rect(100, 120, 500, 500), $"Position: {rigidBody2D.position}");
                 GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {rigidBody2D.velocity}");
-                GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weapon.weaponEnabled}");
+                // GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weapon.weaponEnabled}");
                 GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
                 GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
                 GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActiveAsBool}");
                 GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {weapon.weaponBoostGain}");
-                GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {weapon.weaponType}");
+                // GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {weapon.weaponType}");
             }
         }
 #endif
@@ -369,7 +391,7 @@ namespace DMSH.Characters
                 var touchedMovableObjects = collision.gameObject.GetComponents<IMovableObject>();
                 foreach (var movableObject in touchedMovableObjects)
                 {
-                    if(movableObject is Enemy or Bullet {isEnemyBullet: true})
+                    if(movableObject is Enemy or Bullet {IsEnemyBullet: true})
                     {
                         Damage();
                     }
@@ -379,7 +401,10 @@ namespace DMSH.Characters
 
         public void Kill()
         {
-            _cameraDeathAnimation.Play();
+            if (_cameraDeathAnimation != null)
+            {
+                _cameraDeathAnimation.Play();
+            }
 
             if (_slowMotionCoroutine != null)
             {
@@ -443,14 +468,17 @@ namespace DMSH.Characters
                 // Destroy all bullet cuz we are can teleport player into the bullet 
                 foreach (var bullet in FindObjectsOfType<Bullet>())
                 {
-                    if (bullet.isEnemyBullet &&
-                        bullet.collisionDestroyBullet)
+                    if (bullet.IsEnemyBullet &&
+                        bullet.IsCollisionDestroyBullet)
                     {
                         bullet.SqueezeAndDestroy();
                     }
                 }
-                // Set spawn point position to player 
-                gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
+                // Set spawn point position to player
+                if (resizableGameElements != null)
+                {
+                    gameObject.transform.position = resizableGameElements.respawnPoint.transform.position;
+                }
             }
         }
 

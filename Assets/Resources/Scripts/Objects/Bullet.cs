@@ -1,71 +1,154 @@
+using DMSH.Characters;
+
 using System.Collections;
+
 using UnityEngine;
+
 using DMSH.Misc;
 using DMSH.Path;
 using DMSH.Gameplay;
+using DMSH.Objects.Projectiles;
+
+using Scripts.Utils.Pools;
+
+using System.Collections.Generic;
 
 namespace DMSH.Objects
 {
-    public class Bullet : MovableObject
+    public sealed class Bullet : MovableObject, IPooled
     {
-        [Header("Bullet")]
-        public bool isEnemyBullet = false;
-        public bool collisionDestroyBullet = true;
-        public float lifeTime = 2.0f;
-        public bool freeMovement = false;
-        public Timer timer = null;
-
-        [SerializeField] 
-        private Vector2 _bullet_dir = new Vector2(0, 1);
-        [SerializeField] 
-        private float _rotation_speed = 300.0f;
+        [Header("Bullet.Graphics")]
         [SerializeField]
-        private TrailRenderer _trailRenderer = null;
+        private SpriteRenderer m_renderer;
 
-        protected void Start()
+        [Header("Bullet.Settings")]
+        public bool IsEnemyBullet;
+
+        [SerializeField]
+        private ProjectileFlyBehaviorScriptableObject m_pattern;
+
+        public ProjectileFlyBehaviorScriptableObject Pattern
+        {
+            get => m_pattern;
+            set
+            {
+                if (m_pattern != value)
+                {
+                    m_pattern = value;
+                    if (m_pattern != null)
+                    {
+                        OnEnable();
+                    }
+                }
+            }
+        }
+
+        [SerializeField]
+        private bool _collisionDestroyBullet = true;
+        public bool IsCollisionDestroyBullet => _collisionDestroyBullet;
+
+        [SerializeField]
+        private float _lifeTime = 2.0f;
+
+        public bool IsMovesItself => pathSystem == null;
+
+        // internal
+        [Tooltip("Direction in which projectile will fly")]
+        [SerializeField]
+        private Vector2 _bulletDirection = new(0, 1);
+
+        public Vector2 BulletDirection
+        {
+            get => _bulletDirection;
+            set => _bulletDirection = value;
+        }
+
+        internal ProjectileStateStruct ProjectileState;
+
+        [Tooltip("Will rotate projectile around every tick")]
+        [SerializeField]
+        private float _graphicRotationSpeed = 300.0f;
+
+        [Header("Bullet.References")]
+        [SerializeField]
+        private TrailRenderer _trailRenderer;
+        private Timer _timer;
+
+        // unity
+
+        internal void OnEnable()
+        {
+            ProjectileState = ProjectileStateStruct.CreateEmpty();
+            BulletDirection = new Vector2(0, -1);
+
+            // If we are attach pathSystem on start 
+            if (IsMovesItself)
+            {
+                _timer = gameObject.AddComponent<Timer>();
+                _timer.EndEvent += Unspawn;
+                _timer.time = _lifeTime;
+                _timer.StartTimer();
+            }
+        }
+
+        internal void Start()
         {
             rigidBody2D = GetComponent<Rigidbody2D>();
             boxCollider2D = GetComponent<BoxCollider2D>();
-            _trailRenderer = GetComponentInChildren<TrailRenderer>();
-
-            // If we are attach pathSystem on start 
-            freeMovement = freeMovement && pathSystem == null;
-
-            if (freeMovement == true)
+            if (_trailRenderer == null)
             {
-                timer = gameObject.AddComponent(typeof(Timer)) as Timer;
-                timer.EndEvent += Unspawn;
-                timer.time = lifeTime;
-                timer.StartTimer();
+                if (!TryGetComponent(out _trailRenderer))
+                {
+                    _trailRenderer = GetComponentInChildren<TrailRenderer>();
+                }
             }
         }
 
-        public override void Unspawn()
+        internal void OnDisable()
         {
-            Destroy(gameObject);
-        }
-
-        // Squeeze bullet 
-        // It's just destroy effect for boost or player death
-
-        private IEnumerator SqueezeAnimation()
-        {
-            while (transform.localScale != new Vector3(0.0f, 0.0f, transform.localScale.z))
+            if (_trailRenderer != null)
             {
-                // FIX ME: Smooth...
-                float speed = 4.0f * Time.deltaTime * 10 * GlobalSettings.gameActiveAsInt;
-
-                Vector3 vec = Vector3.Lerp(transform.localScale, Vector3.zero, speed);
-                float startwidth = Mathf.Lerp(_trailRenderer.startWidth, 0, speed);
-                float endwidth = Mathf.Lerp(_trailRenderer.endWidth, 0, speed);
-                transform.localScale = new Vector3(vec.x, vec.y, transform.localScale.z);
-                _trailRenderer.endWidth = startwidth;
-                _trailRenderer.startWidth = endwidth;
-                yield return new WaitForSeconds(0.01f);
+                _trailRenderer.Clear();
             }
 
-            Unspawn();
+            if (_timer != null)
+            {
+                _timer.StopTimer();
+                Destroy(_timer);
+                _timer = null;
+            }
         }
+
+        internal void Update()
+        {
+            if (m_pattern != null)
+            {
+                m_pattern.Tick(this);
+            }
+        }
+
+        internal void FixedUpdate()
+        {
+            // Basic effect of rotation
+            rigidBody2D.MoveRotation(rigidBody2D.rotation + _graphicRotationSpeed * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt);
+
+            if (IsMovesItself)
+            {
+                rigidBody2D.velocity = _bulletDirection * speed * GlobalSettings.gameActiveAsInt;
+            }
+        }
+
+        internal void OnCollisionEnter2D(Collision2D collision)
+        {
+            if (_collisionDestroyBullet
+                && ((IsEnemyBullet && collision.transform == PlayerController.Player.transform)
+                    || (!IsEnemyBullet && collision.transform.CompareTag("Enemy"))))
+            {
+                Unspawn();
+            }
+        }
+
+        // public APIs
 
         public void SqueezeAndDestroy()
         {
@@ -73,22 +156,82 @@ namespace DMSH.Objects
             StartCoroutine(SqueezeAnimation());
         }
 
-        protected void Update()
+        public override void Unspawn()
         {
-            // Basic effect of rotation
-            rigidBody2D.MoveRotation(rigidBody2D.rotation + (_rotation_speed * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt));
-
-            if (freeMovement == true)
-            {
-                rigidBody2D.MovePosition(rigidBody2D.position + ((_bullet_dir * speed) * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt));
-            }
+            Release();
         }
 
-        protected void OnCollisionEnter2D(Collision2D collision)
+        // private
+
+        // Squeeze bullet 
+        // It's just destroy effect for boost or player death
+        private IEnumerator SqueezeAnimation()
         {
-            if (collisionDestroyBullet)
+            var sizeBefore = transform.localScale;
+            var trailStartSizeWidthBefore = _trailRenderer.startWidth;
+            var trailEndSizeWidthBefore = _trailRenderer.endWidth;
+            var animateUntilVector = new Vector3(0.0f, 0.0f, transform.localScale.z);
+            var lerpVal = 0f;
+
+            while (transform.localScale != animateUntilVector)
             {
-                Unspawn();
+                var smalledLocalScale = Vector3.Lerp(transform.localScale, Vector3.zero, lerpVal);
+                var trailStartWidth = Mathf.Lerp(_trailRenderer.startWidth, 0, lerpVal);
+                var trailEndWidth = Mathf.Lerp(_trailRenderer.endWidth, 0, lerpVal);
+
+                transform.localScale = new Vector3(smalledLocalScale.x, smalledLocalScale.y, animateUntilVector.z);
+                _trailRenderer.endWidth = trailStartWidth;
+                _trailRenderer.startWidth = trailEndWidth;
+
+                lerpVal += 0.01f;
+                yield return new WaitForSeconds(0.01f);
+            }
+
+            Unspawn();
+
+            _trailRenderer.startWidth = trailStartSizeWidthBefore;
+            _trailRenderer.endWidth = trailEndSizeWidthBefore;
+            transform.localScale = sizeBefore;
+        }
+
+        public void Release()
+        {
+            if (!ProjectilePool.TryRelease(this))
+            {
+                Debug.LogError($"Spawned bullet without pool! Will call direct destroy", this);
+                Destroy(gameObject);
+                return;
+            }
+
+            if (_timer != null)
+            {
+                _timer.StopTimer();
+                Destroy(_timer);
+                _timer = null;
+            }
+
+            ProjectileState = ProjectileStateStruct.CreateEmpty();
+            Pattern = null;
+        }
+
+        private static Dictionary<Color, Gradient> GradientCache = new();
+
+        public void SetSprite(Sprite stepBulletSprite, Color stepBulletSpriteColor)
+        {
+            m_renderer.sprite = stepBulletSprite;
+            m_renderer.color = stepBulletSpriteColor;
+            if (_trailRenderer != null)
+            {
+                if (!GradientCache.TryGetValue(stepBulletSpriteColor, out var gradient))
+                {
+                    gradient = new Gradient();
+                    gradient.SetKeys(
+                        new GradientColorKey[] {new(stepBulletSpriteColor, 0.0f)},
+                        new GradientAlphaKey[] {new(1, 0.0f), new(0, 0.3f), new(0, 0.4f)}
+                    );
+                }
+
+                _trailRenderer.colorGradient = gradient;
             }
         }
     }

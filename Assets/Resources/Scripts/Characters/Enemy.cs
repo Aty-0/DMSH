@@ -230,7 +230,7 @@ namespace DMSH.Characters
                     }
                     case Bullet b:
                     {
-                        Destroy(b);
+                        b.Release();
                         Damage();
                         break;
                     }

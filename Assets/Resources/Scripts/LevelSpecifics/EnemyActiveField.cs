@@ -17,7 +17,10 @@ namespace DMSH.LevelSpecifics
             _playerController = FindObjectOfType<PlayerController>();
 
             _resizableGameElements = _playerController.resizableGameElements;
-            _resizableGameElements.screenHandler.onScreenResolutionChange.Add(OnResolutionChange);
+            if (_resizableGameElements != null)
+            {
+                _resizableGameElements.screenHandler.onScreenResolutionChange.Add(OnResolutionChange);
+            }
         }
 
         private void OnResolutionChange()

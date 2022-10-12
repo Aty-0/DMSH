@@ -764,6 +764,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70cf974c3d23486a92bad9d7e035774c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_sideBarRect: {fileID: 4813038099463782103}
   _uiScoreText: {fileID: 386859477817497049}
   _uiBoostGainText: {fileID: 3411127154762776398}
   _uiBoostText: {fileID: 8017727714696632203}
@@ -840,7 +841,6 @@ MonoBehaviour:
   _uiPauseScreen: {fileID: 1751553568047604629}
   _uiDeathScreen: {fileID: 3200462816621560470}
   _uiCurrentScoreOnDeathText: {fileID: 1577688591765293370}
-  _uiMaxScoreText: {fileID: 7431086910141673474}
 --- !u!1 &1548305559953898980
 GameObject:
   m_ObjectHideFlags: 0
