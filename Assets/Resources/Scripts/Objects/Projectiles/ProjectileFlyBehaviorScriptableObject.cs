@@ -242,7 +242,7 @@ namespace DMSH.Objects.Projectiles
             public Vector2 Direction;
 
             public AnimationCurve LifetimeDirectionModifier;
-            public AnimationCurve LifetimeAngleModifier;
+            // TODO public AnimationCurve LifetimeAngleModifier;
 
             public ProjectileDirectionTypeEnum AngleConverter;
             public Layer SwitchOnMask;

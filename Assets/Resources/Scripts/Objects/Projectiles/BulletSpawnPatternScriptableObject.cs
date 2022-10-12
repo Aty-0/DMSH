@@ -93,7 +93,9 @@ namespace DMSH.Objects.Projectiles
 
             public ProjectileFlyBehaviorScriptableObject bulletFlyPattern;
 
+            [Obsolete("Not implemented")]
             public RepeatEnumType RepeatType;
+            [Obsolete("Not implemented")]
             public int RepeatCount;
 
             public float AngleOffset;
