@@ -15,7 +15,6 @@ namespace DMSH.Path
     public class PathSystem : MonoBehaviourWithUniqueID
     {        
         [Header("Main")]
-
         [HideInInspector]
         [SerializeField]
         private StageSystem stageSystem = null;
@@ -34,6 +33,7 @@ namespace DMSH.Path
 
         [Header("Misc")]
         public float distanceBetweenObjects = 2.0f;
+        public float maxAugmentSpeed = 5.0f;
 
         [Tooltip("Distance accuracy for reach point")]
         public float distanceAccuracy = 0.01f;
@@ -399,7 +399,7 @@ namespace DMSH.Path
                 // Will boost up speed when object is stand behind 
                 if (distanceBetweenCurrentObjects > distanceBetweenObjects)
                 {
-                    currentPathObject.augmentSpeed = Mathf.Clamp(Mathf.Clamp(distanceBetweenCurrentObjects, 1.0f, distanceBetweenCurrentObjects) / distanceBetweenObjects, 0.01f, 5.0f);
+                    currentPathObject.augmentSpeed = Mathf.Clamp(Mathf.Clamp(distanceBetweenCurrentObjects, 1.0f, distanceBetweenCurrentObjects) / distanceBetweenObjects, 0.01f, maxAugmentSpeed);
                 }
                 else
                 {
