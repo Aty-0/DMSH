@@ -24,12 +24,24 @@ namespace DMSH.Objects.Projectiles
 
         // public 
 
+        public void StartShooting(Weapon weapon)
+        {
+            if (m_steps == null || m_steps.Length == 0)
+                return;
+
+            ref var currentState = ref weapon.PatternFireState;
+
+            currentState.IsStarted = true;
+        }
+
         public void Tick(Weapon weapon)
         {
             if (m_steps == null || m_steps.Length == 0)
                 return;
 
             ref var currentState = ref weapon.PatternFireState;
+            if (!currentState.IsStarted)
+                return;
 
             var startNewStep = false;
             if (currentState.StepIndex == -1)
@@ -96,7 +108,7 @@ namespace DMSH.Objects.Projectiles
 
             public Sprite BulletSprite;
             public Color BulletSpriteColor;
-            
+
             [Obsolete("Not implemented")]
             public RepeatEnumType RepeatType;
             [Obsolete("Not implemented")]

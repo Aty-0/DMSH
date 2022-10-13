@@ -50,7 +50,8 @@ namespace DMSH.Misc
                         switch (component)
                         {
                             case Rigidbody2D rigidbody:
-                                rigidbody.simulated = _gameActive;
+                                // ! why? some bullets can't be moved with this logic
+                                // rigidbody.simulated = _gameActive;
                                 break;
                             case TrailRenderer trail:
                                 trail.time = 0;

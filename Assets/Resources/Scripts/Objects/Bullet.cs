@@ -84,17 +84,24 @@ namespace DMSH.Objects
             // If we are attach pathSystem on start 
             if (IsMovesItself)
             {
-                _timer = gameObject.AddComponent<Timer>();
-                _timer.EndEvent += Unspawn;
-                _timer.time = _lifeTime;
-                _timer.StartTimer();
+                if (_timer == null)
+                {
+                    _timer = gameObject.AddComponent<Timer>();
+                    _timer.EndEvent += Unspawn;
+                    _timer.time = _lifeTime;
+                    _timer.StartTimer();
+                }
+                else
+                {
+                    _timer.RestartTimer();
+                }
             }
         }
 
         internal void Start()
         {
             rigidBody2D = GetComponent<Rigidbody2D>();
-            boxCollider2D = GetComponent<BoxCollider2D>();
+            Collider2D = GetComponent<Collider2D>();
             if (_trailRenderer == null)
             {
                 if (!TryGetComponent(out _trailRenderer))
@@ -114,8 +121,6 @@ namespace DMSH.Objects
             if (_timer != null)
             {
                 _timer.StopTimer();
-                Destroy(_timer);
-                _timer = null;
             }
         }
 
@@ -152,7 +157,7 @@ namespace DMSH.Objects
 
         public void SqueezeAndDestroy()
         {
-            boxCollider2D.enabled = false;
+            Collider2D.enabled = false;
             StartCoroutine(SqueezeAnimation());
         }
 
@@ -206,8 +211,6 @@ namespace DMSH.Objects
             if (_timer != null)
             {
                 _timer.StopTimer();
-                Destroy(_timer);
-                _timer = null;
             }
 
             ProjectileState = ProjectileStateStruct.CreateEmpty();

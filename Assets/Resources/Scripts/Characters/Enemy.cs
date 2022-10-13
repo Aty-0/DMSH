@@ -64,7 +64,7 @@ namespace DMSH.Characters
         protected void Start()
         {
             _rigidBody2D    = GetComponent<Rigidbody2D>();
-            _boxCollider2D  = GetComponent<BoxCollider2D>();
+            _Collider2D  = GetComponent<BoxCollider2D>();
             _spriteRenderer = GetComponent<SpriteRenderer>();
             _deathParticle  = GetComponentInChildren<ParticleSystem>();
 
@@ -156,7 +156,7 @@ namespace DMSH.Characters
             {
                 _pathSystem?.DetachObject(this);
                 _spriteRenderer.enabled = false;
-                _boxCollider2D.enabled = false;
+                _Collider2D.enabled = false;
                 ParticleSystemRenderer pr = _deathParticle.GetComponent<ParticleSystemRenderer>();
                 pr.material.color = _spriteRenderer.color;
                 _deathParticle.Play();

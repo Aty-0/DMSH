@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
+
 using UnityEngine;
+
 using DMSH.Misc;
 
 namespace DMSH.Gameplay
@@ -14,22 +16,22 @@ namespace DMSH.Gameplay
         }
 
         [Header("Time")]
-        public float time = 0.0f;
+        public float time;
 
         [Tooltip("In seconds")]
         public float tick = 1.0f;
 
         [Header("Debug")]
-        [SerializeField] 
-        private bool _isEnded = false;
-        [SerializeField] 
-        private float _currentTime = 0.0f;
+        [SerializeField]
+        private bool _isEnded;
+        [SerializeField]
+        private float _currentTime;
 
         public event Action StartEvent;
         public event Action UpdateEvent;
         public event Action EndEvent;
 
-        private Coroutine _tickCoroutine = null;
+        private Coroutine _tickCoroutine;
 
         protected void Start()
         {
@@ -39,12 +41,22 @@ namespace DMSH.Gameplay
         public void StartTimer()
         {
             _isEnded = false;
+            if (_tickCoroutine != null)
+            {
+                Debug.LogWarning("Already started! Bug in logic!", this);
+                return;
+            }
+
             _tickCoroutine = StartCoroutine(Tick());
         }
 
         public void StopTimer()
         {
-            StopCoroutine(_tickCoroutine);
+            if (_tickCoroutine != null)
+            {
+                StopCoroutine(_tickCoroutine);
+                _tickCoroutine = null;
+            }
         }
 
         public void EndTimer()
@@ -58,18 +70,41 @@ namespace DMSH.Gameplay
             _currentTime = time;
         }
 
+        /// <summary>
+        /// Clear prev states and launch it as first time
+        /// </summary>
+        public void RestartTimer()
+        {
+            if (_tickCoroutine != null)
+            {
+                StopTimer();
+            }
+
+            ResetTimer();
+            StartTimer();
+        }
+
         private IEnumerator Tick()
         {
-            StartEvent?.Invoke();
-            while (_currentTime >= 0)
+            try
             {
-                _currentTime -= tick * GlobalSettings.gameActiveAsInt;
+                StartEvent?.Invoke();
+                while (_currentTime >= 0)
+                {
+                    _currentTime -= tick * GlobalSettings.gameActiveAsInt;
 
-                UpdateEvent?.Invoke();
-                yield return new WaitForSeconds(tick);
+                    UpdateEvent?.Invoke();
+                    yield return new WaitForSeconds(tick);
+                }
+
+                _isEnded = true;
+                EndEvent?.Invoke();
             }
-            _isEnded = true;
-            EndEvent?.Invoke();
+            finally
+            {
+                _isEnded = true;
+                _tickCoroutine = null;
+            }
         }
     }
 }

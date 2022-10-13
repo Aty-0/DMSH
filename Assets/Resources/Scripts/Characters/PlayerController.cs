@@ -162,7 +162,7 @@ namespace DMSH.Characters
             gameCamera = GetComponentInParent(typeof(Camera)) as Camera;
             spriteRenderer = GetComponent<SpriteRenderer>();
             rigidBody2D = GetComponent<Rigidbody2D>();
-            boxCollider2D = GetComponent<BoxCollider2D>();
+            Collider2D = GetComponent<Collider2D>();
             playerInput = GetComponent<PlayerInput>();
             weapon = GetComponent<Weapon>();
 
@@ -189,7 +189,13 @@ namespace DMSH.Characters
 
         protected void FixedUpdate()
         {
-            _rigidBody2D.MoveRigidbodyInsideScreen(_moveDirection * _speed * GlobalSettings.gameActiveAsInt, gameCamera, UI_Root.Get.SidePanelRect.sizeDelta.x);
+            var velocity = _moveDirection * _speed * GlobalSettings.gameActiveAsInt;
+
+#if PREFFER_A_T_RESIZABLE_GAME_ELEMENTS
+            _rigidBody2D.velocity = velocity;
+ #else
+            _rigidBody2D.MoveRigidbodyInsideScreen(velocity, gameCamera, UI_Root.Get.SidePanelRect.sizeDelta.x);
+#endif
         }
 
         private IEnumerator DoSlowMotion(bool isBoost = true)
@@ -417,7 +423,7 @@ namespace DMSH.Characters
 
             _isDead = true;
             spriteRenderer.enabled = false;
-            boxCollider2D.enabled = false;
+            Collider2D.enabled = false;
             rigidBody2D.isKinematic = true;
             playerInput.enabled = false;
 

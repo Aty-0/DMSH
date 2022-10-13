@@ -591,7 +591,8 @@ PlayerSettings:
   webGLMemoryLinearGrowthStep: 16
   webGLMemoryGeometricGrowthStep: 0.2
   webGLMemoryGeometricGrowthCap: 96
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    Standalone: PREFFER_A_T_RESIZABLE_GAME_ELEMENTS
   additionalCompilerArguments: {}
   platformArchitecture: {}
   scriptingBackend: {}

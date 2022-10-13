@@ -45,11 +45,25 @@ namespace DMSH.Gameplay
         private bool _useOwner;
 
         [SerializeField]
-        private BoxCollider2D _boxCollider2D;
+        private Collider2D _Collider2D;
 
-        private Vector3 BulletSpawnPosition => _useOwner == false
-            ? ShotPoint.transform.position
-            : new Vector3(ShotPoint.transform.position.x, ShotPoint.transform.position.y - _boxCollider2D.size.y, 0);
+        private Vector3 BulletSpawnPosition
+        {
+            get
+            {
+                if (_useOwner == false)
+                    return ShotPoint.transform.position;
+
+                switch (_Collider2D)
+                {
+                    case BoxCollider2D boxCollider:
+                        return new Vector3(ShotPoint.transform.position.x, ShotPoint.transform.position.y - boxCollider.size.y, 0);
+                    
+                    default:
+                        return transform.position;
+                }
+            }
+        }
 
         private Coroutine _shotCoroutine;
 
@@ -64,8 +78,8 @@ namespace DMSH.Gameplay
             {
                 _useOwner = true;
                 ShotPoint = transform;
-                _boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
-                Debug.Assert(_boxCollider2D != null);
+                _Collider2D = gameObject.GetComponent<Collider2D>();
+                Debug.Assert(_Collider2D != null);
             }
         }
 
@@ -148,6 +162,7 @@ namespace DMSH.Gameplay
                 if (m_firePattern != null)
                 {
                     PatternFireState = FireStateStruct.CreateEmpty();
+                    m_firePattern.StartShooting(this);
                     m_firePattern.Tick(this);
                 }
                 else

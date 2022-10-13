@@ -9,7 +9,7 @@ namespace DMSH.Path
         int currentCurvePoint { get; set; }
         float speed { get; set; }
         Rigidbody2D rigidBody2D { get; set; }
-        BoxCollider2D boxCollider2D { get; set; }
+        Collider2D Collider2D { get; set; }
         Vector3 moveOffset { get; set; }
         PathSystem pathSystem { get; set; }
         float reduceSpeed { get; set; }
@@ -30,7 +30,7 @@ namespace DMSH.Path
         [SerializeField] 
         protected Rigidbody2D _rigidBody2D = null;
         [SerializeField] 
-        protected BoxCollider2D _boxCollider2D = null;
+        protected Collider2D _Collider2D = null;
         [SerializeField] 
         protected Vector3 _moveOffset = Vector3.zero;
         [SerializeField] 
@@ -49,7 +49,7 @@ namespace DMSH.Path
         public int currentCurvePoint { get { return _currentCurvePoint; } set { _currentCurvePoint = value; } }
         public float speed { get { return _speed; } set { _speed = value; } }
         public Rigidbody2D rigidBody2D { get { return _rigidBody2D; } set { _rigidBody2D = value; } }
-        public BoxCollider2D boxCollider2D { get { return _boxCollider2D; } set { _boxCollider2D = value; } }
+        public Collider2D Collider2D { get => _Collider2D; set => _Collider2D = value; }
         public Vector3 moveOffset { get { return _moveOffset; } set { _moveOffset = value; } }
         public PathSystem pathSystem { get { return _pathSystem; } set { _pathSystem = value; } }
         public float reduceSpeed { get { return _reduceSpeed; } set { _reduceSpeed = value; } }

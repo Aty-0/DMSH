@@ -140,6 +140,7 @@ namespace DMSH.LevelSpecifics.Stage
         {
             PathSystem ps = null;
 
+            // ! go.GetType() -> NullReferenceException, why?
             // If we are created root for path system
             if (go.GetType() == typeof(GameObject))
             {
@@ -156,7 +157,10 @@ namespace DMSH.LevelSpecifics.Stage
             go.SetActive(true);
 
             // Enable spawner in PathSystem
-            ps?.EnableSpawner();
+            if (ps != null)
+            {
+                ps.EnableSpawner();
+            }
 
             Debug.Log($"[StageSystem] Activate | Index:{currentStage.stageObjects.IndexOf(go)}");
         }
