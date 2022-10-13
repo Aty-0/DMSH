@@ -8,11 +8,6 @@ using System.Collections.Generic;
 
 namespace DMSH.Misc.Screen
 {
-    // TODO: Resize all game object 
-    //       Why? Because on resizing path system we get is too long paths 
-    //       On very high resolutions we get slow and hard gameplay,
-    //       and objects will be is tiny
-
     public class ResizableGameElements : MonoBehaviour
     {
         public GameObject respawnPoint = null;
@@ -46,7 +41,12 @@ namespace DMSH.Misc.Screen
 
         [SerializeField]
         [HideInInspector]
-        private List<Tuple<string,Vector3>> initialPosition = new List<Tuple<string, Vector3>>();
+        private List<Tuple<string,Vector3>> initialPositionPS = new List<Tuple<string, Vector3>>();
+
+        [SerializeField]
+        [HideInInspector]
+        private List<Tuple<string, Vector3>> initialPositionCurvePointsPS = new List<Tuple<string, Vector3>>();
+
 
         [SerializeField]
         [HideInInspector]
@@ -85,12 +85,23 @@ namespace DMSH.Misc.Screen
 
             // first 
             UpdateResolutionInWorldPoint();
+            GetInitialData();
+            // Do last
             OnResolutionScreenChange();
+        }
 
+        private void GetInitialData()
+        {
             // Save initial position of PathSystems
             foreach (var system in FindObjectsOfType<PathSystem>())
             {
-                initialPosition.Add(Tuple.Create(system.ID, system.transform.position));
+                initialPositionPS.Add(Tuple.Create(system.ID, system.transform.position));
+
+                // Save initial position of curve points
+                foreach (var point in system.pathPointsList)
+                {
+                    initialPositionCurvePointsPS.Add(Tuple.Create(point.ID, point.curvePoint));
+                }
             }
 
             // Save initial scale of MovableObjects
@@ -129,6 +140,7 @@ namespace DMSH.Misc.Screen
             }
             return isFine;
         }
+
         private void UpdateResolutionInWorldPoint()
         {
             resolutionInWorldPoint = new Vector3(gameCamera.ViewportToWorldPoint(new Vector2(1, 0)).x,
@@ -163,33 +175,48 @@ namespace DMSH.Misc.Screen
             screenDistanceWidth = Vector3.Distance(-new Vector3(resolutionInWorldPoint.x, 0, 0), new Vector3(resultPoint, 0, 0)) * 0.1f;
             screenDistanceHeight = Vector3.Distance(-new Vector3(0, resolutionInWorldPoint.y, 0), new Vector3(0, resolutionInWorldPoint.y, 0)) * 0.1f;
 
+            // --
+            // Kucha parsa, mb eto plohaya idea
+            // --
+
             // Rescale pathSystem and change position for all points
             foreach (var system in FindObjectsOfType<PathSystem>())
             {
-                Debug.Log($"ResizableGameElements: Rescale [PathSystem] object {system.name} id {system.ID}");
-                foreach (var pos in initialPosition)
+                system.transform.localScale = new Vector3(screenDistanceWidth, screenDistanceHeight, 1);
+
+                foreach (var point in system.pathPointsList)
                 {
-                    if (pos.Item1 == system.ID)
+                    foreach (var curvePos in initialPositionCurvePointsPS)
                     {
-                        Debug.Log("ResizableGameElements: Passed");
-                        system.transform.localPosition = new Vector3(pos.Item2.x - screenDistanceWidth, pos.Item2.y + screenDistanceHeight, 1);
-                        break;
+                        if (curvePos.Item1 == point.ID)
+                        {
+                            //Debug.Log($"ResizableGameElements: New pos [Point] curve ! object {point.name} id {point.ID} {point.curvePoint} -> {curvePos.Item2}");
+                            point.curvePoint = new Vector3(curvePos.Item2.x - screenDistanceWidth * 0.1f, curvePos.Item2.y + screenDistanceHeight * 0.1f, 1);
+                            break;
+                        }
                     }
                 }
 
-                system.transform.localScale = new Vector3(screenDistanceWidth, screenDistanceHeight, 1);
+                //foreach (var pos in initialPositionPS)
+                //{
+                //    if (pos.Item1 == system.ID)
+                //    {
+                //        //Debug.Log($"ResizableGameElements: New pos [PathSystem] object {system.name} id {system.ID} {system.transform.position} -> {pos.Item2}");
+                //        system.transform.localPosition = new Vector3(pos.Item2.x + screenDistanceWidth * 0.1f, pos.Item2.y + screenDistanceHeight * 0.1f, 1);
+                //        break;
+                //    }
+                //}           
             }
 
             // Rescale MovableObjects
             foreach (var mo in FindObjectsOfType<MovableObject>())
             {
-                Debug.Log($"ResizableGameElements: Rescale [MovableObject] object {mo.name} id {mo.ID}");
                 foreach (var scale in initialScale)
                 {
                     if (scale.Item1 == mo.ID)
                     {
-                        Debug.Log("ResizableGameElements: Passed");
-                        mo.transform.localScale = new Vector3(scale.Item2.x + screenDistanceWidth, scale.Item2.y + screenDistanceHeight, 1);
+                        //Debug.Log($"ResizableGameElements: Rescale [MovableObject] object {mo.name} id {mo.ID} {mo.transform.localScale} -> {scale.Item2}");
+                        mo.transform.localScale = new Vector3(scale.Item2.x + screenDistanceWidth * 0.1f, scale.Item2.y + screenDistanceHeight * 0.1f, 1);
                         break;
                     }
                 }

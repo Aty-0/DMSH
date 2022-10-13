@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.Events;
 using DMSH.Gameplay;
 
+using Scripts.Utils;
+
 namespace DMSH.Path
 {
     public enum EnemyScriptedBehavior
@@ -11,7 +13,7 @@ namespace DMSH.Path
         StopShot,
     }
 
-    public class PathPoint : MonoBehaviour
+    public class PathPoint : MonoBehaviourWithUniqueID
     {
         [Header("Other")]
         public Timer waitTimer = null;
