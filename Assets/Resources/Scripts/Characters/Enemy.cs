@@ -6,6 +6,10 @@ using DMSH.Gameplay;
 using DMSH.Objects;
 using DMSH.Misc.Animated;
 
+using Scripts.Objects.Bonuses;
+
+using Scripts.Utils.Pools;
+
 namespace DMSH.Characters
 {
     [RequireComponent(typeof(Rigidbody2D))]
@@ -42,11 +46,9 @@ namespace DMSH.Characters
         protected bool _showDamageStatusText = true;
 
         [Header("Bonus")]
-        [SerializeField] 
-        protected GameObject _bonusWeaponBuff = null;
-        [SerializeField] 
-        protected GameObject _bonusScoreBuff = null;
-
+        [SerializeField]
+        private BonusDropTypeEnum m_bonusDropType;
+        
         [Header("Misc")]
         [SerializeField] 
         protected PlayerController _playerController = null;
@@ -275,22 +277,27 @@ namespace DMSH.Characters
 
         public void DropBonus()
         {
-            if (_bonusWeaponBuff)
+            switch (m_bonusDropType)
             {
-                for (int i = 0; i <= Random.Range(0, MAX_RANDOM_DROP_WEAPON_BONUS); i++)
-                {
-                    Instantiate(_bonusWeaponBuff);
-                    _bonusWeaponBuff.transform.position = gameObject.transform.position;
-                }
-            }
-
-            if (_bonusScoreBuff)
-            {
-                for (int i = 0; i <= Random.Range(0, MAX_RANDOM_DROP_SCORE_BONUS); i++)
-                {
-                    Instantiate(_bonusScoreBuff);
-                    _bonusScoreBuff.transform.position = gameObject.transform.position;
-                }
+                case BonusDropTypeEnum.Score:
+                    for (int i = 0; i <= Random.Range(0, MAX_RANDOM_DROP_SCORE_BONUS); i++)
+                    {
+                        BonusPool
+                            .GetOrCreate()
+                            .SpawnAt(transform.position, BonusPool.Get.Score1000Bonus);
+                    }
+                    
+                    break;
+                
+                case BonusDropTypeEnum.Weapon:
+                    for (int i = 0; i <= Random.Range(0, MAX_RANDOM_DROP_WEAPON_BONUS); i++)
+                    {
+                        BonusPool
+                            .GetOrCreate()
+                            .SpawnAt(transform.position, BonusPool.Get.WeaponBonus);
+                    }
+                    
+                    break;
             }
         }
     }

@@ -12,10 +12,10 @@ GameObject:
   - component: {fileID: 7008038911934347922}
   - component: {fileID: 1481939122143068326}
   - component: {fileID: 654588986628493432}
-  - component: {fileID: 7119211649962542834}
   - component: {fileID: 5844155320413957961}
+  - component: {fileID: 4776867073583859010}
   m_Layer: 0
-  m_Name: BonusScoreBuff
+  m_Name: BonusPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -29,7 +29,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4461109801838719764}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 1.3614606, y: 1.8923782, z: 0}
+  m_LocalPosition: {x: 0.20247644, y: 0.14865594, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -135,22 +135,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
---- !u!114 &7119211649962542834
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4461109801838719764}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 49cec88d2e82a024bb738ba0cb478db6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_initialSpeedModifier: 1.5
-  m_moveSpeedModifier: 9
-  m_magnetRadius: 2.5
-  m_audioSource: {fileID: 5844155320413957961}
 --- !u!82 &5844155320413957961
 AudioSource:
   m_ObjectHideFlags: 0
@@ -247,3 +231,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &4776867073583859010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4461109801838719764}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 04ddb60d4252ab443a12966589b6773d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  BonusBehaviour: {fileID: 0}
+  m_initialSpeedModifier: 3
+  m_moveSpeedModifier: 9
+  m_magnetRadius: 2.4
+  m_audioSource: {fileID: 5844155320413957961}

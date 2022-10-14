@@ -10,7 +10,7 @@ using UnityEngine;
 
 namespace DMSH.Objects.Projectiles
 {
-    [CreateAssetMenu(menuName = "DMSH/ProjectileFlyPattern")]
+    [CreateAssetMenu(menuName = "DMSH/Projectile/ProjectileFlyPattern")]
     public class ProjectileFlyBehaviorScriptableObject : ScriptableObject
     {
         [SerializeField]

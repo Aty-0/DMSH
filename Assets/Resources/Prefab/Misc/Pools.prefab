@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4768697196136591806}
   - component: {fileID: 1875820923505709250}
+  - component: {fileID: 7575741185279042512}
   m_Layer: 0
   m_Name: Pools
   m_TagString: Untagged
@@ -30,7 +31,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 13
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1875820923505709250
 MonoBehaviour:
@@ -44,5 +45,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2b19265fa674407e890d2e1197b45169, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_precacheCount: 256
   m_projectilePrefab: {fileID: 2641599803358856708, guid: 97eb3fb14d8798f44954fb57b1d6ed3f, type: 3}
+  m_precacheCount: 256
+--- !u!114 &7575741185279042512
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7686560528989354561}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1ccbbdda4fa4e9eb7c694a2e4a71963, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_projectilePrefab: {fileID: 4461109801838719764, guid: 6153ae2a2284cb341b1427520964dacf, type: 3}

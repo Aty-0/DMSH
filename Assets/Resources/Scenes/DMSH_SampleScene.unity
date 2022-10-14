@@ -2396,6 +2396,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7575741185279042512, guid: 3375cef3ffe202d4ea7c16a64a58a499, type: 3}
+      propertyPath: m_wewaponBonus
+      value: 
+      objectReference: {fileID: 11400000, guid: 59c2b16ad3b96ea418c1f90dc7fda46a, type: 2}
+    - target: {fileID: 7575741185279042512, guid: 3375cef3ffe202d4ea7c16a64a58a499, type: 3}
+      propertyPath: m_1000ScoreBonus
+      value: 
+      objectReference: {fileID: 11400000, guid: 085f3a605e2074b46957abe3939db2ff, type: 2}
     - target: {fileID: 7686560528989354561, guid: 3375cef3ffe202d4ea7c16a64a58a499, type: 3}
       propertyPath: m_Name
       value: Pools

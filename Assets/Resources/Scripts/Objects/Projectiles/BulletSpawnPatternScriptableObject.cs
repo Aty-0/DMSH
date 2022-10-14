@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace DMSH.Objects.Projectiles
 {
-    [CreateAssetMenu(menuName = "DMSH/ProjectileSpawnPattern")]
+    [CreateAssetMenu(menuName = "DMSH/Projectile/ProjectileSpawnPattern")]
     public class BulletSpawnPatternScriptableObject : ScriptableObject
     {
         [SerializeField]

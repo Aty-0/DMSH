@@ -4,16 +4,22 @@ using DMSH.Characters;
 using DMSH.Gameplay;
 using DMSH.Misc;
 
+using Scripts.Utils.Pools;
+
+using System;
+
 using UnityEditor;
 
 namespace DMSH.Objects.Bonuses
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(AudioSource))]
-    public abstract class Bonus : MonoBehaviour
+    public class Bonus : MonoBehaviour
     {
         private static readonly Vector2 INITIAL_FALL_DIRECTION = new(0, 4);
         private static readonly Vector2 DEFAULT_FALL_DIRECTION = new(0, -2);
+
+        public IBonusBehaviour BonusBehaviour;
 
         [SerializeField]
         private float m_initialSpeedModifier = 3f;
@@ -22,15 +28,15 @@ namespace DMSH.Objects.Bonuses
         private float m_moveSpeedModifier = 9f;
 
         [SerializeField]
-        private float m_magnetRadius;
+        private float m_magnetRadius = 2.4f;
 
         [SerializeField]
         private AudioSource m_audioSource;
         public AudioSource AudioSource => m_audioSource;
 
-        protected Rigidbody2D Rigidbody;
-        protected SpriteRenderer Renderer;
-        protected Collider2D Collider;
+        public Rigidbody2D Rigidbody { get; private set; }
+        public SpriteRenderer Renderer { get; private set; }
+        public Collider2D Collider { get; private set; }
 
         private Timer _destroyTimer;
         private float _directionChangeLerp;
@@ -59,6 +65,22 @@ namespace DMSH.Objects.Bonuses
             _destroyTimer.StartTimer();
         }
 
+        protected void OnEnable()
+        {
+            if (_destroyTimer != null)
+            {
+                _destroyTimer.RestartTimer();
+            }
+        }
+
+        protected void OnDisable()
+        {
+            if (_destroyTimer != null)
+            {
+                _destroyTimer.StopTimer();
+            }
+        }
+
         protected void Update()
         {
             if (_directionChangeLerp < 1 && GlobalSettings.gameActiveAsBool)
@@ -74,7 +96,7 @@ namespace DMSH.Objects.Bonuses
                 Rigidbody.velocity = Vector2.zero;
                 return;
             }
-            
+
             if (PlayerController.Player != null)
             {
                 var playerPosition = PlayerController.Player.transform.position;
@@ -94,7 +116,15 @@ namespace DMSH.Objects.Bonuses
                     const float TRIGGER_DISTANCE = 0.6f;
                     if (distanceToPlayer <= TRIGGER_DISTANCE)
                     {
-                        Use(PlayerController.Player);
+                        if (BonusBehaviour != null)
+                        {
+                            BonusBehaviour.Use(this);
+                        }
+                        else
+                        {
+                            Debug.LogWarning($"No {nameof(BonusBehaviour)} on {nameof(Bonus)}!", this);
+                            Kill();
+                        }
                     }
                 }
                 else
@@ -114,11 +144,26 @@ namespace DMSH.Objects.Bonuses
 
         // APIs
 
-        protected abstract void Use(PlayerController player);
-
-        protected void Kill()
+        public void SpawnAt(Vector3 position, IBonusBehaviour bonusBehaviour)
         {
-            Destroy(gameObject, AudioSource.clip.length);
+            transform.position = position;
+            BonusBehaviour = bonusBehaviour;
+            if (BonusBehaviour != null)
+            {
+                BonusBehaviour.Apply(this);
+            }
+        }
+
+        public void Kill()
+        {
+            if (!BonusPool.TryRelease(this))
+            {
+                Destroy(gameObject, AudioSource.clip.length);
+                Debug.LogError($"Spawned bullet without pool! Will call direct destroy", this);
+                return;
+            }
+
+            BonusBehaviour = null;
         }
     }
 }
