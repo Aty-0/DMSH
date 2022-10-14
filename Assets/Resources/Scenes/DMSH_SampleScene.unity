@@ -637,6 +637,7 @@ MonoBehaviour:
   spawnerTimerTime: 0.5
   spawnerTimerTick: 0.5
   distanceBetweenObjects: 7
+  maxAugmentSpeed: 5
   distanceAccuracy: 0.1
   lineColor: {r: 1, g: 0, b: 0.07831144, a: 1}
   lifeTime: 20
@@ -761,6 +762,7 @@ MonoBehaviour:
   spawnerTimerTime: 0.5
   spawnerTimerTick: 0.5
   distanceBetweenObjects: 6
+  maxAugmentSpeed: 5
   distanceAccuracy: 0.1
   lineColor: {r: 0, g: 0.29662108, b: 1, a: 1}
   lifeTime: 20
@@ -878,6 +880,7 @@ MonoBehaviour:
   spawnerTimerTime: 0.5
   spawnerTimerTick: 0.5
   distanceBetweenObjects: 6
+  maxAugmentSpeed: 5
   distanceAccuracy: 0.1
   lineColor: {r: 0, g: 0.29662108, b: 1, a: 1}
   lifeTime: 20

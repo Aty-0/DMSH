@@ -212,67 +212,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!1 &2483376451655993570
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2489675750705107768}
-  - component: {fileID: 759148203187812659}
-  - component: {fileID: 32471182662921623}
-  m_Layer: 9
-  m_Name: BonusMagnet
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &2489675750705107768
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2483376451655993570}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.003, y: -0.015, z: 0}
-  m_LocalScale: {x: 1.7, y: 1.7, z: 1.7311561}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5158097134412944852}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!58 &759148203187812659
-CircleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2483376451655993570}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 1
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  serializedVersion: 2
-  m_Radius: 0.5
---- !u!114 &32471182662921623
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2483376451655993570}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5648b10cbb7089a4686be90bb4b1e762, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &3607991598455676696
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,7 +420,6 @@ Transform:
   - {fileID: 8854672541966849934}
   - {fileID: 3276473710699556215}
   - {fileID: 7150887283382471543}
-  - {fileID: 2489675750705107768}
   m_Father: {fileID: 5158097133582274870}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -554,7 +492,7 @@ MonoBehaviour:
   _currentCurvePoint: 0
   _speed: 7
   _rigidBody2D: {fileID: 0}
-  _boxCollider2D: {fileID: 0}
+  _Collider2D: {fileID: 0}
   _moveOffset: {x: 0, y: 0, z: 0}
   _pathSystem: {fileID: 0}
   _reduceSpeed: 1
@@ -686,7 +624,7 @@ MonoBehaviour:
   weaponBoostGain: 0
   ShotPoint: {fileID: 0}
   _useOwner: 0
-  _boxCollider2D: {fileID: 0}
+  _Collider2D: {fileID: 0}
 --- !u!114 &5188588155356166229
 MonoBehaviour:
   m_ObjectHideFlags: 0

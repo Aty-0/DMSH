@@ -6,27 +6,24 @@ namespace DMSH.Objects.Bonuses
 {
     public class BonusScoreBuff : Bonus
     {
-        protected void Start()
+        protected override void Use(PlayerController player)
         {
-            InitializeBasicBonusComponents();
-        }
-
-        public override void Use(PlayerController player)
-        {
-            if (!audioSource.isPlaying)
+            if (!AudioSource.isPlaying)
             {
                 Debug.Assert(player);
                 player.Score += 1000;
                 CreateBonusStatusText("+1000");
-                Destroy(gameObject, audioSource.clip.length);
-                audioSource.Play();
-                gameObject.GetComponent<Rigidbody2D>().isKinematic = true;
-                gameObject.GetComponent<SpriteRenderer>().enabled = false;
-                gameObject.GetComponent<Collider2D>().enabled = false;
+                AudioSource.Play();
+
+                Rigidbody.isKinematic = true;
+                Renderer.enabled = false;
+                Collider.enabled = false;
+                
+                Kill();
             }
         }
 
-        public void CreateBonusStatusText(string text)
+        private void CreateBonusStatusText(string text)
         {
             GameObject textGO = new GameObject();
             textGO.name = $"BonusStatusText{textGO.GetInstanceID()}";
