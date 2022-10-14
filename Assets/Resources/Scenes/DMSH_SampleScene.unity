@@ -152,6 +152,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: e58a14fe-7f2d-4a2e-8060-6df7fe8ebcf8
   waitTimer: {fileID: 0}
   useCurve: 0
   curvePoint: {x: -9.070283, y: 3.1101933, z: 0}
@@ -277,6 +278,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: ebf5a4b1-d269-436e-9703-e2212448cf57
   waitTimer: {fileID: 0}
   useCurve: 0
   curvePoint: {x: 0, y: 0, z: 0}
@@ -343,6 +345,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: 4ad1fde0-3bb7-4057-baa2-c5bc75b47eb2
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: -0.16473827, y: 4.3601933, z: 0}
@@ -379,6 +382,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: de59fd44-6813-4f91-b4b4-007ed8653dd5
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: -0.16473827, y: 4.3601933, z: 0}
@@ -445,6 +449,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: dd7ab8aa-6423-4561-9f00-7b2e9774eb0c
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: -0.3001901, y: 0.4785328, z: 0}
@@ -512,6 +517,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: 6d0f0f96-9102-42a8-8061-19d29ee887b5
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: 2.2746327, y: -1.4653503, z: 0}
@@ -563,6 +569,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: 633f6506-9bc5-40c0-bd58-1f40e1579e2f
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: 1.4297171, y: 1.8601933, z: 0}
@@ -630,6 +637,7 @@ MonoBehaviour:
   spawnerTimerTime: 0.5
   spawnerTimerTick: 0.5
   distanceBetweenObjects: 7
+  maxAugmentSpeed: 5
   distanceAccuracy: 0.1
   lineColor: {r: 1, g: 0, b: 0.07831144, a: 1}
   lifeTime: 20
@@ -685,6 +693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: da3415b5-4ef7-478a-96fb-3e4cfcbd9b47
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: -0.16473827, y: 4.3601933, z: 0}
@@ -753,6 +762,7 @@ MonoBehaviour:
   spawnerTimerTime: 0.5
   spawnerTimerTick: 0.5
   distanceBetweenObjects: 6
+  maxAugmentSpeed: 5
   distanceAccuracy: 0.1
   lineColor: {r: 0, g: 0.29662108, b: 1, a: 1}
   lifeTime: 20
@@ -870,6 +880,7 @@ MonoBehaviour:
   spawnerTimerTime: 0.5
   spawnerTimerTick: 0.5
   distanceBetweenObjects: 6
+  maxAugmentSpeed: 5
   distanceAccuracy: 0.1
   lineColor: {r: 0, g: 0.29662108, b: 1, a: 1}
   lifeTime: 20
@@ -928,6 +939,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: 0cf5e739-67be-4632-ad73-e3207979549f
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: 6.7301755, y: 1.9888927, z: 0}
@@ -1101,6 +1113,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: 5abe3049-bc7e-46d0-92ce-74485f48ac2b
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: -6.914738, y: 7.1101933, z: 0}
@@ -1137,6 +1150,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: 783d85f6-b8db-4b8e-a576-bc55eda552e7
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: 9.929717, y: 3.3601933, z: 0}
@@ -1189,6 +1203,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: 63f934fe-6650-48ab-9ad8-d92ca0cd39c5
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: -6.0393763, y: -0.57497025, z: 0}
@@ -1256,6 +1271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: ed11602f-bfd8-4ec9-a40b-307dfea15954
   waitTimer: {fileID: 0}
   useCurve: 1
   curvePoint: {x: 10.835262, y: 1.8601933, z: 0}
@@ -1600,6 +1616,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2060346917}
     - target: {fileID: 5188588155356166229, guid: 1ce61d9d483b1224599cf218480b5bc5, type: 3}
+      propertyPath: _uiSomeImage
+      value: 
+      objectReference: {fileID: 2069770156}
+    - target: {fileID: 5188588155356166229, guid: 1ce61d9d483b1224599cf218480b5bc5, type: 3}
       propertyPath: respawnPoint
       value: 
       objectReference: {fileID: 927803902}
@@ -1707,8 +1727,7 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents:
-    - {fileID: 5188588155356166229, guid: 1ce61d9d483b1224599cf218480b5bc5, type: 3}
+    m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 1ce61d9d483b1224599cf218480b5bc5, type: 3}
 --- !u!1 &2022167201
@@ -1834,6 +1853,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55095bda438aebb40a57de0490589f88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _ID: 004b43e7-6555-45dc-b68c-a67d65c7c114
   waitTimer: {fileID: 0}
   useCurve: 0
   curvePoint: {x: 0, y: 0, z: 0}
@@ -2313,6 +2333,17 @@ PrefabInstance:
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: da312d48bf9209841b85956bb07ab9e4, type: 3}
+--- !u!114 &2069770156 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4813038099463782102, guid: da312d48bf9209841b85956bb07ab9e4, type: 3}
+  m_PrefabInstance: {fileID: 2069770155}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &2978905473784888034
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2365,6 +2396,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7575741185279042512, guid: 3375cef3ffe202d4ea7c16a64a58a499, type: 3}
+      propertyPath: m_wewaponBonus
+      value: 
+      objectReference: {fileID: 11400000, guid: 59c2b16ad3b96ea418c1f90dc7fda46a, type: 2}
+    - target: {fileID: 7575741185279042512, guid: 3375cef3ffe202d4ea7c16a64a58a499, type: 3}
+      propertyPath: m_1000ScoreBonus
+      value: 
+      objectReference: {fileID: 11400000, guid: 085f3a605e2074b46957abe3939db2ff, type: 2}
     - target: {fileID: 7686560528989354561, guid: 3375cef3ffe202d4ea7c16a64a58a499, type: 3}
       propertyPath: m_Name
       value: Pools

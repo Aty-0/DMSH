@@ -86,8 +86,8 @@ namespace DMSH.Misc.Log
 
             Konsole.RegisterCommand("noclip", context =>
             {
-                PlayerController.Player.boxCollider2D.enabled = !PlayerController.Player.boxCollider2D.enabled;
-                context.Log($"{TextTags.Bold("Noclip")} is {(PlayerController.Player.boxCollider2D.enabled ? "Enabled" : "Disabled")}");
+                PlayerController.Player.Collider2D.enabled = !PlayerController.Player.Collider2D.enabled;
+                context.Log($"{TextTags.Bold("Noclip")} is {(PlayerController.Player.Collider2D.enabled ? "Enabled" : "Disabled")}");
             });
 
             // ?

@@ -312,7 +312,7 @@ MonoBehaviour:
   _currentCurvePoint: 0
   _speed: 7
   _rigidBody2D: {fileID: 0}
-  _boxCollider2D: {fileID: 0}
+  _Collider2D: {fileID: 0}
   _moveOffset: {x: 0, y: 0, z: 0}
   _pathSystem: {fileID: 0}
   _reduceSpeed: 1
@@ -329,8 +329,7 @@ MonoBehaviour:
   _health: 0
   _reduceHealth: 1.5
   _showDamageStatusText: 1
-  _bonusWeaponBuff: {fileID: 4162459214245127621, guid: 307332adac44dfa499659c92f6c259e9, type: 3}
-  _bonusScoreBuff: {fileID: 4461109801838719764, guid: 6153ae2a2284cb341b1427520964dacf, type: 3}
+  m_bonusDropType: 1
   _playerController: {fileID: 0}
   _deathParticle: {fileID: 6997500095999071746}
   _deathAudioSource: {fileID: 7466140917204400368}
@@ -447,6 +446,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_firePattern: {fileID: 11400000, guid: 52b40da03bfa26e429284df524b5f9e2, type: 2}
+  m_isEnemy: 1
   shotFrequency: 0.4
   canBeUsed: 1
   _weaponEnabled: 0
@@ -454,7 +454,7 @@ MonoBehaviour:
   weaponBoostGain: 0
   ShotPoint: {fileID: 0}
   _useOwner: 0
-  _boxCollider2D: {fileID: 0}
+  _Collider2D: {fileID: 0}
 --- !u!1001 &5799921381402374756
 PrefabInstance:
   m_ObjectHideFlags: 0
