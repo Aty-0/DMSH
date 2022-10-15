@@ -1,46 +1,65 @@
+using DMSH.Misc;
+
+using Scripts.Utils.Pools;
+
 using System.Collections;
+
 using UnityEngine;
+
 using TMPro;
 
-namespace DMSH.Misc.Animated
+namespace DMSH.UI
 {
-    public class DamageStatusText : MonoBehaviour
+    public class UI_BonusStatText : MonoBehaviour
     {
-        public string text = string.Empty;
-        public float fontSize = 12.0f;
+        [SerializeField]
+        private TextMeshPro m_textTMP;
 
-        [SerializeField] 
-        private TextMeshPro _textTMP;
-        [SerializeField] 
         private Coroutine _fadeAnimationCoroutine;
-        [SerializeField] 
         private Coroutine _goUpAnimationCoroutine;
 
-        protected void Start()
+        // public
+        
+        public void SpawnAt(Vector3 position, string text)
         {
-            _textTMP = gameObject.AddComponent<TextMeshPro>();
-            _textTMP.text = text;
-            _textTMP.font = Resources.Load<TMP_FontAsset>("Fonts/mom_SDF");
-            _textTMP.fontSize = fontSize;
+            transform.position = position;
+            
+            m_textTMP.text = text;
 
+            if (_fadeAnimationCoroutine != null)
+            {
+                Debug.LogWarning($"{nameof(_fadeAnimationCoroutine)} already launched! Logic bug!", this);
+            }
+            
             _fadeAnimationCoroutine = StartCoroutine(DamageStatusTextFadeAnimation());
+
+            if (_goUpAnimationCoroutine != null)
+            {
+                Debug.LogWarning($"{nameof(_goUpAnimationCoroutine)} already launched! Logic bug!", this);
+            }
+            
             _goUpAnimationCoroutine = StartCoroutine(DamageStatusTextGoUpAnimation());
         }
+        
+        // private 
 
         private void OnDestroyDamageText()
         {
             StopCoroutine(_fadeAnimationCoroutine);
+            _fadeAnimationCoroutine = null;
             StopCoroutine(_goUpAnimationCoroutine);
-            Destroy(gameObject);
+            _goUpAnimationCoroutine = null;
+
+            BonusStatsTextPool.TryRelease(this);
         }
 
         private IEnumerator DamageStatusTextGoUpAnimation()
         {
-            Vector2 initPos = _textTMP.transform.position;
+            Vector2 initPos = m_textTMP.transform.position;
             while (initPos.y < initPos.y + 2.0f)
             {
                 initPos.y += 0.02f * GlobalSettings.gameActiveAsInt;
-                _textTMP.transform.position = initPos;
+                m_textTMP.transform.position = initPos;
                 yield return new WaitForSeconds(0.01f);
             }
         }
@@ -51,7 +70,7 @@ namespace DMSH.Misc.Animated
             while (alpha > 0.0f)
             {
                 alpha -= 0.01f * GlobalSettings.gameActiveAsInt;
-                _textTMP.color = new Color(1, 1, 1, alpha);
+                m_textTMP.color = new Color(1, 1, 1, alpha);
                 yield return new WaitForSeconds(0.01f);
             }
 

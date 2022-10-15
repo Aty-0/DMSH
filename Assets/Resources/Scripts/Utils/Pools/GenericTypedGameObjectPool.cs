@@ -15,7 +15,10 @@ namespace Scripts.Utils.Pools
         public virtual int PrecacheCount => 32;
 
         [SerializeField]
-        private GameObject m_projectilePrefab;
+        private GameObject m_pooledPrefab;
+
+        [SerializeField]
+        private Transform m_parentTo;
 
         private readonly List<(bool inUse, TPoolElement go)> _pool = new(32);
 
@@ -31,9 +34,13 @@ namespace Scripts.Utils.Pools
             var chunkSize = PRECACHE_CHUNK_SIZE;
             for (var i = 0; i < PrecacheCount; i++)
             {
-                var createdGo = Instantiate(m_projectilePrefab);
+                var createdGo = Instantiate(m_pooledPrefab);
 #if UNITY_EDITOR
-                createdGo.transform.SetParent(GameObject.Find("Pools").transform);
+                createdGo.transform.SetParent(
+                    m_parentTo == null
+                        ? GameObject.Find("Pools").transform
+                        : m_parentTo);
+
                 createdGo.name = $"{TypeName}_{i}";
 #endif
                 createdGo.SetActive(false);
@@ -64,9 +71,12 @@ namespace Scripts.Utils.Pools
                 }
             }
 
-            var createdGo = Instantiate(Get.m_projectilePrefab);
+            var createdGo = Instantiate(Get.m_pooledPrefab);
 #if UNITY_EDITOR
-            createdGo.transform.SetParent(GameObject.Find("Pools").transform);
+            createdGo.transform.SetParent(
+                Get.m_parentTo == null
+                    ? GameObject.Find("Pools").transform
+                    : Get.m_parentTo);
             createdGo.name = $"Projectile_{Get._pool.Count}";
 #endif
             var component = createdGo.GetComponent<TPoolElement>();

@@ -1242,6 +1242,11 @@ Transform:
   m_Father: {fileID: 1408109148}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!224 &1905506213 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 386859477558106205, guid: da312d48bf9209841b85956bb07ab9e4, type: 3}
+  m_PrefabInstance: {fileID: 2069770155}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1966268735
 GameObject:
   m_ObjectHideFlags: 0
@@ -2408,6 +2413,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Pools
       objectReference: {fileID: 0}
+    - target: {fileID: 8747363011577208463, guid: 3375cef3ffe202d4ea7c16a64a58a499, type: 3}
+      propertyPath: m_parentTo
+      value: 
+      objectReference: {fileID: 1905506213}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: 3375cef3ffe202d4ea7c16a64a58a499, type: 3}
