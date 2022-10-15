@@ -170,14 +170,11 @@ namespace DMSH.Characters
             }
         }
 
-        public void CreateDamageStatusText(string text)
+        private void CreateDamageStatusText(string text)
         {
-            GameObject textGO = new GameObject();
-            textGO.name = $"ReduceHealthTextMesh{textGO.GetInstanceID()}";
-            textGO.transform.position = transform.position;
-            textGO.transform.localScale = new Vector3(0.25f, 0.25f, 1);
-            DamageStatusText dst = textGO.AddComponent<DamageStatusText>();
-            dst.text = text;
+            BonusStatsTextPool
+                .GetOrCreate()
+                .SpawnAt(transform.position, text);
         }
 
         public void Damage()
