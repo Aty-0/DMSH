@@ -17,15 +17,21 @@ namespace DMSH.Objects.Projectiles.Editor
             var angleConversionValue = (ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum) angleConverterProperty.enumValueIndex;
             switch (angleConversionValue)
             {
-                case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.FaceToEnemy:
+                case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.InPlayerDirection:
                     break;
 
-                case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.FaceToEnemy_PlusAngle:
+                case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.InPlayerDirection_PlusAngle:
                 case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectAngle:
                     fieldsCount++;
                     break;
 
                 case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectDirection:
+                    fieldsCount++;
+                    break;
+                
+                case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectAngle_WithRandomFactor:
+                    fieldsCount++;
+                    fieldsCount++;
                     fieldsCount++;
                     break;
 
@@ -64,13 +70,22 @@ namespace DMSH.Objects.Projectiles.Editor
             var angleConversionValue = (ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum) angleConverterProperty.enumValueIndex;
             switch (angleConversionValue)
             {
-                case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.FaceToEnemy:
+                case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.InPlayerDirection:
                     break;
 
-                case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.FaceToEnemy_PlusAngle:
+                case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.InPlayerDirection_PlusAngle:
                 case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectAngle:
                     var angleRect = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16);
                     EditorGUI.PropertyField(angleRect, property.FindPropertyRelative(nameof(ProjectileFlyBehaviorScriptableObject.ProjectileBehaviorStepStruct.Angle)));
+                    break;
+                
+                case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectAngle_WithRandomFactor:
+                    angleRect = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16);
+                    EditorGUI.PropertyField(angleRect, property.FindPropertyRelative(nameof(ProjectileFlyBehaviorScriptableObject.ProjectileBehaviorStepStruct.Angle)));
+                    var leftFactorRect = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16);
+                    EditorGUI.PropertyField(leftFactorRect, property.FindPropertyRelative(nameof(ProjectileFlyBehaviorScriptableObject.ProjectileBehaviorStepStruct.RandomFactorLeft)));
+                    var rightFactorRect = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16);
+                    EditorGUI.PropertyField(rightFactorRect, property.FindPropertyRelative(nameof(ProjectileFlyBehaviorScriptableObject.ProjectileBehaviorStepStruct.RandomFactorRight)));
                     break;
 
                 case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectDirection:

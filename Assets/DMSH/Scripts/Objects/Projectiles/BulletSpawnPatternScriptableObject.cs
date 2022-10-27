@@ -9,6 +9,9 @@ namespace DMSH.Objects.Projectiles
     [CreateAssetMenu(menuName = "DMSH/Projectile/ProjectileSpawnPattern")]
     public class BulletSpawnPatternScriptableObject : ScriptableObject
     {
+        [TextArea, SerializeField]
+        private string m_description;
+        
         [SerializeField]
         private ProjectileSpawnStepStruct[] m_steps;
 
@@ -86,7 +89,8 @@ namespace DMSH.Objects.Projectiles
                     && firedBullet.Pattern.TryGetCurrentStep(firedBullet, out var patternStep)
                     && patternStep.AngleConverter
                         is ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectAngle
-                        or ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.FaceToEnemy_PlusAngle
+                        or ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectAngle_WithRandomFactor
+                        or ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.InPlayerDirection_PlusAngle
                         or ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectDirection)
                 {
                     firedBullet.Pattern.RecalculateWithAngleOffset(firedBullet, step.AngleOffset);

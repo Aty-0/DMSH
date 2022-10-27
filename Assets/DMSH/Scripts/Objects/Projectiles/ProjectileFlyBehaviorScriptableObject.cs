@@ -1,5 +1,6 @@
 ﻿using DMSH.Characters;
-using DMSH.Gameplay;
+
+using GD.MinMaxSlider;
 
 using Scripts.Utils;
 using Scripts.Utils.Unity;
@@ -13,6 +14,9 @@ namespace DMSH.Objects.Projectiles
     [CreateAssetMenu(menuName = "DMSH/Projectile/ProjectileFlyPattern")]
     public class ProjectileFlyBehaviorScriptableObject : ScriptableObject
     {
+        [TextArea, SerializeField]
+        private string m_description;
+
         [SerializeField]
         private ProjectileBehaviorStepStruct[] m_steps;
 
@@ -27,7 +31,7 @@ namespace DMSH.Objects.Projectiles
 #endif
 
         // public
-        
+
         public bool TryGetCurrentStep(Bullet projectile, out ProjectileBehaviorStepStruct step)
         {
             step = default;
@@ -37,7 +41,7 @@ namespace DMSH.Objects.Projectiles
             if (m_steps.Length <= projectile.ProjectileState.StepIndex
                 || projectile.ProjectileState.StepIndex < 0)
                 return false;
-            
+
             step = m_steps[projectile.ProjectileState.StepIndex];
             return true;
         }
@@ -96,7 +100,7 @@ namespace DMSH.Objects.Projectiles
             var lerpVal = step.RelaunchType == ProjectileRelaunchTypeEnum.RelaunchEveryTickForLifetime
                 ? 1
                 : step.LifetimeDirectionModifier.Evaluate(1 - (currentState.Lifetime / step.Lifetime));
-            
+
             projectile.BulletDirection = Vector2.Lerp(
                 currentState.InitialDirection,
                 currentState.CalculatedDirection,
@@ -139,29 +143,36 @@ namespace DMSH.Objects.Projectiles
             Vector2 directionFromAngle;
             switch (step.AngleConverter)
             {
-                case ProjectileDirectionTypeEnum.FaceToEnemy:
+                case ProjectileDirectionTypeEnum.InPlayerDirection:
                     directionFromAngle = (PlayerController.Player.transform.position - projectile.transform.position).normalized;
                     break;
 
-                case ProjectileDirectionTypeEnum.FaceToEnemy_PlusAngle:
+                case ProjectileDirectionTypeEnum.InPlayerDirection_PlusAngle:
                     var preAngle = !projectile.IsEnemyBullet
                         ? new Vector2(0, -1)
                         : new Vector2(0, 1);
-                    var resultAngle = preAngle + MathUtils.RadianToVector2(step.Angle);
+                    var resultAngle = preAngle + MathUtils.RadianToVector2(step.Angle / 180 * Mathf.PI);
                     directionFromAngle = resultAngle.normalized;
                     break;
 
                 case ProjectileDirectionTypeEnum.DirectAngle:
-                    directionFromAngle = MathUtils.RadianToVector2(step.Angle);
+                    directionFromAngle = MathUtils.RadianToVector2(step.Angle / 180 * Mathf.PI);
+                    break;
+
+                case ProjectileDirectionTypeEnum.DirectAngle_WithRandomFactor:
+                    var angleOffset = UnityEngine.Random.Range(0, 100) >= 50
+                        ? -UnityEngine.Random.Range(step.RandomFactorLeft.x, step.RandomFactorLeft.y)
+                        : UnityEngine.Random.Range(step.RandomFactorRight.x, step.RandomFactorRight.y);
+                    directionFromAngle = MathUtils.RadianToVector2((step.Angle + angleOffset) / 180 * Mathf.PI);
                     break;
 
                 case ProjectileDirectionTypeEnum.DirectDirection:
                     directionFromAngle = step.Direction;
                     break;
-                
+
                 default:
                     Debug.LogError($"Projectile type ({step.AngleConverter}) not implemented! fallback to default", projectile);
-                    goto case ProjectileDirectionTypeEnum.FaceToEnemy;
+                    goto case ProjectileDirectionTypeEnum.InPlayerDirection;
             }
 
             if (step.DirectionSpeedModifier != 0)
@@ -183,7 +194,7 @@ namespace DMSH.Objects.Projectiles
                 projectile.gameObject.layer = step.SwitchOnMask.Index;
             }
         }
-        
+
         public void RecalculateWithAngleOffset(Bullet projectile, float angleOffset)
         {
             ref var currentState = ref projectile.ProjectileState;
@@ -192,31 +203,39 @@ namespace DMSH.Objects.Projectiles
             Vector2 directionFromAngle;
             switch (step.AngleConverter)
             {
-                case ProjectileDirectionTypeEnum.FaceToEnemy:
-                    var preAngle = (Vector2)(PlayerController.Player.transform.position - projectile.transform.position).normalized;
+                case ProjectileDirectionTypeEnum.InPlayerDirection:
+                    var preAngle = (Vector2) (PlayerController.Player.transform.position - projectile.transform.position).normalized;
                     var midAngle = preAngle + MathUtils.RadianToVector2(angleOffset);
                     directionFromAngle = midAngle.normalized;
                     break;
 
-                case ProjectileDirectionTypeEnum.FaceToEnemy_PlusAngle:
+                case ProjectileDirectionTypeEnum.InPlayerDirection_PlusAngle:
                     preAngle = !projectile.IsEnemyBullet
                         ? new Vector2(0, -1)
                         : new Vector2(0, 1);
-                    var resultAngle = preAngle + MathUtils.RadianToVector2(step.Angle + angleOffset);
+                    var resultAngle = preAngle + MathUtils.RadianToVector2((step.Angle + angleOffset) / 180 * Mathf.PI);
                     directionFromAngle = resultAngle.normalized;
                     break;
 
                 case ProjectileDirectionTypeEnum.DirectAngle:
-                    directionFromAngle = MathUtils.RadianToVector2(step.Angle + angleOffset);
+                    directionFromAngle = MathUtils.RadianToVector2((step.Angle + angleOffset) / 180 * Mathf.PI);
+                    break;
+
+                case ProjectileDirectionTypeEnum.DirectAngle_WithRandomFactor:
+                    var randomOffset = UnityEngine.Random.Range(0, 100) >= 50
+                        ? -UnityEngine.Random.Range(step.RandomFactorLeft.x, step.RandomFactorLeft.y)
+                        : UnityEngine.Random.Range(step.RandomFactorRight.x, step.RandomFactorRight.y);
+
+                    directionFromAngle = MathUtils.RadianToVector2((step.Angle + angleOffset + randomOffset) / 180 * Mathf.PI);
                     break;
 
                 case ProjectileDirectionTypeEnum.DirectDirection:
                     directionFromAngle = (step.Direction + MathUtils.RadianToVector2(angleOffset)).normalized;
                     break;
-                
+
                 default:
                     Debug.LogError($"Projectile type ({step.AngleConverter}) not implemented! fallback to default", projectile);
-                    goto case ProjectileDirectionTypeEnum.FaceToEnemy;
+                    goto case ProjectileDirectionTypeEnum.InPlayerDirection;
             }
 
             if (step.DirectionSpeedModifier != 0)
@@ -225,7 +244,8 @@ namespace DMSH.Objects.Projectiles
             }
 
             // set state
-            currentState.InitialDirection = (projectile.BulletDirection + MathUtils.RadianToVector2(angleOffset)).normalized;;
+            currentState.InitialDirection = (projectile.BulletDirection + MathUtils.RadianToVector2(angleOffset)).normalized;
+            ;
             currentState.CalculatedDirection = directionFromAngle;
         }
 
@@ -246,9 +266,15 @@ namespace DMSH.Objects.Projectiles
 
             public ProjectileDirectionTypeEnum AngleConverter;
             public Layer SwitchOnMask;
-            
+
             [Range(0, 360)]
             public float Angle;
+
+            // DirectAngle_WithRandomFactor
+            [MinMaxSlider(0, 180)]
+            public Vector2Int RandomFactorLeft;
+            [MinMaxSlider(0, 180)]
+            public Vector2Int RandomFactorRight;
 
             public ProjectileRelaunchTypeEnum RelaunchType;
             public int RelaunchTimes;
@@ -256,10 +282,11 @@ namespace DMSH.Objects.Projectiles
 
         public enum ProjectileDirectionTypeEnum
         {
-            FaceToEnemy = 0,
-            FaceToEnemy_PlusAngle = 1,
+            InPlayerDirection = 0,
+            InPlayerDirection_PlusAngle = 1,
             DirectAngle = 2,
             DirectDirection = 3,
+            DirectAngle_WithRandomFactor = 4,
         }
 
         public enum ProjectileRelaunchTypeEnum
