@@ -10,13 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 51ace89429124013970c5369d0379a7f, type: 3}
-  m_Name: Default_PlayerFlyPattern
+  m_Name: RandomMovement
   m_EditorClassIdentifier: 
-  m_description: "\u0412\u0435\u0440\u0442\u0438\u043A\u0430\u043B\u044C\u043D\u043E
-    \u0441\u043D\u0438\u0437\u0443 \u0432 \u0432\u0435\u0440\u0445"
+  m_description: "\u0421\u0442\u0440\u0435\u043B\u044F\u0435\u043C \u043F\u043E\u0434
+    \u0443\u0433\u043B\u043E\u043C 90* (\u0441\u043D\u0438\u0437\u0443 \u0432\u0432\u0435\u0440\u0445)
+    \u0441 \u0440\u0430\u0437\u0431\u0440\u043E\u0441\u043E\u043C\n"
   m_steps:
   - Lifetime: 4
-    DirectionSpeedModifier: 4
+    DirectionSpeedModifier: 1.35
     Direction: {x: 0, y: 1}
     LifetimeDirectionModifier:
       serializedVersion: 2
@@ -42,11 +43,11 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    AngleConverter: 3
+    AngleConverter: 4
     SwitchOnMask:
       m_layer: 3
-    Angle: 130
-    RandomFactorLeft: {x: 0, y: 0}
-    RandomFactorRight: {x: 0, y: 0}
+    Angle: 90
+    RandomFactorLeft: {x: 0, y: 32}
+    RandomFactorRight: {x: 0, y: 32}
     RelaunchType: 0
     RelaunchTimes: 0
