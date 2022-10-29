@@ -11,7 +11,7 @@ namespace DMSH.Objects.Projectiles.Editor
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            var fieldsCount = 6;
+            var fieldsCount = 5;
 
 #pragma warning disable CS0618
             var angleConverterProperty = property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.RepeatType));
@@ -83,7 +83,6 @@ namespace DMSH.Objects.Projectiles.Editor
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-
 
             EditorGUI.indentLevel = identBefore;
             EditorGUI.EndProperty();

@@ -11,7 +11,7 @@ namespace DMSH.Objects.Projectiles.Editor
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            var fieldsCount = 5;
+            var fieldsCount = 6;
 
             var angleConverterProperty = property.FindPropertyRelative(nameof(ProjectileFlyBehaviorScriptableObject.ProjectileBehaviorStepStruct.AngleConverter));
             var angleConversionValue = (ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum) angleConverterProperty.enumValueIndex;
@@ -28,7 +28,7 @@ namespace DMSH.Objects.Projectiles.Editor
                 case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectDirection:
                     fieldsCount++;
                     break;
-                
+
                 case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectAngle_WithRandomFactor:
                     fieldsCount++;
                     fieldsCount++;
@@ -39,7 +39,10 @@ namespace DMSH.Objects.Projectiles.Editor
                     throw new ArgumentOutOfRangeException();
             }
 
-            return EditorGUIUtility.singleLineHeight * fieldsCount + EditorGUIUtility.singleLineHeight + 6;
+            var modificatorsProperty = property.FindPropertyRelative(nameof(ProjectileFlyBehaviorScriptableObject.ProjectileBehaviorStepStruct.Modificators));
+            var modificatorsHeight = EditorGUI.GetPropertyHeight(modificatorsProperty);
+
+            return EditorGUIUtility.singleLineHeight * fieldsCount + 6 + modificatorsHeight;
         }
 
         public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
@@ -78,7 +81,7 @@ namespace DMSH.Objects.Projectiles.Editor
                     var angleRect = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16);
                     EditorGUI.PropertyField(angleRect, property.FindPropertyRelative(nameof(ProjectileFlyBehaviorScriptableObject.ProjectileBehaviorStepStruct.Angle)));
                     break;
-                
+
                 case ProjectileFlyBehaviorScriptableObject.ProjectileDirectionTypeEnum.DirectAngle_WithRandomFactor:
                     angleRect = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16);
                     EditorGUI.PropertyField(angleRect, property.FindPropertyRelative(nameof(ProjectileFlyBehaviorScriptableObject.ProjectileBehaviorStepStruct.Angle)));
@@ -98,6 +101,14 @@ namespace DMSH.Objects.Projectiles.Editor
             }
 
             EditorGUI.PropertyField(switchOnMaskRect, property.FindPropertyRelative(nameof(ProjectileFlyBehaviorScriptableObject.ProjectileBehaviorStepStruct.SwitchOnMask)));
+
+
+            var modificatorsProperty = property.FindPropertyRelative(nameof(ProjectileFlyBehaviorScriptableObject.ProjectileBehaviorStepStruct.Modificators));
+            var modificatorsHeight = EditorGUI.GetPropertyHeight(modificatorsProperty);
+            var modificatorsRect = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16 + modificatorsHeight);
+
+
+            EditorGUI.PropertyField(modificatorsRect, modificatorsProperty);
 
             EditorGUI.indentLevel = identBefore;
             EditorGUI.EndProperty();

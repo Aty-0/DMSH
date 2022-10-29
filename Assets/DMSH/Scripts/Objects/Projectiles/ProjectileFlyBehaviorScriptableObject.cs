@@ -1,4 +1,6 @@
 ﻿using DMSH.Characters;
+using DMSH.Scripts.Objects.Projectiles;
+using DMSH.UI;
 
 using GD.MinMaxSlider;
 
@@ -46,6 +48,7 @@ namespace DMSH.Objects.Projectiles
             return true;
         }
 
+        /// <summary>Apply fly behavior to projectile</summary>
         public void Tick(Bullet projectile)
         {
             if (m_steps == null || m_steps.Length == 0)
@@ -101,14 +104,92 @@ namespace DMSH.Objects.Projectiles
                 ? 1
                 : step.LifetimeDirectionModifier.Evaluate(1 - (currentState.Lifetime / step.Lifetime));
 
+            TickModificators(projectile, m_steps[currentState.StepIndex]);
+
             projectile.BulletDirection = Vector2.Lerp(
                 currentState.InitialDirection,
                 currentState.CalculatedDirection,
                 lerpVal);
         }
 
+        private void TickModificators(Bullet projectile, ProjectileBehaviorStepStruct step)
+        {
+            ref var projectileState = ref projectile.ProjectileState;
+
+            if (projectileState.ModificatorStates is null)
+                return;
+
+            var rightPanelSizeInPixels = UI_Root.Get.SidePanelRect.sizeDelta.x;
+            var gameCamera = PlayerController.Player.gameCamera;
+
+            var projectilePos = projectile.transform.position;
+            var posBefore = projectilePos;
+
+            for (var i = 0; i < projectile.ProjectileState.ModificatorStates.Count; i++)
+            {
+                var modState = projectile.ProjectileState.ModificatorStates[i];
+                switch (modState.Type)
+                {
+                    case ProjectileModificatorEnum.Unset:
+                        // ignore, why would we add it anyway?
+                        break;
+
+                    case ProjectileModificatorEnum.BounceFromWalls:
+                        if (modState.BounceCount > 0)
+                        {
+                            if (World2DUtils.IsOutOfGameView(projectilePos, gameCamera, rightPanelSizeInPixels, out var inScreenPos, 0.5f))
+                            {
+                                var collidedWith = World2DUtils.GetCollidedWall(projectilePos, gameCamera, rightPanelSizeInPixels);
+
+                                if ((collidedWith & modState.AffectedWalls) != 0)
+                                {
+                                    projectilePos = inScreenPos;
+
+                                    modState.BounceCount -= 1;
+
+                                    projectile.ProjectileState.ModificatorStates[i] = modState;
+
+                                    // apply angle direction
+                                    if (((collidedWith & WallsFlags.Top) != 0 && (modState.AffectedWalls & WallsFlags.Top) != 0)
+                                        || ((collidedWith & WallsFlags.Down) != 0 && (modState.AffectedWalls & WallsFlags.Down) != 0))
+                                    {
+                                        projectileState.CalculatedDirection.y *= -1;
+                                    }
+
+                                    if (((collidedWith & WallsFlags.Left) != 0 && (modState.AffectedWalls & WallsFlags.Left) != 0)
+                                        || ((collidedWith & WallsFlags.Right) != 0 && (modState.AffectedWalls & WallsFlags.Right) != 0))
+                                    {
+                                        projectileState.CalculatedDirection.x *= -1;
+                                    }
+                                }
+                                else
+                                {
+                                    // disable this modificator, because on next hit offscreen it will teleport projectile inside screen
+                                    modState.BounceCount = 0;
+
+                                    projectile.ProjectileState.ModificatorStates[i] = modState;
+                                }
+                            }
+                        }
+
+                        break;
+
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            }
+
+            if (posBefore != projectilePos)
+            {
+                projectile.transform.position = projectilePos;
+            }
+        }
+
+
         // private
 
+        /// <summary>is I can move to next step</summary>
+        /// <returns>true - yez</returns>
         private static bool CanRiseStepLogic(ref ProjectileStateStruct state, ProjectileBehaviorStepStruct step)
         {
             switch (step.RelaunchType)
@@ -138,6 +219,7 @@ namespace DMSH.Objects.Projectiles
             return true;
         }
 
+        /// <summary>Init projectile step behavior (direction/speed/etc)</summary>
         private static void StartNewStep(Bullet projectile, ref ProjectileStateStruct state, ProjectileBehaviorStepStruct step, bool applyLifetime)
         {
             Vector2 directionFromAngle;
@@ -193,8 +275,11 @@ namespace DMSH.Objects.Projectiles
             {
                 projectile.gameObject.layer = step.SwitchOnMask.Index;
             }
+
+            state.FillModificators(step.Modificators);
         }
 
+        /// <summary>Apply "angle modification" to settled projectile state</summary>
         public void RecalculateWithAngleOffset(Bullet projectile, float angleOffset)
         {
             ref var currentState = ref projectile.ProjectileState;
@@ -245,7 +330,7 @@ namespace DMSH.Objects.Projectiles
 
             // set state
             currentState.InitialDirection = (projectile.BulletDirection + MathUtils.RadianToVector2(angleOffset)).normalized;
-            ;
+
             currentState.CalculatedDirection = directionFromAngle;
         }
 
@@ -278,6 +363,8 @@ namespace DMSH.Objects.Projectiles
 
             public ProjectileRelaunchTypeEnum RelaunchType;
             public int RelaunchTimes;
+
+            public ProjectileModificator[] Modificators;
         }
 
         public enum ProjectileDirectionTypeEnum

@@ -11,5 +11,11 @@ namespace Scripts.Utils
         {
             return new Vector2(Mathf.Cos(radian), Mathf.Sin(radian));
         }
+        
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static float Vector2ToRadian(Vector2 direction)
+        {
+            return (float)Mathf.Atan2(direction.x, -direction.y);
+        }
     }
 }

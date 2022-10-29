@@ -43,7 +43,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    AngleConverter: 4
+    AngleConverter: 3
     SwitchOnMask:
       m_layer: 3
     Angle: 90
@@ -51,3 +51,4 @@ MonoBehaviour:
     RandomFactorRight: {x: 0, y: 32}
     RelaunchType: 0
     RelaunchTimes: 0
+    Modificators: []
