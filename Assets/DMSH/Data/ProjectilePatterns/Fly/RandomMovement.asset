@@ -51,7 +51,4 @@ MonoBehaviour:
     RandomFactorRight: {x: 0, y: 32}
     RelaunchType: 0
     RelaunchTimes: 0
-    Modificators:
-    - Type: 1
-      AffectedWalls: 7
-      BounceCount: 4
+    Modificators: []

@@ -45,9 +45,9 @@ MonoBehaviour:
     AngleConverter: 3
     SwitchOnMask:
       m_layer: 3
-    Angle: 130
-    RandomFactorLeft: {x: 0, y: 0}
-    RandomFactorRight: {x: 0, y: 0}
+    Angle: 90
+    RandomFactorLeft: {x: 0, y: 27}
+    RandomFactorRight: {x: 0, y: 22}
     RelaunchType: 0
     RelaunchTimes: 0
     Modificators: []

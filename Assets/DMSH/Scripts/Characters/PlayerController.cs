@@ -10,9 +10,11 @@ using DMSH.Misc.Log;
 using DMSH.Objects;
 using DMSH.LevelSpecifics.Stage;
 using DMSH.Gameplay;
+using DMSH.Scripts.Objects.Projectiles;
 using DMSH.UI;
 
 using Scripts.Utils;
+using Scripts.Utils.Pools;
 
 using System;
 using System.Text;
@@ -146,6 +148,9 @@ namespace DMSH.Characters
 
         protected void Start()
         {
+            // TODO move it to better place, like "world initializer"
+            GenericReusableList<ProjectileModificatorStateStruct>.CreatePool(32, 4);
+            
             // First initialize
             PrepareComponents();
             UpdateHUD();

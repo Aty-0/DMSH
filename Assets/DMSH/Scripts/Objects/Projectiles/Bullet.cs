@@ -78,7 +78,7 @@ namespace DMSH.Objects
 
         internal void OnEnable()
         {
-            ProjectileState = ProjectileStateStruct.CreateEmpty();
+            ProjectileState = ProjectileState.Reset();
             BulletDirection = new Vector2(0, -1);
 
             // If we are attach pathSystem on start 
@@ -213,7 +213,7 @@ namespace DMSH.Objects
                 _timer.StopTimer();
             }
 
-            ProjectileState = ProjectileStateStruct.CreateEmpty();
+            ProjectileState = ProjectileState.Reset();
             Pattern = null;
         }
 

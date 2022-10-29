@@ -1,10 +1,29 @@
-﻿using UnityEngine;
+﻿using DMSH.Scripts.Objects.Projectiles;
+
+using UnityEngine;
 
 namespace Scripts.Utils
 {
     public static class World2DUtils
     {
         public static void MoveRigidbodyInsideScreen(this Rigidbody2D src, Vector2 velocity, Camera camera, float removeFromRight)
+        {
+            src.velocity = velocity;
+
+            if (IsOutOfGameView(src.position, camera, removeFromRight, out var insidePosition))
+            {
+                src.position = insidePosition;
+            }
+        }
+
+        /// <summary>Is current position out of the game screen?</summary>
+        /// <param name="currentPosition">object position in world</param>
+        /// <param name="camera">game camera</param>
+        /// <param name="removeFromRight">right panel size in pixels</param>
+        /// <param name="positionInWorld">updated position in game screen</param>
+        /// <param name="collidePositionOffset">move positionInWorld to center by this value offset</param>
+        /// <returns>true - if game object out of the game screen</returns>
+        public static bool IsOutOfGameView(Vector2 currentPosition, Camera camera, float removeFromRight, out Vector2 positionInWorld, float collidePositionOffset = 0)
         {
             var bottomLeft = camera.ScreenToWorldPoint(Vector3.zero);
             var topRight = camera.ScreenToWorldPoint(new Vector3(camera.pixelWidth - removeFromRight, camera.pixelHeight));
@@ -15,18 +34,87 @@ namespace Scripts.Utils
                 topRight.x - bottomLeft.x,
                 topRight.y - bottomLeft.y);
 
-            src.velocity = velocity;
-
-            var srcPosition = src.position;
             var clampedPosition = new Vector2(
-                Mathf.Clamp(srcPosition.x, cameraRect.xMin, cameraRect.xMax),
-                Mathf.Clamp(srcPosition.y, cameraRect.yMin, cameraRect.yMax)
+                Mathf.Clamp(currentPosition.x, cameraRect.xMin, cameraRect.xMax),
+                Mathf.Clamp(currentPosition.y, cameraRect.yMin, cameraRect.yMax)
             );
 
-            if (clampedPosition != srcPosition)
+            if (clampedPosition != currentPosition)
             {
-                src.position = clampedPosition;
+                if (collidePositionOffset > 0)
+                {
+                    if (clampedPosition.x == cameraRect.xMin)
+                    {
+                        clampedPosition.x += collidePositionOffset;
+                    }
+                    else if (clampedPosition.x == cameraRect.xMax)
+                    {
+                        clampedPosition.x -= collidePositionOffset;
+                    }
+
+                    if (clampedPosition.y == cameraRect.yMin)
+                    {
+                        clampedPosition.y += collidePositionOffset;
+                    }
+                    else if (clampedPosition.y == cameraRect.yMax)
+                    {
+                        clampedPosition.y -= collidePositionOffset;
+                    }
+                }
+
+                positionInWorld = clampedPosition;
+                return true;
             }
+
+            positionInWorld = default;
+            return false;
+        }
+
+        public static WallsFlags GetCollidedWall(Vector2 currentPosition, Camera camera, float removeFromRight)
+        {
+            var bottomLeft = camera.ScreenToWorldPoint(Vector3.zero);
+            var topRight = camera.ScreenToWorldPoint(new Vector3(camera.pixelWidth - removeFromRight, camera.pixelHeight));
+
+            var cameraRect = new Rect(
+                bottomLeft.x,
+                bottomLeft.y,
+                topRight.x - bottomLeft.x,
+                topRight.y - bottomLeft.y);
+
+            var result = WallsFlags.Unset;
+
+            if (currentPosition.x < cameraRect.xMin)
+            {
+                // left
+                result |= WallsFlags.Left;
+                result &= ~WallsFlags.Unset;
+            }
+            else if (currentPosition.x > cameraRect.xMax)
+            {
+                // right
+                result |= WallsFlags.Right;
+                result &= ~WallsFlags.Unset;
+            }
+
+            if (currentPosition.y > cameraRect.yMax)
+            {
+                // top
+                result |= WallsFlags.Top;
+                result &= ~WallsFlags.Unset;
+            }
+            else if (currentPosition.y < cameraRect.yMin)
+            {
+                // down
+                result |= WallsFlags.Down;
+                result &= ~WallsFlags.Unset;
+            }
+
+            return result;
+        }
+
+        public static Vector2 MoveToScreen(Vector2 sourcePosition, float valueInPixels)
+        {
+            return sourcePosition;
         }
     }
 }
