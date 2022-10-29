@@ -50,3 +50,4 @@ MonoBehaviour:
     RandomFactorRight: {x: 0, y: 0}
     RelaunchType: 0
     RelaunchTimes: 0
+    Modificators: []

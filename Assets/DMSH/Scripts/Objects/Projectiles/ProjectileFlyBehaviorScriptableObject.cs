@@ -1,4 +1,5 @@
 ﻿using DMSH.Characters;
+using DMSH.Scripts.Objects.Projectiles;
 
 using GD.MinMaxSlider;
 
@@ -278,6 +279,8 @@ namespace DMSH.Objects.Projectiles
 
             public ProjectileRelaunchTypeEnum RelaunchType;
             public int RelaunchTimes;
+
+            public ProjectileModificator[] Modificators;
         }
 
         public enum ProjectileDirectionTypeEnum

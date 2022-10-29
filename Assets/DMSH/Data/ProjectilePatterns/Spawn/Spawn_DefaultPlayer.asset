@@ -16,7 +16,7 @@ MonoBehaviour:
     \u0438\u0433\u0440\u043E\u043A\u0430"
   m_steps:
   - ToNextStepAfter: 0
-    bulletFlyPattern: {fileID: 11400000, guid: b29a0308a057d714e9ea0cc9c0ed6492, type: 2}
+    bulletFlyPattern: {fileID: 11400000, guid: fab238cb78ad3ff4cb4de1b2372aa500, type: 2}
     BulletSprite: {fileID: 21300000, guid: c6394ff3d4c8512488bbf5a4470fb641, type: 3}
     BulletSpriteColor: {r: 0.17475079, g: 0.26318562, b: 0.7264151, a: 1}
     RepeatType: 0
