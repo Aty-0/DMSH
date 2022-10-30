@@ -362,10 +362,10 @@ MonoBehaviour:
   _reduceSpeed: 1
   _augmentSpeed: 1
   _finalSpeed: 0
-  spriteRenderer: {fileID: 0}
-  gameCamera: {fileID: 0}
   playerInput: {fileID: 0}
   resizableGameElements: {fileID: 0}
+  m_animator: {fileID: 5321791737208014033}
+  m_spriteRenderer: {fileID: 5158097134412944855}
   _moveDirection: {x: 0, y: 0}
   _isDead: 0
   _cameraDeathAnimation: {fileID: 0}

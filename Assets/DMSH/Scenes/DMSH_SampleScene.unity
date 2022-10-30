@@ -1554,6 +1554,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7067424126246462346, guid: 6128b1f3b513a794ea480795f2e8e747, type: 3}
+      propertyPath: m_Name
+      value: DynamicCanvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 7067424126246462346, guid: 6128b1f3b513a794ea480795f2e8e747, type: 3}
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}

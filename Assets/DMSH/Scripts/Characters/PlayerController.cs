@@ -71,10 +71,18 @@ namespace DMSH.Characters
         #endregion
 
         [Header("Global")]
-        public SpriteRenderer   spriteRenderer = null;
         public PlayerInput      playerInput = null;
         public ResizableGameElements resizableGameElements = null;
 
+        [Header("Graphics")]
+        [SerializeField]
+        private Animator m_animator;
+        public Animator Animator => m_animator;
+        
+        [SerializeField]
+        private SpriteRenderer m_spriteRenderer;
+        public SpriteRenderer SpriteRenderer => m_spriteRenderer;
+        
         [SerializeField] 
         private Vector2 _moveDirection = Vector2.zero;
 
@@ -159,7 +167,6 @@ namespace DMSH.Characters
         private void PrepareComponents()
         {
             // Get all components
-            spriteRenderer = GetComponent<SpriteRenderer>();
             rigidBody2D = GetComponent<Rigidbody2D>();
             Collider2D = GetComponent<Collider2D>();
             playerInput = GetComponent<PlayerInput>();
@@ -328,9 +335,9 @@ namespace DMSH.Characters
                 _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
 
                 // Enable death animation
-                if (spriteRenderer.color.a < 0.9f)
+                if (SpriteRenderer.color.a < 0.9f)
                 {
-                    _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(spriteRenderer));
+                    _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(SpriteRenderer));
                 }
 
                 audioSourceMusic.Play();
@@ -421,7 +428,7 @@ namespace DMSH.Characters
             Life = PLAYER_MIN_LIFE;
 
             _isDead = true;
-            spriteRenderer.enabled = false;
+            SpriteRenderer.enabled = false;
             Collider2D.enabled = false;
             rigidBody2D.isKinematic = true;
             playerInput.enabled = false;
@@ -463,7 +470,7 @@ namespace DMSH.Characters
             }
             else
             {
-                _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(spriteRenderer));
+                _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(SpriteRenderer));
 
                 // Make everything slow
                 // Slow motion gameplay kekw
