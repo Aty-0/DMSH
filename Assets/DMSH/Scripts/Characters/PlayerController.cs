@@ -19,7 +19,6 @@ using Scripts.Utils.Pools;
 namespace DMSH.Characters
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    [RequireComponent(typeof(PlayerInput))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(Weapon))]
@@ -71,7 +70,6 @@ namespace DMSH.Characters
         #endregion
 
         [Header("Global")]
-        public PlayerInput      playerInput = null;
         public ResizableGameElements resizableGameElements = null;
 
         [Header("Graphics")]
@@ -85,6 +83,11 @@ namespace DMSH.Characters
         
         [SerializeField] 
         private Vector2 _moveDirection = Vector2.zero;
+        public Vector2 MoveDirection
+        {
+            get => _moveDirection;
+            set => _moveDirection = value;
+        }
 
         [HideInInspector] 
         [SerializeField] 
@@ -112,8 +115,7 @@ namespace DMSH.Characters
         [SerializeField] 
         private float _saved_time_scale = 0.0f;
 
-        [Header("Weapon")]
-        public Weapon                   weapon;
+        public Weapon                   Weapon { get; private set; }
 
         [Header("Sounds")]
         [SerializeField] 
@@ -169,8 +171,7 @@ namespace DMSH.Characters
             // Get all components
             rigidBody2D = GetComponent<Rigidbody2D>();
             Collider2D = GetComponent<Collider2D>();
-            playerInput = GetComponent<PlayerInput>();
-            weapon = GetComponent<Weapon>();
+            Weapon = GetComponent<Weapon>();
 
             _stageSystem = StageSystem.Get;
             if (_stageSystem == null)
@@ -251,40 +252,6 @@ namespace DMSH.Characters
             _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
         }
 
-        private void OnUseBoost(InputValue input)
-        {
-            if (GlobalSettings.gameActiveAsBool)
-            {
-                UseBoost();
-            }
-        }
-
-        private void OnShot(InputValue input)
-        {
-            if (GlobalSettings.gameActiveAsBool && input.isPressed)
-            {
-                weapon.Shot();
-            }
-            else
-            {
-                weapon.StopShooting();
-            }
-        }
-
-        private void OnMoveH(InputValue input)
-        {
-            _moveDirection.x = input.Get<Vector2>().x;
-        }
-
-        private void OnMoveV(InputValue input)
-        {
-            _moveDirection.y = input.Get<Vector2>().y;
-        }
-
-        private void OnPause(InputValue input)
-        {
-            ShowPauseScreen();
-        }
 
         public void ShowDeathScreen()
         {
@@ -344,7 +311,7 @@ namespace DMSH.Characters
             }
             else
             {
-                weapon.StopShooting();
+                Weapon.StopShooting();
 
                 if (_deathAwakeCoroutine != null)
                 {
@@ -360,9 +327,12 @@ namespace DMSH.Characters
                 audioSourceMusic.Pause();
             }
 
-            playerInput.currentActionMap.Disable();
-            playerInput.SwitchCurrentActionMap(UI_Root.Get.IsPauseMenuOpened ? "Pause" : "Player");
-            playerInput.currentActionMap.Enable();
+            var plInput = PlayerControl.Get.Input;
+            plInput.currentActionMap.Disable();
+            plInput.SwitchCurrentActionMap(UI_Root.Get.IsPauseMenuOpened
+                ? "Pause"
+                : "Player");
+            plInput.currentActionMap.Enable();
 
             UpdateSettings();
         }
@@ -389,7 +359,7 @@ namespace DMSH.Characters
                 GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
                 GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
                 GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActiveAsBool}");
-                GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {weapon.weaponBoostGain}");
+                GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {Weapon.weaponBoostGain}");
                 // GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {weapon.weaponType}");
             }
         }
@@ -423,7 +393,7 @@ namespace DMSH.Characters
                 StopCoroutine(_slowMotionCoroutine);
             }
 
-            weapon.StopShooting();
+            Weapon.StopShooting();
 
             Life = PLAYER_MIN_LIFE;
 
@@ -431,7 +401,7 @@ namespace DMSH.Characters
             SpriteRenderer.enabled = false;
             Collider2D.enabled = false;
             rigidBody2D.isKinematic = true;
-            playerInput.enabled = false;
+            PlayerControl.Get.Input.enabled = false;
 
             // Show death screen 
             ShowDeathScreen();

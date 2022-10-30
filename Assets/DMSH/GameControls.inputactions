@@ -1,1 +1,351 @@
-{"name":"GameControls","maps":[{"name":"Player","id":"cf5bd8bb-c8b1-4c65-a4e3-2294e94cb19b","actions":[{"name":"MoveV","type":"Value","id":"945a2105-eaf0-485c-bcfd-e1c1c96d825e","expectedControlType":"Vector2","processors":"","interactions":"","initialStateCheck":true},{"name":"MoveH","type":"Value","id":"96535894-6401-4577-9d12-3d6a58701c52","expectedControlType":"Vector2","processors":"","interactions":"","initialStateCheck":true},{"name":"Shot","type":"Button","id":"0bb889a5-fe0f-494e-838f-e2dc746de44f","expectedControlType":"Button","processors":"","interactions":"","initialStateCheck":false},{"name":"UseBoost","type":"Button","id":"a55fe427-c111-41f4-a7e0-cbc2377801ee","expectedControlType":"Button","processors":"","interactions":"","initialStateCheck":false},{"name":"Pause","type":"Button","id":"29589c47-1e14-49bd-b80d-03e029d52b98","expectedControlType":"Button","processors":"","interactions":"","initialStateCheck":false},{"name":"ToggleConsole","type":"Button","id":"28f5f2bd-810d-4181-b392-7e2ad4866d1f","expectedControlType":"Button","processors":"","interactions":"","initialStateCheck":false}],"bindings":[{"name":"2D Vector","id":"876df996-cf4a-4a44-9910-fd39b49a9e41","path":"2DVector","interactions":"Press(pressPoint=0.01,behavior=2)","processors":"","groups":"","action":"MoveH","isComposite":true,"isPartOfComposite":false},{"name":"left","id":"0ded0da2-c760-4c6c-827d-8da14c4f15b5","path":"<Keyboard>/a","interactions":"","processors":"","groups":"","action":"MoveH","isComposite":false,"isPartOfComposite":true},{"name":"right","id":"14e77a6d-d1f2-404e-a71f-f79330ba7cb0","path":"<Keyboard>/d","interactions":"","processors":"","groups":"","action":"MoveH","isComposite":false,"isPartOfComposite":true},{"name":"left","id":"45d181db-9f34-45a5-9def-3a2b33363ce0","path":"<Keyboard>/leftArrow","interactions":"","processors":"","groups":"","action":"MoveH","isComposite":false,"isPartOfComposite":true},{"name":"right","id":"1976ae4e-5dd8-4e55-a00a-b459bee9f7b9","path":"<Keyboard>/rightArrow","interactions":"","processors":"","groups":"","action":"MoveH","isComposite":false,"isPartOfComposite":true},{"name":"","id":"23b0939d-4c48-42a5-a5f3-a59ef9c40c60","path":"<Keyboard>/z","interactions":"Press(behavior=2)","processors":"Normalize(max=1)","groups":"","action":"Shot","isComposite":false,"isPartOfComposite":false},{"name":"","id":"3afe9d5a-28d1-455c-9885-de02b2bb914f","path":"<Keyboard>/x","interactions":"","processors":"","groups":"","action":"UseBoost","isComposite":false,"isPartOfComposite":false},{"name":"","id":"a460fd9b-913c-4f2b-a9c1-c1dbb3eeb279","path":"<Keyboard>/escape","interactions":"","processors":"","groups":"","action":"Pause","isComposite":false,"isPartOfComposite":false},{"name":"2D Vector","id":"ef602416-3f0a-45bc-97dd-a355f1f06055","path":"2DVector","interactions":"","processors":"","groups":"","action":"MoveV","isComposite":true,"isPartOfComposite":false},{"name":"up","id":"4c13a51f-d049-40d4-b247-291dad474064","path":"<Keyboard>/w","interactions":"","processors":"","groups":"","action":"MoveV","isComposite":false,"isPartOfComposite":true},{"name":"down","id":"edd39c32-78c0-4308-8558-63de829b8ed3","path":"<Keyboard>/s","interactions":"","processors":"","groups":"","action":"MoveV","isComposite":false,"isPartOfComposite":true},{"name":"up","id":"2e3707c1-d299-4560-99fb-63a75be0d225","path":"<Keyboard>/upArrow","interactions":"","processors":"","groups":"","action":"MoveV","isComposite":false,"isPartOfComposite":true},{"name":"down","id":"0ce5da2b-7c19-4768-8042-aac505fb9a89","path":"<Keyboard>/downArrow","interactions":"","processors":"","groups":"","action":"MoveV","isComposite":false,"isPartOfComposite":true},{"name":"","id":"c7b6e324-00e8-48a9-a886-b1c45b18d664","path":"<Keyboard>/backquote","interactions":"","processors":"","groups":"","action":"ToggleConsole","isComposite":false,"isPartOfComposite":false}]},{"name":"Pause","id":"6a2c7830-c344-42a8-aea9-f091df2125cb","actions":[{"name":"Pause","type":"Button","id":"df8ed196-e79c-400f-9c88-b76d4194a649","expectedControlType":"Button","processors":"","interactions":"","initialStateCheck":false},{"name":"ToggleConsole","type":"Button","id":"28f5f2bd-810d-4181-b392-7e2ad4866d1f","expectedControlType":"Button","processors":"","interactions":"","initialStateCheck":false}],"bindings":[{"name":"","id":"d3f65a3f-1ed0-480b-b159-14f1e0e6f371","path":"<Keyboard>/escape","interactions":"","processors":"","groups":"","action":"Pause","isComposite":false,"isPartOfComposite":false},{"name":"","id":"c7b6e324-00e8-48a9-a886-b1c45b18d664","path":"<Keyboard>/backquote","interactions":"","processors":"","groups":"","action":"ToggleConsole","isComposite":false,"isPartOfComposite":false}]},{"name":"Bagheads.Konsole","id":"b9d19517-6e90-4f5f-bc3b-8eaa6cedfb3e","actions":[{"name":"ToggleConsole","type":"Button","id":"28f5f2bd-810d-4181-b392-7e2ad4866d1f","expectedControlType":"Button","processors":"","interactions":"","initialStateCheck":false},{"name":"Tab","type":"Button","id":"e04ab66d-8c6e-4219-a2cf-81b38eaee429","expectedControlType)":"Button","processors":"","interactions":"","initialStateCheck":false},{"name":"SelectDirection","type":"Value","id":"1dbaaa18-5492-4b12-b3df-cfa8d7dc1f0a","expectedControlType":"Axis","processors":"","interactions":"","initialStateCheck":true}],"bindings":[{"name":"","id":"c7b6e324-00e8-48a9-a886-b1c45b18d664","path":"<Keyboard>/backquote","interactions":"","processors":"","groups":"IntegratedConsole","action":"ToggleConsole","isComposite":false,"isPartOfComposite":false},{"name":"","id":"4c31b343-1368-45e4-8192-2f96f464f943","path":"<Keyboard>/tab","interactions":"","processors":"","groups":"","action":"Tab","isComposite":false,"isPartOfComposite":false},{"name":"Arrows","id":"fd660627-1202-459f-9ba9-4726b593f6b2","path":"1DAxis","interactions":"","processors":"","groups":"","action":"SelectDirection","isComposite":true,"isPartOfComposite":false},{"name":"negative","id":"327b8f91-c715-4e51-9d44-d5ae48dd5fa6","path":"<Keyboard>/downArrow","interactions":"","processors":"","groups":"","action":"SelectDirection","isComposite":false,"isPartOfComposite":true},{"name":"positive","id":"950a169b-58cc-4c4b-9e95-48fa5296f955","path":"<Keyboard>/upArrow","interactions":"","processors":"","groups":"","action":"SelectDirection","isComposite":false,"isPartOfComposite":true}]}],"controlSchemes":[]}
+{
+    "name": "GameControls",
+    "maps": [
+        {
+            "name": "Player",
+            "id": "cf5bd8bb-c8b1-4c65-a4e3-2294e94cb19b",
+            "actions": [
+                {
+                    "name": "Shot",
+                    "type": "Button",
+                    "id": "0bb889a5-fe0f-494e-838f-e2dc746de44f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "UseBoost",
+                    "type": "Button",
+                    "id": "a55fe427-c111-41f4-a7e0-cbc2377801ee",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "29589c47-1e14-49bd-b80d-03e029d52b98",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleConsole",
+                    "type": "Button",
+                    "id": "033ad9bc-69f6-4667-8d85-5d55c918a93a",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Move",
+                    "type": "Value",
+                    "id": "c0b04f37-467f-402d-bfbd-a47c2adb4894",
+                    "expectedControlType": "Vector2",
+                    "processors": "NormalizeVector2",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "23b0939d-4c48-42a5-a5f3-a59ef9c40c60",
+                    "path": "<Keyboard>/z",
+                    "interactions": "Press(behavior=2)",
+                    "processors": "Normalize(max=1)",
+                    "groups": "",
+                    "action": "Shot",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3afe9d5a-28d1-455c-9885-de02b2bb914f",
+                    "path": "<Keyboard>/x",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "UseBoost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "a460fd9b-913c-4f2b-a9c1-c1dbb3eeb279",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "9c85b27d-1a56-43ba-8648-b089e7ad01c7",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleConsole",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "2D Vector WADS",
+                    "id": "94428714-e229-4ac4-9e21-a0dac9bf5b27",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "f5556004-1319-4a01-9bdb-9d509b952e60",
+                    "path": "<Keyboard>/w",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "e0e5409e-0719-4f43-907d-d4417173c685",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "5bf3c3ba-7c93-4744-afca-3031bf387f45",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "c3d5608a-91b4-44a3-b38c-2dbe4af7801e",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "2D Vector Arrows",
+                    "id": "fe94658a-1c97-4f62-a459-19a24cd97b68",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "86c0b54e-e646-4ec6-8006-5e2af8e2d89a",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "0ce83d3d-004d-453d-9ffe-b54caee96d3a",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "ab78f467-9df6-4973-9acd-cab9a3092ae2",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "55c151c8-dcd9-4fdc-8451-223e0e91ab3c",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Move",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        },
+        {
+            "name": "Pause",
+            "id": "6a2c7830-c344-42a8-aea9-f091df2125cb",
+            "actions": [
+                {
+                    "name": "Pause",
+                    "type": "Button",
+                    "id": "df8ed196-e79c-400f-9c88-b76d4194a649",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleConsole",
+                    "type": "Button",
+                    "id": "2a406e12-eed4-4cd8-a49b-be38aeb04381",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d3f65a3f-1ed0-480b-b159-14f1e0e6f371",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Pause",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "efc3208b-b276-4871-bb5c-07e82f1f8466",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleConsole",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Bagheads.Konsole",
+            "id": "b9d19517-6e90-4f5f-bc3b-8eaa6cedfb3e",
+            "actions": [
+                {
+                    "name": "ToggleConsole",
+                    "type": "Button",
+                    "id": "28f5f2bd-810d-4181-b392-7e2ad4866d1f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "Tab",
+                    "type": "Button",
+                    "id": "e04ab66d-8c6e-4219-a2cf-81b38eaee429",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "SelectDirection",
+                    "type": "Value",
+                    "id": "1dbaaa18-5492-4b12-b3df-cfa8d7dc1f0a",
+                    "expectedControlType": "Axis",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "c7b6e324-00e8-48a9-a886-b1c45b18d664",
+                    "path": "<Keyboard>/backquote",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "IntegratedConsole",
+                    "action": "ToggleConsole",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "4c31b343-1368-45e4-8192-2f96f464f943",
+                    "path": "<Keyboard>/tab",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Tab",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Arrows",
+                    "id": "fd660627-1202-459f-9ba9-4726b593f6b2",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectDirection",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "negative",
+                    "id": "327b8f91-c715-4e51-9d44-d5ae48dd5fa6",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectDirection",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "positive",
+                    "id": "950a169b-58cc-4c4b-9e95-48fa5296f955",
+                    "path": "<Keyboard>/upArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SelectDirection",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

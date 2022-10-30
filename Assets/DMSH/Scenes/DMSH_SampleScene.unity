@@ -123,6 +123,17 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!114 &279845718 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6004108817828936024, guid: f6707b8a5f21fa74e8582903ffcf8b92, type: 3}
+  m_PrefabInstance: {fileID: 891923457165695314}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a08ff090b950724d90418fb01356d18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &336938259
 GameObject:
   m_ObjectHideFlags: 0
@@ -1362,9 +1373,40 @@ PrefabInstance:
       propertyPath: stagesList.Array.data[0].stageObjects.Array.data[1]
       value: 
       objectReference: {fileID: 1502246292}
+    - target: {fileID: 5521658316434446301, guid: d28cabc38f1b83a48b25728f38787a95, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 985745947}
+    - target: {fileID: 5521658316434446301, guid: d28cabc38f1b83a48b25728f38787a95, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5521658316434446301, guid: d28cabc38f1b83a48b25728f38787a95, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 5396121820174603962}
+    - target: {fileID: 5521658316434446301, guid: d28cabc38f1b83a48b25728f38787a95, type: 3}
+      propertyPath: m_ActionEvents.Array.data[5].m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7384262645012721434, guid: d28cabc38f1b83a48b25728f38787a95, type: 3}
+      propertyPath: m_player
+      value: 
+      objectReference: {fileID: 279845718}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: d28cabc38f1b83a48b25728f38787a95, type: 3}
+--- !u!114 &5396121820174603962 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7384262645012721434, guid: d28cabc38f1b83a48b25728f38787a95, type: 3}
+  m_PrefabInstance: {fileID: 5396121820174603961}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d30e87dd160a4144baf99f48b82ff03b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &8103489975524730386
 PrefabInstance:
   m_ObjectHideFlags: 0
