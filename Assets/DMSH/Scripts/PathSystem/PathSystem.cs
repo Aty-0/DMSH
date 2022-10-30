@@ -90,7 +90,6 @@ namespace DMSH.Path
             }
         }
 
-#region Spawner
         private void SpawnObject()
         {
             spawnedObjectCount++;
@@ -137,9 +136,7 @@ namespace DMSH.Path
                 _lifetimeTimer.StartTimer();
             }
         }
-        #endregion
 
-        #region Utils
         public void UpdateElementChangedCallback()
         {
             foreach (Action action in onMovableObjectsChanged)
@@ -240,9 +237,8 @@ namespace DMSH.Path
             move_object.currentCurvePoint = 1;
             move_object.currentPoint++;
         }
-        #endregion
 
-        #region Debug        
+#if UNITY_EDITOR 
         protected void OnGUI()
         {
             if (GlobalSettings.debugDrawPSObjectInfo)
@@ -326,31 +322,24 @@ namespace DMSH.Path
             }
 
         }
+#endif
 
-#endregion
-
-        #region Update
         protected void Update()
         {
             // Check both lists on object exist
-            if (!pathPointsList.Any() || !movablePathObjectsList.Any())
+            if (pathPointsList.Count == 0 || movablePathObjectsList.Count == 0)
                 return;
-
-            // FIXME: I'm not sure about using this function in update method
-
-            // Will protect from unexpected deleted objects 
-            movablePathObjectsList.RemoveAll(o => o == null);
-
+          
             MovableObject futurePathObject = null;
-
             // TODO: Slip movement
             foreach (var mO in movablePathObjectsList.ToList())
             {
                 currentPathObject = mO;
 
-                // If current path object is null we are skip this
+                // If current path object is null we are skip that object and remove it from list
                 if (currentPathObject == null)
                 {
+                    movablePathObjectsList.Remove(currentPathObject);
                     continue;
                 }
 
@@ -457,6 +446,5 @@ namespace DMSH.Path
                 }
             }
         }
-        #endregion
     }
 }
