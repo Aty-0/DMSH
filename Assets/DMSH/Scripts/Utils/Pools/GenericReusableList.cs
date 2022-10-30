@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 
+using UnityEngine;
+
 namespace Scripts.Utils.Pools
 {
     public class GenericReusableList<T>
@@ -22,7 +24,10 @@ namespace Scripts.Utils.Pools
         public static void CreatePool(int initialSize, int initialListElementsCount = 4)
         {
             if (_pool != null)
-                throw new Exception("Already exists");
+            {
+                Debug.LogWarning($"Pool already exists! skip");
+                return;
+            }
 
             _pool = new GenericReusableList<T>(initialSize, initialListElementsCount);
         }
