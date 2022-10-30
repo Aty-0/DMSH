@@ -11,12 +11,14 @@ Shader "Custom/BackgroundShader"
     {
         Pass
         {
-            CGPROGRAM
+            Tags
+            {
+                "RenderType" = "Opaque" "RenderPipeline" = "UniversalPipeline" "IgnoreProjector" = "True"
+            }
 
+            CGPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-
-            #include "UnityCG.cginc"
 
             struct appdata
             {
@@ -28,12 +30,11 @@ Shader "Custom/BackgroundShader"
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
-
             };
 
             fixed4 _Color;
 
-            v2f vert(appdata v)
+            v2f vert(const appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
@@ -47,25 +48,26 @@ Shader "Custom/BackgroundShader"
             int _GameActive = 1;
             sampler2D _MainTex;
 
-            float3 G(float2 uv, float clampedSinTime, float aspect)
+            float3 G(float2 uv, float clamped_sin_time, float aspect)
             {
-                float sin_factor = sin(_Time.w) / 60;
+                const float sin_factor = sin(_Time.w) / 60;
                 float cos_factor = cos(_Time.w) / 60;
-                uv = (uv - 0.5) * .4f + 0.5;                
-                uv += mul(float2((uv.x - 0.5) * aspect, uv.y - 0.5),  float2x2(cos_factor, sin_factor - _SinTime.w, -sin_factor, -tan(cos_factor)));
+                uv = (uv - 0.5) * .4f + 0.5;
+                uv += mul(float2((uv.x - 0.5) * aspect, uv.y - 0.5),
+                          float2x2(cos_factor, sin_factor - _SinTime.w, -sin_factor, -tan(cos_factor)));
                 uv = float2((uv.x - 0.5) * aspect, uv.y - 0.5);
-                float d = sqrt(dot(uv, uv));
-                float radius = 0.006f;   
-                float thickness =  0.07f;
-                float t = 1 - fmod(smoothstep(abs(thickness / radius) * 100, 0, abs(-radius - d)), 1.0f);
+                const float d = sqrt(dot(uv, uv));
+                const float radius = 0.006f;
+                const float thickness = 0.07f;
+                const float t = 1 - fmod(smoothstep(abs(thickness / radius) * 100, 0, abs(-radius - d)), 1.0f);
                 return t;
-            }     
+            }
 
             float3 hash3(float2 p)
             {
-                float3 q = float3(dot(p, float2(127.1, 311.7)),
-                    dot(p, float2(269.5, 183.3)),
-                    dot(p, float2(419.2, 371.9)));
+                const float3 q = float3(dot(p, float2(127.1, 311.7)),
+                                        dot(p, float2(269.5, 183.3)),
+                                        dot(p, float2(419.2, 371.9)));
 
                 return frac(sin(q) * 43758.5453);
             }
@@ -74,9 +76,9 @@ Shader "Custom/BackgroundShader"
             {
                 fixed4 col = tex2D(_MainTex, input.uv);
 
-                float time = _Time.w;
-                float clampedSinTime = clamp(_SinTime.w, _Time.x / 500, _Time.y * 1000);
-                float aspect = _ScreenParams.x / _ScreenParams.y;
+                const float time = _Time.w;
+                const float clampedSinTime = clamp(_SinTime.w, _Time.x / 500, _Time.y * 1000);
+                const float aspect = _ScreenParams.x / _ScreenParams.y;
 
                 float t2 = 0;
                 t2 += dot(hash3(input.uv + time), 0.05f);
@@ -95,12 +97,12 @@ Shader "Custom/BackgroundShader"
                 f = f * 1.3f;
                 float s = dot(_SinTime, 0.02f);
                 col -= float4(f, 1);
-                col += float4(0.2f * s, s, s, 1) -.3f;
+                col += float4(0.2f * s, s, s, 1) - .3f;
                 col += float4(t2, t2, t2, 1);
 
                 return col;
             }
             ENDCG
-        }  
+        }
     }
 }

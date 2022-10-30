@@ -1,4 +1,5 @@
 ﻿using DMSH.Characters;
+using DMSH.Scripts.Controls;
 using DMSH.Scripts.Objects.Projectiles;
 using DMSH.UI;
 
@@ -120,7 +121,7 @@ namespace DMSH.Objects.Projectiles
                 return;
 
             var rightPanelSizeInPixels = UI_Root.Get.SidePanelRect.sizeDelta.x;
-            var gameCamera = PlayerController.Player.gameCamera;
+            var gameCamera = GameCamera.Get.Camera;
 
             var projectilePos = projectile.transform.position;
             var posBefore = projectilePos;

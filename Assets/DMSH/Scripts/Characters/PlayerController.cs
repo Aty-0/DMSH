@@ -9,6 +9,7 @@ using DMSH.Misc.Animated;
 using DMSH.Objects;
 using DMSH.LevelSpecifics.Stage;
 using DMSH.Gameplay;
+using DMSH.Scripts.Controls;
 using DMSH.Scripts.Objects.Projectiles;
 using DMSH.UI;
 
@@ -71,7 +72,6 @@ namespace DMSH.Characters
 
         [Header("Global")]
         public SpriteRenderer   spriteRenderer = null;
-        public Camera           gameCamera = null;
         public PlayerInput      playerInput = null;
         public ResizableGameElements resizableGameElements = null;
 
@@ -159,7 +159,6 @@ namespace DMSH.Characters
         private void PrepareComponents()
         {
             // Get all components
-            gameCamera = GetComponentInParent(typeof(Camera)) as Camera;
             spriteRenderer = GetComponent<SpriteRenderer>();
             rigidBody2D = GetComponent<Rigidbody2D>();
             Collider2D = GetComponent<Collider2D>();
@@ -172,7 +171,7 @@ namespace DMSH.Characters
 
             if (TryGetComponent(out resizableGameElements))
             {
-                resizableGameElements.gameCamera = gameCamera;
+                resizableGameElements.gameCamera = GameCamera.Get.Camera;
                 resizableGameElements.Initialize();
                 
                 // Set respawnPoint position
@@ -180,7 +179,7 @@ namespace DMSH.Characters
             }
 
             _cameraDeathAnimation = gameObject.AddComponent<CameraDeathAnimation>();
-            _cameraDeathAnimation.animCamera = gameCamera;
+            _cameraDeathAnimation.animCamera = GameCamera.Get.Camera;
             _cameraDeathAnimation.target = gameObject;
 
             // Don't show cursor when we are create the player 
