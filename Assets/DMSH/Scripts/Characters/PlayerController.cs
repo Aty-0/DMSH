@@ -6,7 +6,6 @@ using DMSH.Path;
 using DMSH.Misc;
 using DMSH.Misc.Screen;
 using DMSH.Misc.Animated;
-using DMSH.Misc.Log;
 using DMSH.Objects;
 using DMSH.LevelSpecifics.Stage;
 using DMSH.Gameplay;
@@ -15,9 +14,6 @@ using DMSH.UI;
 
 using Scripts.Utils;
 using Scripts.Utils.Pools;
-
-using System;
-using System.Text;
 
 namespace DMSH.Characters
 {
@@ -71,7 +67,6 @@ namespace DMSH.Characters
         public const int PLAYER_MAX_LIFE = 3;
         public const int PLAYER_MAX_BOOST = 5;
         public const int PLAYER_MIN_LIFE = -1;
-        public const int UI_ZEROS_SCORE_TEXT = 8;
         #endregion
 
         [Header("Global")]
@@ -302,7 +297,7 @@ namespace DMSH.Characters
             audioSourceMusic.Stop();
              
             // Show death screen
-            UI_Root.Get.SetDeathScreen(true, GetNumberWithZeros(Score));
+            UI_Root.Get.SetDeathScreen(true, StringUtils.GetNumberWithZeros(Score));
 
             // Stop game world
             Time.timeScale = 1.0f;
@@ -493,25 +488,9 @@ namespace DMSH.Characters
             }
         }
 
-        // Basic string tool to fill string with number also zeros 
-        public static string GetNumberWithZeros(int num)
-        {
-            // Initialize empty string
-            var resultText = new StringBuilder();
-            // Fill string by UI_ZEROS_SCORE_TEXT count subtract number length 
-            var numLength = Mathf.Max(0, Mathf.Floor(Mathf.Log10(num) + 1));
-            for (var i = 0; i <= UI_ZEROS_SCORE_TEXT - numLength; i++)
-            {
-                resultText.Append("0");
-            }
-            // Add number
-            resultText.Append(num);
-            return resultText.ToString();
-        }
-
         private void UpdateHUD()
         {
-            UI_Root.Get.UpdateGameHud(Life, GetNumberWithZeros(Score), Boost);
+            UI_Root.Get.UpdateGameHud(Life, StringUtils.GetNumberWithZeros(Score), Boost);
         }
 
         // That thing should update some player components
