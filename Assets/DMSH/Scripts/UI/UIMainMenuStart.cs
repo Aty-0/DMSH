@@ -4,6 +4,8 @@ using UnityEngine.UI;
 using DMSH.Misc;
 using DMSH.Misc.Animated;
 
+using TMPro;
+
 namespace DMSH.UI
 {
     public class UIMainMenuStart : MonoBehaviour
@@ -15,7 +17,7 @@ namespace DMSH.UI
         {
             if (GlobalSettings.mainMenuAwakeAnimation)
             {
-                foreach (Text text in FindObjectsOfType<Text>())
+                foreach (var text in FindObjectsOfType<TMP_Text>())
                 {
                     StartCoroutine(BasicAnimationsPack.SmoothAwakeText(text, _speed));
                 }

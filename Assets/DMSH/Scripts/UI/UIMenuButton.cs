@@ -4,6 +4,8 @@ using UnityEngine.EventSystems;
 
 using DMSH.Misc.Animated;
 
+using TMPro;
+
 // TODO: Drag, drop
 
 namespace DMSH.UI
@@ -12,14 +14,18 @@ namespace DMSH.UI
     public class UIMenuButton : Button, IDragHandler, IBeginDragHandler, IEndDragHandler
     {
         [SerializeField]
-        private Text _text;
+        private TMP_Text _text;
 
         private Coroutine _colorCoroutine = null;
         private Coroutine _scaleCoroutine = null;
 
         protected override void OnEnable()
         {
-            _text = GetComponentInChildren<Text>();
+            if (_text == null)
+            {
+                _text = GetComponentInChildren<TMP_Text>();
+            }
+
             _text.color = colors.normalColor;
 
             transform.localScale = Vector3.one;

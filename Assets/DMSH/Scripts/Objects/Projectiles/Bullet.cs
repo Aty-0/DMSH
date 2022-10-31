@@ -100,8 +100,16 @@ namespace DMSH.Objects
 
         internal void Start()
         {
-            rigidBody2D = GetComponent<Rigidbody2D>();
-            Collider2D = GetComponent<Collider2D>();
+            if (rigidBody2D == null)
+            {
+                rigidBody2D = GetComponent<Rigidbody2D>();
+            }
+
+            if (Collider2D == null)
+            {
+                Collider2D = GetComponent<Collider2D>();
+            }
+
             if (_trailRenderer == null)
             {
                 if (!TryGetComponent(out _trailRenderer))
