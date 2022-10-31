@@ -367,11 +367,18 @@ namespace DMSH.Characters
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (!_isDead
-                && collision.gameObject.TryGetComponent<IMovableObject>(out var movable)
-                && movable is Enemy or Bullet {IsEnemyBullet: true})
+            if (!_isDead)
             {
-                Damage();
+                if (ProjectilePool.TryGetByGo(collision.gameObject, out var collidedBullet)
+                    && collidedBullet.IsEnemyBullet)
+                {
+                    Damage();
+                }
+                else if(collision.gameObject.TryGetComponent<IMovableObject>(out var movable) && movable is Enemy)
+                {
+                    // TODO get rid of GetComponent
+                    Damage();
+                }
             }
         }
 

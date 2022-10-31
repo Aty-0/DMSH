@@ -7,7 +7,7 @@ using DMSH.Objects;
 using DMSH.Misc.Animated;
 
 using Scripts.Objects.Bonuses;
-
+using Scripts.Utils;
 using Scripts.Utils.Pools;
 
 namespace DMSH.Characters
@@ -156,11 +156,15 @@ namespace DMSH.Characters
 
             if (_deathParticle != null && !unspawn)
             {
-                _pathSystem?.DetachObject(this);
+                if (_pathSystem != null)
+                {
+                    _pathSystem.DetachObject(this);
+                }
+
                 _spriteRenderer.enabled = false;
                 _Collider2D.enabled = false;
-                ParticleSystemRenderer pr = _deathParticle.GetComponent<ParticleSystemRenderer>();
-                pr.material.color = _spriteRenderer.color;
+                var particleModule = _deathParticle.main;
+                particleModule.startColor = _spriteRenderer.color;
                 _deathParticle.Play();
                 Destroy(gameObject, _deathParticle.main.duration);
             }
@@ -181,7 +185,11 @@ namespace DMSH.Characters
         {
             if (!ignoreHits)
             {
-                _damageAudioSource?.Play();
+                if (_damageAudioSource != null)
+                {
+                    _damageAudioSource.Play();
+                }
+
                 OnDamage();
                 if (_health <= 0.0f)
                 {
@@ -214,26 +222,18 @@ namespace DMSH.Characters
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            Component[] components = collision.gameObject.GetComponents<Component>();
-            foreach (Component component in components)
+            if (collision.gameObject == PlayerController.Player.gameObject)
             {
-                switch (component)
+                if (weakType)
                 {
-                    case PlayerController p:
-                    {
-                        if (weakType)
-                        {
-                            Kill(false);
-                        }
-                        break;
-                    }
-                    case Bullet b:
-                    {
-                        b.Release();
-                        Damage();
-                        break;
-                    }
+                    Kill(false);
                 }
+            }
+
+            else if (ProjectilePool.TryGetByGo(collision.gameObject, out var bullet))
+            {
+                bullet.Release();
+                Damage();
             }
         }
 
