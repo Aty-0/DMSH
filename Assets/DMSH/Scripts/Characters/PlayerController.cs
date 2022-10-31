@@ -367,17 +367,11 @@ namespace DMSH.Characters
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            // TODO change on IsAlive or IsDead
-            if (!audioSourceDeath.isPlaying)
+            if (!_isDead
+                && collision.gameObject.TryGetComponent<IMovableObject>(out var movable)
+                && movable is Enemy or Bullet {IsEnemyBullet: true})
             {
-                var touchedMovableObjects = collision.gameObject.GetComponents<IMovableObject>();
-                foreach (var movableObject in touchedMovableObjects)
-                {
-                    if(movableObject is Enemy or Bullet {IsEnemyBullet: true})
-                    {
-                        Damage();
-                    }
-                }
+                Damage();
             }
         }
 
@@ -414,9 +408,9 @@ namespace DMSH.Characters
 
             if (_deathParticle)
             {
+                var particleModule = _deathParticle.main;
                 // TODO store it in variable
-                ParticleSystemRenderer pr = _deathParticle.GetComponent<ParticleSystemRenderer>();
-                pr.material.color = Color.red;
+                particleModule.startColor =Color.red; 
                 _deathParticle.transform.position = rigidBody2D.transform.position;
                 _deathParticle.Play();
             }

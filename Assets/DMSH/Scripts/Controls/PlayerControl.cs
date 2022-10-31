@@ -41,6 +41,8 @@ namespace DMSH.Scripts.Controls
                     Debug.LogWarning($"Player is not set, tried to find it and found ({m_player.name})!", this);
                 }
             }
+
+            m_input.SwitchCurrentActionMap("Player");
         }
 
         /// <summary>Call from <c>PlayerInput</c></summary>

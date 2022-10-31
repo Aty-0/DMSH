@@ -5,7 +5,7 @@
       "depth": 0,
       "source": "git",
       "dependencies": {},
-      "hash": "346c8b0f8954f7a85daa7de529b3122dcf989065"
+      "hash": "454d810b04833c6e8f867065f0000b5fe6c197a7"
     },
     "com.guciodevs.simple-min-max-slider": {
       "version": "https://github.com/GucioDevs/SimpleMinMaxSlider.git#upm",

@@ -40,7 +40,7 @@ namespace DMSH.Misc.Log
             {
                 FontSize = _fontSize,
                 DefaultTextFont = _font,
-                UseTextMeshPro = false
+                UseTextMeshPro = true
             });
 
             Konsole.OnKonsoleVisibleStateChanged += isConsoleVisible =>
