@@ -47,7 +47,7 @@ namespace DMSH.Characters
                 if (bullet.IsEnemyBullet &&
                     bullet.IsCollisionDestroyBullet)
                 {
-                    bullet.Unspawn();
+                    bullet.UnSpawn();
                 }
             }
         }

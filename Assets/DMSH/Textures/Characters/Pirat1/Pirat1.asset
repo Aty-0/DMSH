@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3255e67fccf94ef8ace0d62524776508, type: 3}
+  m_Name: Pirat1
+  m_EditorClassIdentifier: 
+  Animations:
+  - AnimationName: Idle stand
+    FPS: 10
+    Direction: 0
+    Type: 0
+    Sprites:
+    - {fileID: 1775944738, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: -1966807355, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: -1602757039, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: -793972856, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: -1602757039, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: -1966807355, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+  - AnimationName: Fly left
+    FPS: 10
+    Direction: 1
+    Type: 1
+    Sprites:
+    - {fileID: -1103364966, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: 954453849, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: -1260368715, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: 954453849, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+  - AnimationName: Fly right
+    FPS: 10
+    Direction: 2
+    Type: 1
+    Sprites:
+    - {fileID: 2130717202, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: -554061276, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: -509284890, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+    - {fileID: -554061276, guid: dd5458f3c717f134bb33a4f56aa5340c, type: 3}
+  - AnimationName: Idle attack
+    FPS: 10
+    Direction: 0
+    Type: 2
+    Sprites:
+    - {fileID: 1106350678, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+    - {fileID: -60720931, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+    - {fileID: 552030455, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+    - {fileID: -1734301528, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+  - AnimationName: Left attack
+    FPS: 10
+    Direction: 1
+    Type: 2
+    Sprites:
+    - {fileID: 1235247550, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+    - {fileID: -982320892, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+    - {fileID: -1416208898, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+    - {fileID: -982320892, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+  - AnimationName: Right attack
+    FPS: 10
+    Direction: 2
+    Type: 2
+    Sprites:
+    - {fileID: -674261280, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+    - {fileID: -1844150340, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+    - {fileID: -1445348739, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}
+    - {fileID: -1844150340, guid: bb6464d6322f17c498c0fd3a50b2ec83, type: 3}

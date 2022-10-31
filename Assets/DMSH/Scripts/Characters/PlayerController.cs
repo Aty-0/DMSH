@@ -82,7 +82,7 @@ namespace DMSH.Characters
         
         [SerializeField] 
         private Vector2 _moveDirection = Vector2.zero;
-        public Vector2 MoveDirection
+        public override Vector2 MoveDirection
         {
             get => _moveDirection;
             set => _moveDirection = value;
@@ -168,7 +168,7 @@ namespace DMSH.Characters
         private void PrepareComponents()
         {
             // Get all components
-            rigidBody2D = GetComponent<Rigidbody2D>();
+            RigidBody2D = GetComponent<Rigidbody2D>();
             Collider2D = GetComponent<Collider2D>();
             Weapon = GetComponent<Weapon>();
 
@@ -352,8 +352,8 @@ namespace DMSH.Characters
             if (GlobalSettings.debugDrawPlayerDGUI)
             {
                 GUI.Label(new Rect(100, 80, 500, 500),  $"DeltaTime: {Time.deltaTime}");
-                GUI.Label(new Rect(100, 120, 500, 500), $"Position: {rigidBody2D.position}");
-                GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {rigidBody2D.velocity}");
+                GUI.Label(new Rect(100, 120, 500, 500), $"Position: {RigidBody2D.position}");
+                GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {RigidBody2D.velocity}");
                 // GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weapon.weaponEnabled}");
                 GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
                 GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
@@ -400,7 +400,7 @@ namespace DMSH.Characters
             _isDead = true;
             SpriteRenderer.enabled = false;
             Collider2D.enabled = false;
-            rigidBody2D.isKinematic = true;
+            RigidBody2D.isKinematic = true;
             PlayerControl.Get.Input.enabled = false;
 
             // Show death screen 
@@ -417,7 +417,7 @@ namespace DMSH.Characters
                 var particleModule = _deathParticle.main;
                 // TODO store it in variable
                 particleModule.startColor =Color.red; 
-                _deathParticle.transform.position = rigidBody2D.transform.position;
+                _deathParticle.transform.position = RigidBody2D.transform.position;
                 _deathParticle.Play();
             }
 

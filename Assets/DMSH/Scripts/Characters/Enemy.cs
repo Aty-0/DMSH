@@ -18,7 +18,7 @@ namespace DMSH.Characters
     {
         public const int MAX_RANDOM_DROP_SCORE_BONUS = 4;
         public const int MAX_RANDOM_DROP_WEAPON_BONUS = 4;
-
+        
         [Header("Weapon")]
         public Weapon Weapon;
 
@@ -73,9 +73,9 @@ namespace DMSH.Characters
 
         protected void OnDisable()
         {
-            pathSystem = null;
+            PathSystem = null;
         }
-
+        
         public override void OnReachedPointEvent(EnemyScriptedBehavior enemyScriptedBehavior)
         {
             switch (enemyScriptedBehavior)
@@ -117,7 +117,7 @@ namespace DMSH.Characters
             }
         }
 
-        public override void Unspawn()
+        public override void UnSpawn()
         {
             Kill(false, true);
         }
@@ -275,12 +275,11 @@ namespace DMSH.Characters
         public void CopyTo(Enemy target)
         {
             target._spriteRenderer.sprite = _spriteRenderer.sprite;
-            target._spriteRenderer.color = _spriteRenderer.color;
             target.transform.localScale = transform.localScale;
             target.speed = speed;
             target._currentPoint = 0;
             target._currentCurvePoint = 0;
-            target.moveOffset = moveOffset;
+            target.MoveOffset = MoveOffset;
             target._lifes = _lifes;
             target._maxHealth = _maxHealth;
             target._reduceHealth = _reduceHealth;
