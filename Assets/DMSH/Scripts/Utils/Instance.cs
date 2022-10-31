@@ -12,6 +12,7 @@ namespace Scripts.Utils
             if (Get == null)
             {
                 Get = this as T;
+                OnInstanceStateChanged(true);
             }
         }
 
@@ -20,7 +21,13 @@ namespace Scripts.Utils
             if (Get == this)
             {
                 Get = null;
+                OnInstanceStateChanged(false);
             }
+        }
+
+        protected virtual void OnInstanceStateChanged(bool isInstanced)
+        {
+            
         }
     }
 }

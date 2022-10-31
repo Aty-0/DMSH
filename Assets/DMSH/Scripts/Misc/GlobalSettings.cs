@@ -1,22 +1,23 @@
+using DMSH.Characters;
+
 using System;
-using UnityEngine;
 
 // TODO: 1. Make functions to stop non DMSH Game elements 
 //       2. Read settings from game.json or something like that
 //       3. Save the current settings [Save volume, graphics preset, max scores]
 
 namespace DMSH.Misc
-{    
+{
     [Serializable]
     public static class GlobalSettings
     {
         // TODO:
         // Works only in unity editor, because we use gizmos
-        public static bool debugDrawInvWallSI           = false;
-        public static bool debugDrawWeaponPoints        = false;
-        public static bool debugDrawPSObjectInfo        = false;
-        public static bool debugDrawPSAllPoints         = false;
-        public static bool debugDrawPSCurrentMovement   = false;
+        public static bool debugDrawInvWallSI = false;
+        public static bool debugDrawWeaponPoints = false;
+        public static bool debugDrawPSObjectInfo = false;
+        public static bool debugDrawPSAllPoints = false;
+        public static bool debugDrawPSCurrentMovement = false;
         public static bool debugDrawPlayerDGUI = false;
 
         public static bool cheatGod = false;
@@ -30,44 +31,24 @@ namespace DMSH.Misc
         [NonSerialized]
         private static bool _gameActive = true;
 
-        public static int  gameActiveAsInt { get => Convert.ToInt32(_gameActive); }
-        public static bool gameActiveAsBool { get => _gameActive; }
+        public static int gameActiveAsInt => _gameActive ? 1 : 0;
+        public static bool gameActiveAsBool => _gameActive;
 
 
         public static void SetGameActive(bool gameActive)
         {
+            if (_gameActive == gameActive)
+                return;
+
             _gameActive = gameActive;
 
-            foreach (GameObject go in UnityEngine.Object.FindObjectsOfType<GameObject>())
+            if (_gameActive)
             {
-                Component[] components = go.GetComponents<Component>();
-
-                foreach (Component component in components)
-                {
-                    // TODO: Add another components
-                    if (true /* !_gameActive */) // TODO: Need to back previous properties, if we change something custom like time in trailRenderer
-                    {
-                        switch (component)
-                        {
-                            case Rigidbody2D rigidbody:
-                                // ! why? some bullets can't be moved with this logic
-                                // rigidbody.simulated = _gameActive;
-                                break;
-                            case TrailRenderer trail:
-                                trail.time = 0;
-                                break;
-                            case Animator animator:
-                                if (_gameActive)
-                                    animator.StopPlayback();
-                                else
-                                    animator.StartPlayback();
-                                break;
-                            default:
-                                continue;
-                                // TODO: Add another components
-                        }
-                    }
-                }
+                PlayerController.Player.Animator.StopPlayback();
+            }
+            else
+            {
+                PlayerController.Player.Animator.StartPlayback();
             }
         }
     }

@@ -286,7 +286,7 @@ Transform:
   m_GameObject: {fileID: 6742823706331438891}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 1}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 6235392219523000999}
@@ -311,16 +311,16 @@ MonoBehaviour:
   _currentPoint: 0
   _currentCurvePoint: 0
   _speed: 7
-  _rigidBody2D: {fileID: 0}
-  _Collider2D: {fileID: 0}
+  _rigidBody2D: {fileID: 3829573561018212415}
+  _Collider2D: {fileID: 3829573561018212412}
   _moveOffset: {x: 0, y: 0, z: 0}
   _pathSystem: {fileID: 0}
   _reduceSpeed: 1
   _augmentSpeed: 1
   _finalSpeed: 0
-  weapon: {fileID: 0}
+  Weapon: {fileID: 2258258786124978485}
   ignoreHits: 0
-  _spriteRenderer: {fileID: 0}
+  _spriteRenderer: {fileID: 3829573561018212413}
   weakType: 0
   onLastPointWillDestroy: 0
   _isDead: 0
@@ -330,7 +330,6 @@ MonoBehaviour:
   _reduceHealth: 1.5
   _showDamageStatusText: 1
   m_bonusDropType: 1
-  _playerController: {fileID: 0}
   _deathParticle: {fileID: 6997500095999071746}
   _deathAudioSource: {fileID: 7466140917204400368}
   _damageAudioSource: {fileID: 301094841988702237}
@@ -354,7 +353,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

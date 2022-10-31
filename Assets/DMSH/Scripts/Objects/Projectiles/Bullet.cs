@@ -50,7 +50,7 @@ namespace DMSH.Objects
         [SerializeField]
         private float _lifeTime = 2.0f;
 
-        public bool IsMovesItself => pathSystem == null;
+        public bool IsMovesItself => PathSystem == null;
 
         // internal
         [Tooltip("Direction in which projectile will fly")]
@@ -87,7 +87,7 @@ namespace DMSH.Objects
                 if (_timer == null)
                 {
                     _timer = gameObject.AddComponent<Timer>();
-                    _timer.EndEvent += Unspawn;
+                    _timer.EndEvent += UnSpawn;
                     _timer.time = _lifeTime;
                     _timer.StartTimer();
                 }
@@ -100,8 +100,16 @@ namespace DMSH.Objects
 
         internal void Start()
         {
-            rigidBody2D = GetComponent<Rigidbody2D>();
-            Collider2D = GetComponent<Collider2D>();
+            if (RigidBody2D == null)
+            {
+                RigidBody2D = GetComponent<Rigidbody2D>();
+            }
+
+            if (Collider2D == null)
+            {
+                Collider2D = GetComponent<Collider2D>();
+            }
+
             if (_trailRenderer == null)
             {
                 if (!TryGetComponent(out _trailRenderer))
@@ -135,11 +143,12 @@ namespace DMSH.Objects
         internal void FixedUpdate()
         {
             // Basic effect of rotation
-            rigidBody2D.MoveRotation(rigidBody2D.rotation + _graphicRotationSpeed * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt);
+            RigidBody2D.MoveRotation(RigidBody2D.rotation + _graphicRotationSpeed * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt);
 
             if (IsMovesItself)
             {
-                rigidBody2D.velocity = _bulletDirection * speed * GlobalSettings.gameActiveAsInt;
+                MoveDirection = _bulletDirection * speed * GlobalSettings.gameActiveAsInt;
+                RigidBody2D.velocity = MoveDirection;
             }
         }
 
@@ -149,7 +158,7 @@ namespace DMSH.Objects
                 && ((IsEnemyBullet && collision.transform == PlayerController.Player.transform)
                     || (!IsEnemyBullet && collision.transform.CompareTag("Enemy"))))
             {
-                Unspawn();
+                UnSpawn();
             }
         }
 
@@ -161,7 +170,7 @@ namespace DMSH.Objects
             StartCoroutine(SqueezeAnimation());
         }
 
-        public override void Unspawn()
+        public override void UnSpawn()
         {
             Release();
         }
@@ -192,7 +201,7 @@ namespace DMSH.Objects
                 yield return new WaitForSeconds(0.01f);
             }
 
-            Unspawn();
+            UnSpawn();
 
             _trailRenderer.startWidth = trailStartSizeWidthBefore;
             _trailRenderer.endWidth = trailEndSizeWidthBefore;

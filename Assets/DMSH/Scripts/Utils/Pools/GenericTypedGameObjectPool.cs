@@ -11,7 +11,7 @@ namespace Scripts.Utils.Pools
     {
         private const int PRECACHE_CHUNK_SIZE = 8;
         private static readonly string TypeName = typeof(TPoolElement).Name;
-        
+
         public virtual int PrecacheCount => 32;
 
         [SerializeField]
@@ -21,6 +21,7 @@ namespace Scripts.Utils.Pools
         private Transform m_parentTo;
 
         private readonly List<(bool inUse, TPoolElement go)> _pool = new(32);
+        private readonly Dictionary<GameObject, TPoolElement> _goHashmap = new(32);
 
         // unity
 
@@ -44,7 +45,9 @@ namespace Scripts.Utils.Pools
                 createdGo.name = $"{TypeName}_{i}";
 #endif
                 createdGo.SetActive(false);
-                _pool.Add((false, createdGo.GetComponent<TPoolElement>()));
+                var poolElement = createdGo.GetComponent<TPoolElement>();
+                _pool.Add((false, poolElement));
+                _goHashmap.Add(createdGo, poolElement);
 
                 chunkSize--;
                 if (chunkSize < 0)
@@ -81,6 +84,7 @@ namespace Scripts.Utils.Pools
 #endif
             var component = createdGo.GetComponent<TPoolElement>();
             Get._pool.Add((true, component));
+            Get._goHashmap.Add(createdGo, component);
             return component;
         }
 
@@ -101,5 +105,8 @@ namespace Scripts.Utils.Pools
 
             return false;
         }
+
+        public static bool TryGetByGo(GameObject key, out TPoolElement element) =>
+            Get._goHashmap.TryGetValue(key, out element);
     }
 }

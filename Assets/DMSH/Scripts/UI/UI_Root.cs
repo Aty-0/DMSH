@@ -3,10 +3,9 @@ using DMSH.Misc.Animated;
 
 using Scripts.Utils;
 
-using System;
+using TMPro;
 
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace DMSH.UI
 {
@@ -19,23 +18,23 @@ namespace DMSH.UI
         
         [Header("UI")]
         [SerializeField]
-        private Text _uiScoreText = null;
+        private TMP_Text _uiScoreText = null;
         
         [SerializeField]
-        private Text _uiBoostGainText = null;
-        public Text UI_BoostGainText => _uiBoostGainText;
+        private TMP_Text _uiBoostGainText = null;
+        public TMP_Text UI_BoostGainText => _uiBoostGainText;
 
         [SerializeField]
-        private Text _uiBoostText = null;
+        private TMP_Text _uiBoostText = null;
         
         [SerializeField]
-        private Text _uiLifeText = null;
+        private TMP_Text _uiLifeText = null;
         
         [SerializeField]
-        private Text _uiFpsCounterText = null;
+        private TMP_Text _uiFpsCounterText = null;
 
         [SerializeField]
-        private Text _uiChapterName = null;
+        private TMP_Text _uiChapterName = null;
 
         [SerializeField]
         private GUIStyle _cheatGUIStyle = null;
@@ -51,7 +50,7 @@ namespace DMSH.UI
         
         [Tooltip("Only for death screen")]
         [SerializeField]
-        private Text _uiCurrentScoreOnDeathText = null;
+        private TMP_Text _uiCurrentScoreOnDeathText = null;
         
         private Coroutine _showChapterNameCoroutine = null;
 

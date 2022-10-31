@@ -28,9 +28,6 @@ namespace DMSH.Misc.Log
         [SerializeField]
         private bool _Resume = true;
 
-        [SerializeField]
-        private bool _fpsCounter = false;
-
         protected void Start()
         {
             IntegrateKonsoleCommands();
@@ -43,8 +40,25 @@ namespace DMSH.Misc.Log
             {
                 FontSize = _fontSize,
                 DefaultTextFont = _font,
+                UseTextMeshPro = true
             });
-            Konsole.RegisterCommand("debugDrawFps", "Show/hide FPS indicator", _ => _fpsCounter = !_fpsCounter);
+
+            Konsole.OnKonsoleVisibleStateChanged += isConsoleVisible =>
+            {
+                drawConsole = isConsoleVisible;
+                Cursor.visible = !_Resume || (drawConsole || !GlobalSettings.gameActiveAsBool);
+
+                if (_Resume)
+                {
+                    if (drawConsole)
+                    {
+                        _savedGameActiveState = GlobalSettings.gameActiveAsBool;
+                    }
+
+                    GlobalSettings.SetGameActive(_savedGameActiveState == true && !drawConsole);
+                }
+            };
+
             Konsole.RegisterCommand("d_tc", "Stop all audio sources", _ =>
             {
                 foreach (var audioSource in FindObjectsOfType<AudioSource>())
@@ -86,8 +100,10 @@ namespace DMSH.Misc.Log
 
             Konsole.RegisterCommand("noclip", context =>
             {
-                PlayerController.Player.Collider2D.enabled = !PlayerController.Player.Collider2D.enabled;
-                context.Log($"{TextTags.Bold("Noclip")} is {(PlayerController.Player.Collider2D.enabled ? "Enabled" : "Disabled")}");
+                var plCollider = PlayerController.Player.Collider2D;
+                var newPlCollider = !plCollider.enabled;
+                plCollider.enabled = newPlCollider;
+                context.Log($" is {(!newPlCollider ? "Enabled" : "Disabled")}");
             });
 
             // ?
@@ -132,47 +148,6 @@ namespace DMSH.Misc.Log
                 GlobalSettings.debugDrawInvWallSI = !GlobalSettings.debugDrawInvWallSI;
                 context.Log($"{TextTags.Bold("debugDrawInvWallSI")} is {(GlobalSettings.debugDrawInvWallSI ? TextTags.WithColor(Color.green, "Enabled") : TextTags.WithColor(Color.green, "Disabled"))}");
             });
-        }
-
-        protected void OnGUI()
-        {
-            GUIStyle textStyle = new GUIStyle(GUI.skin.label);
-            textStyle.font = _font;
-            textStyle.fontSize = _fontSize;
-
-            if (Event.current.type == EventType.KeyUp)
-            {
-                if (Event.current.keyCode == KeyCode.Escape
-                    && Event.current.isKey
-                    && Konsole.ConsoleInstance.IsShouldBeVisible)
-                {
-                    Konsole.ToggleConsole();
-                    drawConsole = Konsole.ConsoleInstance.IsShouldBeVisible;
-                }
-
-                if (Event.current.keyCode == KeyCode.BackQuote && Event.current.isKey)
-                {
-                    drawConsole = Konsole.ConsoleInstance.IsShouldBeVisible;
-                    Cursor.visible = !_Resume || (drawConsole || !GlobalSettings.gameActiveAsBool);
-
-                    if (_Resume)
-                    {
-                        if (drawConsole)
-                        {
-                            _savedGameActiveState = GlobalSettings.gameActiveAsBool;
-                        }
-
-                        GlobalSettings.SetGameActive(_savedGameActiveState == true && !drawConsole);
-                    }
-                }
-            }
-
-            if (_fpsCounter)
-            {
-                GUILayout.BeginArea(new Rect(0, 30, 500, 500));
-                GUILayout.Label($"FPS:{(int) (1f / Time.unscaledDeltaTime)}", textStyle);
-                GUILayout.EndArea();
-            }
         }
     }
 }

@@ -1,6 +1,10 @@
-﻿using UnityEngine;
+﻿using System;
+
+using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+
+using TMPro;
 
 namespace DMSH.Misc.Animated
 {
@@ -17,6 +21,7 @@ namespace DMSH.Misc.Animated
             }
         }
 
+        [Obsolete("Please, use TextMeshPro")]
         public static IEnumerator SmoothAwakeText(Text text, float neededAlpha = 0.0f, float speed = 15.0f, float seconds = 0.01f)
         {
             neededAlpha = (neededAlpha == 0.0f) ? text.color.a : neededAlpha;
@@ -29,8 +34,21 @@ namespace DMSH.Misc.Animated
                 yield return new WaitForSeconds(seconds);
             }
         }
-
-        public static IEnumerator SmoothFadeText(Text text, float speed = 35.0f, float seconds = 0.01f)
+        
+        public static IEnumerator SmoothAwakeText(TMP_Text text, float neededAlpha = 0.0f, float speed = 15.0f, float seconds = 0.01f)
+        {
+            neededAlpha = (neededAlpha == 0.0f) ? text.color.a : neededAlpha;
+            float alpha = 0.0f;
+            text.color = new Color(text.color.r, text.color.g, text.color.b, 0.0f);
+            text.gameObject.SetActive(true);
+            while (alpha <= neededAlpha)
+            {
+                text.color = Color.Lerp(text.color, new Color(text.color.r, text.color.g, text.color.b, neededAlpha), Time.deltaTime * speed);
+                yield return new WaitForSeconds(seconds);
+            }
+        }
+        
+        public static IEnumerator SmoothFadeText(TMP_Text text, float speed = 35.0f, float seconds = 0.01f)
         {
             float alpha = text.color.a;
             while (alpha >= 0.0f)
@@ -61,8 +79,8 @@ namespace DMSH.Misc.Animated
                 yield return new WaitForSeconds(seconds);
             }
         }
-
-        public static IEnumerator SmoothChangeToColorForText(Text text, Color to_color, float intensive = 40.0f, float seconds = 0.001f)
+        
+        public static IEnumerator SmoothChangeToColorForText(TMP_Text text, Color to_color, float intensive = 40.0f, float seconds = 0.001f)
         {
             while (text.color != to_color)
             {

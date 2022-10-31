@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 using DMSH.Path;
 using DMSH.Misc;
@@ -9,6 +8,7 @@ using DMSH.Misc.Animated;
 using DMSH.Objects;
 using DMSH.LevelSpecifics.Stage;
 using DMSH.Gameplay;
+using DMSH.Scripts.Controls;
 using DMSH.Scripts.Objects.Projectiles;
 using DMSH.UI;
 
@@ -18,7 +18,6 @@ using Scripts.Utils.Pools;
 namespace DMSH.Characters
 {
     [RequireComponent(typeof(SpriteRenderer))]
-    [RequireComponent(typeof(PlayerInput))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(Weapon))]
@@ -70,13 +69,24 @@ namespace DMSH.Characters
         #endregion
 
         [Header("Global")]
-        public SpriteRenderer   spriteRenderer = null;
-        public Camera           gameCamera = null;
-        public PlayerInput      playerInput = null;
         public ResizableGameElements resizableGameElements = null;
 
+        [Header("Graphics")]
+        [SerializeField]
+        private Animator m_animator;
+        public Animator Animator => m_animator;
+        
+        [SerializeField]
+        private SpriteRenderer m_spriteRenderer;
+        public SpriteRenderer SpriteRenderer => m_spriteRenderer;
+        
         [SerializeField] 
         private Vector2 _moveDirection = Vector2.zero;
+        public override Vector2 MoveDirection
+        {
+            get => _moveDirection;
+            set => _moveDirection = value;
+        }
 
         [HideInInspector] 
         [SerializeField] 
@@ -104,8 +114,7 @@ namespace DMSH.Characters
         [SerializeField] 
         private float _saved_time_scale = 0.0f;
 
-        [Header("Weapon")]
-        public Weapon                   weapon;
+        public Weapon                   Weapon { get; private set; }
 
         [Header("Sounds")]
         [SerializeField] 
@@ -159,12 +168,9 @@ namespace DMSH.Characters
         private void PrepareComponents()
         {
             // Get all components
-            gameCamera = GetComponentInParent(typeof(Camera)) as Camera;
-            spriteRenderer = GetComponent<SpriteRenderer>();
-            rigidBody2D = GetComponent<Rigidbody2D>();
+            RigidBody2D = GetComponent<Rigidbody2D>();
             Collider2D = GetComponent<Collider2D>();
-            playerInput = GetComponent<PlayerInput>();
-            weapon = GetComponent<Weapon>();
+            Weapon = GetComponent<Weapon>();
 
             _stageSystem = StageSystem.Get;
             if (_stageSystem == null)
@@ -172,7 +178,7 @@ namespace DMSH.Characters
 
             if (TryGetComponent(out resizableGameElements))
             {
-                resizableGameElements.gameCamera = gameCamera;
+                resizableGameElements.gameCamera = GameCamera.Get.Camera;
                 resizableGameElements.Initialize();
                 
                 // Set respawnPoint position
@@ -180,7 +186,7 @@ namespace DMSH.Characters
             }
 
             _cameraDeathAnimation = gameObject.AddComponent<CameraDeathAnimation>();
-            _cameraDeathAnimation.animCamera = gameCamera;
+            _cameraDeathAnimation.animCamera = GameCamera.Get.Camera;
             _cameraDeathAnimation.target = gameObject;
 
             // Don't show cursor when we are create the player 
@@ -245,40 +251,6 @@ namespace DMSH.Characters
             _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
         }
 
-        private void OnUseBoost(InputValue input)
-        {
-            if (GlobalSettings.gameActiveAsBool)
-            {
-                UseBoost();
-            }
-        }
-
-        private void OnShot(InputValue input)
-        {
-            if (GlobalSettings.gameActiveAsBool && input.isPressed)
-            {
-                weapon.Shot();
-            }
-            else
-            {
-                weapon.StopShooting();
-            }
-        }
-
-        private void OnMoveH(InputValue input)
-        {
-            _moveDirection.x = input.Get<Vector2>().x;
-        }
-
-        private void OnMoveV(InputValue input)
-        {
-            _moveDirection.y = input.Get<Vector2>().y;
-        }
-
-        private void OnPause(InputValue input)
-        {
-            ShowPauseScreen();
-        }
 
         public void ShowDeathScreen()
         {
@@ -329,16 +301,16 @@ namespace DMSH.Characters
                 _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
 
                 // Enable death animation
-                if (spriteRenderer.color.a < 0.9f)
+                if (SpriteRenderer.color.a < 0.9f)
                 {
-                    _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(spriteRenderer));
+                    _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(SpriteRenderer));
                 }
 
                 audioSourceMusic.Play();
             }
             else
             {
-                weapon.StopShooting();
+                Weapon.StopShooting();
 
                 if (_deathAwakeCoroutine != null)
                 {
@@ -354,9 +326,12 @@ namespace DMSH.Characters
                 audioSourceMusic.Pause();
             }
 
-            playerInput.currentActionMap.Disable();
-            playerInput.SwitchCurrentActionMap(UI_Root.Get.IsPauseMenuOpened ? "Pause" : "Player");
-            playerInput.currentActionMap.Enable();
+            var plInput = PlayerControl.Get.Input;
+            plInput.currentActionMap.Disable();
+            plInput.SwitchCurrentActionMap(UI_Root.Get.IsPauseMenuOpened
+                ? "Pause"
+                : "Player");
+            plInput.currentActionMap.Enable();
 
             UpdateSettings();
         }
@@ -377,13 +352,13 @@ namespace DMSH.Characters
             if (GlobalSettings.debugDrawPlayerDGUI)
             {
                 GUI.Label(new Rect(100, 80, 500, 500),  $"DeltaTime: {Time.deltaTime}");
-                GUI.Label(new Rect(100, 120, 500, 500), $"Position: {rigidBody2D.position}");
-                GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {rigidBody2D.velocity}");
+                GUI.Label(new Rect(100, 120, 500, 500), $"Position: {RigidBody2D.position}");
+                GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {RigidBody2D.velocity}");
                 // GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weapon.weaponEnabled}");
                 GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
                 GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
                 GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActiveAsBool}");
-                GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {weapon.weaponBoostGain}");
+                GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {Weapon.weaponBoostGain}");
                 // GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {weapon.weaponType}");
             }
         }
@@ -391,16 +366,17 @@ namespace DMSH.Characters
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            // TODO change on IsAlive or IsDead
-            if (!audioSourceDeath.isPlaying)
+            if (!_isDead)
             {
-                var touchedMovableObjects = collision.gameObject.GetComponents<IMovableObject>();
-                foreach (var movableObject in touchedMovableObjects)
+                if (ProjectilePool.TryGetByGo(collision.gameObject, out var collidedBullet)
+                    && collidedBullet.IsEnemyBullet)
                 {
-                    if(movableObject is Enemy or Bullet {IsEnemyBullet: true})
-                    {
-                        Damage();
-                    }
+                    Damage();
+                }
+                else if(collision.gameObject.TryGetComponent<IMovableObject>(out var movable) && movable is Enemy)
+                {
+                    // TODO get rid of GetComponent
+                    Damage();
                 }
             }
         }
@@ -417,15 +393,15 @@ namespace DMSH.Characters
                 StopCoroutine(_slowMotionCoroutine);
             }
 
-            weapon.StopShooting();
+            Weapon.StopShooting();
 
             Life = PLAYER_MIN_LIFE;
 
             _isDead = true;
-            spriteRenderer.enabled = false;
+            SpriteRenderer.enabled = false;
             Collider2D.enabled = false;
-            rigidBody2D.isKinematic = true;
-            playerInput.enabled = false;
+            RigidBody2D.isKinematic = true;
+            PlayerControl.Get.Input.enabled = false;
 
             // Show death screen 
             ShowDeathScreen();
@@ -438,10 +414,10 @@ namespace DMSH.Characters
 
             if (_deathParticle)
             {
+                var particleModule = _deathParticle.main;
                 // TODO store it in variable
-                ParticleSystemRenderer pr = _deathParticle.GetComponent<ParticleSystemRenderer>();
-                pr.material.color = Color.red;
-                _deathParticle.transform.position = rigidBody2D.transform.position;
+                particleModule.startColor =Color.red; 
+                _deathParticle.transform.position = RigidBody2D.transform.position;
                 _deathParticle.Play();
             }
 
@@ -464,7 +440,7 @@ namespace DMSH.Characters
             }
             else
             {
-                _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(spriteRenderer));
+                _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(SpriteRenderer));
 
                 // Make everything slow
                 // Slow motion gameplay kekw
