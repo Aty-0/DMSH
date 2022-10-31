@@ -1,3 +1,5 @@
+using DMSH.Characters;
+
 using System;
 using System.Linq;
 using System.Collections.Generic;
@@ -9,6 +11,7 @@ using DMSH.Gameplay;
 using DMSH.LevelSpecifics.Stage;
 
 using Scripts.Utils;
+using Scripts.Utils.Pools;
 
 namespace DMSH.Path
 {  
@@ -26,7 +29,7 @@ namespace DMSH.Path
         [Header("Spawner")]
         public int objectCount = 0;
         public int spawnedObjectCount = 0;
-        public MovableObject objectPrefab = null;
+        public Enemy objectPrefab = null;
         public float spawnerTimerTime = 0.5f;
         public float spawnerTimerTick = 0.5f;
         private Timer _spawnerTimer = null;
@@ -93,12 +96,14 @@ namespace DMSH.Path
         private void SpawnObject()
         {
             spawnedObjectCount++;
-            MovableObject movableObject = Instantiate(objectPrefab, pathPointsList[0].transform.position, Quaternion.identity);
-            movableObject.pathSystem = this;
-            movableObject.name = $"{movableObject.name}{spawnedObjectCount}";
-            movableObject.transform.parent = transform.parent;
+            var spawnedEnemy = EnemyPool.GetOrCreate();
+            objectPrefab.CopyTo(spawnedEnemy);
+            spawnedEnemy.transform.SetPositionAndRotation(pathPointsList[0].transform.position, Quaternion.identity);
+            spawnedEnemy.pathSystem = this;
+            spawnedEnemy.name = $"{spawnedEnemy.name}{spawnedObjectCount}";
+            // ? spawnedEnemy.transform.parent = transform.parent;
             
-            movablePathObjectsList.Add(movableObject);
+            movablePathObjectsList.Add(spawnedEnemy);
             if (spawnedObjectCount == objectCount)
             {
                 _spawnerTimer.EndTimer();
@@ -355,6 +360,7 @@ namespace DMSH.Path
                     {
                         Debug.Log($"Unspawn: {currentPathObject.name}");
                         currentPathObject.Unspawn();
+                        movablePathObjectsList.Remove(currentPathObject);
                     }
 
                     continue; // Move to next object

@@ -21,7 +21,7 @@ namespace DMSH.Gameplay
 
         [SerializeField]
         private bool m_isEnemy = true;
-        
+
         public float shotFrequency = 0.07f;
         public bool canBeUsed = true;
 
@@ -58,7 +58,7 @@ namespace DMSH.Gameplay
                 {
                     case BoxCollider2D boxCollider:
                         return new Vector3(ShotPoint.transform.position.x, ShotPoint.transform.position.y - boxCollider.size.y, 0);
-                    
+
                     default:
                         return transform.position;
                 }
@@ -78,8 +78,11 @@ namespace DMSH.Gameplay
             {
                 _useOwner = true;
                 ShotPoint = transform;
-                _Collider2D = gameObject.GetComponent<Collider2D>();
-                Debug.Assert(_Collider2D != null);
+                if (_Collider2D == null)
+                {
+                    _Collider2D = gameObject.GetComponent<Collider2D>();
+                    Debug.Assert(_Collider2D != null);
+                }
             }
         }
 
@@ -98,7 +101,7 @@ namespace DMSH.Gameplay
             {
                 Gizmos.color = Color.red;
                 Gizmos.DrawCube(ShotPoint.transform.position, new Vector3(0.2f, 0.2f, 0.2f));
-                
+
                 Gizmos.color = Color.cyan;
                 Gizmos.DrawCube(BulletSpawnPosition, new Vector3(0.2f, 0.2f, 0.2f));
             }
@@ -131,6 +134,7 @@ namespace DMSH.Gameplay
             if (_shotCoroutine != null)
             {
                 StopCoroutine(_shotCoroutine);
+                _shotCoroutine = null;
             }
         }
 
@@ -151,6 +155,26 @@ namespace DMSH.Gameplay
             }
 
             return bullet;
+        }
+
+        public void CopyTo(Weapon target)
+        {
+            StopShooting();
+
+            target._useOwner = _useOwner;
+            target._weaponEnabled = _weaponEnabled;
+            target.m_firePattern = m_firePattern;
+            target.m_isEnemy = m_isEnemy;
+            target.shotFrequency = shotFrequency;
+            target.canBeUsed = canBeUsed;
+            target.weaponBoostGain = weaponBoostGain;
+            target.PatternFireState = PatternFireState;
+            if (target.ShotPoint != null)
+            {
+                target.ShotPoint.localPosition = ShotPoint != null
+                    ? ShotPoint.localPosition
+                    : Vector3.zero;
+            }
         }
 
         // private

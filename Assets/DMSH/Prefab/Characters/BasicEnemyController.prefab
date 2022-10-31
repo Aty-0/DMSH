@@ -183,16 +183,16 @@ MonoBehaviour:
   _currentPoint: 0
   _currentCurvePoint: 0
   _speed: 7
-  _rigidBody2D: {fileID: 0}
-  _Collider2D: {fileID: 0}
+  _rigidBody2D: {fileID: 8560063986377600565}
+  _Collider2D: {fileID: 8560063986377600566}
   _moveOffset: {x: 0, y: 0, z: 0}
   _pathSystem: {fileID: 0}
   _reduceSpeed: 1
   _augmentSpeed: 1
   _finalSpeed: 0
-  weapon: {fileID: 0}
+  Weapon: {fileID: 3725581609213465515}
   ignoreHits: 0
-  _spriteRenderer: {fileID: 0}
+  _spriteRenderer: {fileID: 8560063986377600567}
   weakType: 0
   onLastPointWillDestroy: 0
   _isDead: 0
@@ -202,7 +202,6 @@ MonoBehaviour:
   _reduceHealth: 1.5
   _showDamageStatusText: 1
   m_bonusDropType: 0
-  _playerController: {fileID: 0}
   _deathParticle: {fileID: 980541849190187032}
   _deathAudioSource: {fileID: 2626473320893871866}
   _damageAudioSource: {fileID: 5171152870801747479}

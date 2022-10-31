@@ -130,14 +130,14 @@ MonoBehaviour:
   _currentPoint: 0
   _currentCurvePoint: 0
   _speed: 4
-  _rigidBody2D: {fileID: 0}
-  _Collider2D: {fileID: 0}
+  _rigidBody2D: {fileID: 7160398152564118099}
+  _Collider2D: {fileID: 3004387743804076718}
   _moveOffset: {x: 0, y: 0, z: 0}
   _pathSystem: {fileID: 0}
   _reduceSpeed: 1
   _augmentSpeed: 1
   _finalSpeed: 0
-  m_renderer: {fileID: 0}
+  m_renderer: {fileID: 5584539595630154003}
   IsEnemyBullet: 0
   m_pattern: {fileID: 0}
   _collisionDestroyBullet: 1

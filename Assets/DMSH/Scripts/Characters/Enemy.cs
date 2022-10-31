@@ -1,14 +1,12 @@
-using System.Collections;
 using UnityEngine;
 
 using DMSH.Path;
 using DMSH.Gameplay;
-using DMSH.Objects;
-using DMSH.Misc.Animated;
 
 using Scripts.Objects.Bonuses;
-using Scripts.Utils;
 using Scripts.Utils.Pools;
+
+using Random = UnityEngine.Random;
 
 namespace DMSH.Characters
 {
@@ -16,67 +14,66 @@ namespace DMSH.Characters
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(Weapon))]
-    public class Enemy : MovableObject
+    public class Enemy : MovableObject, IPooled
     {
         public const int MAX_RANDOM_DROP_SCORE_BONUS = 4;
         public const int MAX_RANDOM_DROP_WEAPON_BONUS = 4;
 
         [Header("Weapon")]
-        public Weapon weapon;
-        
+        public Weapon Weapon;
+
         [Header("Enemy")]
         public bool ignoreHits = true;
-        [SerializeField] 
+        [SerializeField]
         protected SpriteRenderer _spriteRenderer = null;
-        [SerializeField] 
+        [SerializeField]
         protected bool weakType = false;
-        [SerializeField] 
+        [SerializeField]
         protected bool onLastPointWillDestroy = false;
-        [SerializeField] 
+        [SerializeField]
         protected bool _isDead = false;
-        [SerializeField] 
+        [SerializeField]
         protected int _lifes = 1;
-        [SerializeField] 
+        [SerializeField]
         protected float _maxHealth = 0.0f;
-        [SerializeField] 
+        [SerializeField]
         protected float _health = 0.0f;
-        [SerializeField] 
+        [SerializeField]
         protected float _reduceHealth = 1.5f;
-        [SerializeField] 
+        [SerializeField]
         protected bool _showDamageStatusText = true;
 
         [Header("Bonus")]
         [SerializeField]
         private BonusDropTypeEnum m_bonusDropType;
-        
+
         [Header("Misc")]
-        [SerializeField] 
-        protected PlayerController _playerController = null;
-        [SerializeField] 
-        protected ParticleSystem _deathParticle = null;
-        [SerializeField] 
-        protected Coroutine _shotCoroutine = null;
+        [SerializeField]
+        protected ParticleSystem _deathParticle;
 
         [Header("Sounds")]
-        [SerializeField] 
-        protected AudioSource _deathAudioSource = null;
-        [SerializeField] 
-        protected AudioSource _damageAudioSource = null;
-        
-        protected void Start()
-        {
-            _rigidBody2D    = GetComponent<Rigidbody2D>();
-            _Collider2D  = GetComponent<BoxCollider2D>();
-            _spriteRenderer = GetComponent<SpriteRenderer>();
-            _deathParticle  = GetComponentInChildren<ParticleSystem>();
+        [SerializeField]
+        protected AudioSource _deathAudioSource;
+        [SerializeField]
+        protected AudioSource _damageAudioSource;
 
-            weapon          = GetComponent<Weapon>();
-            weapon.onShot.Add(OnShot);
-            
-            _health = _maxHealth;
+        protected void Awake()
+        {
+            _deathParticle = GetComponentInChildren<ParticleSystem>();
+        }
+
+        protected void OnEnable()
+        {
             ignoreHits = true;
 
+            _health = _maxHealth;
+
             EnemyStart();
+        }
+
+        protected void OnDisable()
+        {
+            pathSystem = null;
         }
 
         public override void OnReachedPointEvent(EnemyScriptedBehavior enemyScriptedBehavior)
@@ -101,7 +98,6 @@ namespace DMSH.Characters
             if (onLastPointWillDestroy)
             {
                 Kill(false, true);
-                return;
             }
         }
 
@@ -109,8 +105,7 @@ namespace DMSH.Characters
         {
             if (!weakType)
             {
-                OnStartShot();
-                weapon.Shot();
+                Weapon.Shot();
             }
         }
 
@@ -118,8 +113,7 @@ namespace DMSH.Characters
         {
             if (!weakType)
             {
-                OnStopShot();
-                weapon.StopShooting();
+                Weapon.StopShooting();
             }
         }
 
@@ -130,7 +124,7 @@ namespace DMSH.Characters
 
         public void Kill(bool givePlayerScore, bool unspawn = false)
         {
-            weapon.StopShooting();
+            Weapon.StopShooting();
 
             _lifes = 0;
             _health = 0;
@@ -143,10 +137,7 @@ namespace DMSH.Characters
 
             if (givePlayerScore)
             {
-                if (_playerController)
-                {
-                    _playerController.Score += 1000;
-                }
+                PlayerController.Player.Score += 1000;
             }
 
             if (_deathAudioSource != null)
@@ -161,16 +152,14 @@ namespace DMSH.Characters
                     _pathSystem.DetachObject(this);
                 }
 
-                _spriteRenderer.enabled = false;
-                _Collider2D.enabled = false;
                 var particleModule = _deathParticle.main;
                 particleModule.startColor = _spriteRenderer.color;
                 _deathParticle.Play();
-                Destroy(gameObject, _deathParticle.main.duration);
+                Release();
             }
             else
             {
-                Destroy(gameObject);
+                Release();
             }
         }
 
@@ -183,40 +172,43 @@ namespace DMSH.Characters
 
         public void Damage()
         {
-            if (!ignoreHits)
+            if (_isDead)
+                return;
+
+            if (ignoreHits)
+                return;
+
+            if (_damageAudioSource != null)
             {
-                if (_damageAudioSource != null)
+                _damageAudioSource.Play();
+            }
+
+            OnDamage();
+            if (_health <= 0.0f)
+            {
+                _health = _maxHealth;
+                _lifes--;
+
+                OnDie();
+
+                if (_lifes == 0)
                 {
-                    _damageAudioSource.Play();
+                    Kill(true);
                 }
 
-                OnDamage();
-                if (_health <= 0.0f)
+                if (_showDamageStatusText)
                 {
-                    _health = _maxHealth;
-                    _lifes--;
-
-                    OnDie();
-
-                    if (_lifes == 0)
-                    {
-                        Kill(true);
-                    }
-
-                    if (_showDamageStatusText)
-                    {
-                        CreateDamageStatusText("Dead");
-                    }
+                    CreateDamageStatusText("Dead");
                 }
-                else
+            }
+            else
+            {
+                if (_showDamageStatusText)
                 {
-                    if (_showDamageStatusText)
-                    {
-                        CreateDamageStatusText($"-{_reduceHealth} HP");
-                    }
-
-                    _health -= _reduceHealth;
+                    CreateDamageStatusText($"-{_reduceHealth} HP");
                 }
+
+                _health -= _reduceHealth;
             }
         }
 
@@ -239,32 +231,14 @@ namespace DMSH.Characters
 
         protected virtual void EnemyStart()
         {
-
-        }
-
-        public virtual void OnShot()
-        {
-
-        }
-
-        public virtual void OnStopShot()
-        {
-
-        }
-
-        public virtual void OnStartShot()
-        {
-
         }
 
         public virtual void OnDamage()
         {
-
         }
 
         public virtual void OnDie()
         {
-
         }
 
         public virtual void OnDieCompletely()
@@ -283,9 +257,9 @@ namespace DMSH.Characters
                             .GetOrCreate()
                             .SpawnAt(transform.position, BonusPool.Get.Score1000Bonus);
                     }
-                    
+
                     break;
-                
+
                 case BonusDropTypeEnum.Weapon:
                     for (int i = 0; i <= Random.Range(0, MAX_RANDOM_DROP_WEAPON_BONUS); i++)
                     {
@@ -293,8 +267,35 @@ namespace DMSH.Characters
                             .GetOrCreate()
                             .SpawnAt(transform.position, BonusPool.Get.WeaponBonus);
                     }
-                    
+
                     break;
+            }
+        }
+
+        public void CopyTo(Enemy target)
+        {
+            target._spriteRenderer.sprite = _spriteRenderer.sprite;
+            target._spriteRenderer.color = _spriteRenderer.color;
+            target.transform.localScale = transform.localScale;
+            target.speed = speed;
+            target._currentPoint = 0;
+            target._currentCurvePoint = 0;
+            target.moveOffset = moveOffset;
+            target._lifes = _lifes;
+            target._maxHealth = _maxHealth;
+            target._reduceHealth = _reduceHealth;
+            target._showDamageStatusText = _showDamageStatusText;
+            target.m_bonusDropType = m_bonusDropType;
+
+            Weapon.CopyTo(target.Weapon);
+        }
+
+        public void Release()
+        {
+            if (!EnemyPool.TryRelease(this))
+            {
+                Debug.LogError($"Spawned enemy without pool! Will call direct destroy", this);
+                Destroy(gameObject);
             }
         }
     }

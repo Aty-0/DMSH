@@ -1,3 +1,5 @@
+using DMSH.Characters;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -272,7 +274,7 @@ public class PathSystemEditorWindow : EditorWindow
                 pathSystem.distanceBetweenObjects = EditorGUILayout.FloatField("Distance Between Objects", pathSystem.distanceBetweenObjects);
                 pathSystem.loop = EditorGUILayout.Toggle("Loop", pathSystem.loop);
                 pathSystem.objectCount = EditorGUILayout.IntField("Spawn object count", pathSystem.objectCount);
-                pathSystem.objectPrefab = EditorGUILayout.ObjectField("Spawn prefab", pathSystem.objectPrefab, typeof(MovableObject)) as MovableObject;
+                pathSystem.objectPrefab = EditorGUILayout.ObjectField("Spawn prefab", pathSystem.objectPrefab, typeof(MovableObject)) as Enemy;
                 //pathSystem.spawnerTimer = EditorGUILayout.ObjectField("Spawner Timer", pathSystem.spawnerTimer, typeof(Timer)) as Timer;
 
                 PointsToolsEditorGlobals.Separator();

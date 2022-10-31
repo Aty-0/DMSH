@@ -33,13 +33,13 @@ namespace DMSH.Characters
         {
             _bossLifes.text = $"Lifes:{_lifes}";
             _bossHealthBar.fillAmount = _health / 100;
-            _playerController.Score += 1000;
+            PlayerController.Player.Score += 1000;
         }
 
         public override void OnDie()
         {
             // Add score
-            _playerController.Score += 10000;
+            PlayerController.Player.Score += 10000;
 
             // Clear scene from bullets
             foreach (Bullet bullet in FindObjectsOfType<Bullet>())
