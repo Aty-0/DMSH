@@ -181,7 +181,7 @@ namespace DMSH.Gameplay
 
         private IEnumerator ShotC()
         {
-            while (GlobalSettings.gameActiveAsBool && _weaponEnabled && canBeUsed)
+            while (!GlobalSettings.IsPaused && _weaponEnabled && canBeUsed)
             {
                 if (m_firePattern != null)
                 {

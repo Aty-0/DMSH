@@ -1,3 +1,5 @@
+using DMSH.Characters.Animation;
+
 using System.Collections;
 using UnityEngine;
 
@@ -17,11 +19,9 @@ using Scripts.Utils.Pools;
 
 namespace DMSH.Characters
 {
-    [RequireComponent(typeof(SpriteRenderer))]
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(Collider2D))]
     [RequireComponent(typeof(Weapon))]
-
     public class PlayerController : MovableObject
     {
         public static PlayerController Player { get; private set; }
@@ -69,16 +69,12 @@ namespace DMSH.Characters
         #endregion
 
         [Header("Global")]
-        public ResizableGameElements resizableGameElements = null;
+        public ResizableGameElements resizableGameElements;
 
         [Header("Graphics")]
         [SerializeField]
-        private Animator m_animator;
-        public Animator Animator => m_animator;
-        
-        [SerializeField]
-        private SpriteRenderer m_spriteRenderer;
-        public SpriteRenderer SpriteRenderer => m_spriteRenderer;
+        private DmshAnimator m_animator;
+        public DmshAnimator Animator => m_animator;
         
         [SerializeField] 
         private Vector2 _moveDirection = Vector2.zero;
@@ -90,19 +86,19 @@ namespace DMSH.Characters
 
         [HideInInspector] 
         [SerializeField] 
-        private bool _isDead = false;
+        private bool _isDead;
 
         [HideInInspector] 
         [SerializeField] 
-        private CameraDeathAnimation _cameraDeathAnimation = null;
+        private CameraDeathAnimation _cameraDeathAnimation;
 
         [HideInInspector] 
         [SerializeField] 
-        private StageSystem _stageSystem = null;
+        private StageSystem _stageSystem;
 
         [Header("Current statistics")]
         [SerializeField] 
-        private int _score = 0;
+        private int _score;
         [SerializeField] 
         private int _life = PLAYER_MAX_LIFE;
         [SerializeField] 
@@ -112,7 +108,7 @@ namespace DMSH.Characters
         [SerializeField] 
         private float _boost_speed = 0.05f;
         [SerializeField] 
-        private float _saved_time_scale = 0.0f;
+        private float _saved_time_scale;
 
         public Weapon                   Weapon { get; private set; }
 
@@ -195,7 +191,7 @@ namespace DMSH.Characters
 
         protected void FixedUpdate()
         {
-            var velocity = _moveDirection * _speed * GlobalSettings.gameActiveAsInt;
+            var velocity = _moveDirection * _speed * GlobalSettings.GameActiveAsInt;
 
 #if PREFFER_A_T_RESIZABLE_GAME_ELEMENTS
             _rigidBody2D.velocity = velocity;
@@ -209,7 +205,7 @@ namespace DMSH.Characters
             while (Time.timeScale < 1.0f)
             {
                 Time.fixedDeltaTime = 0.02F * Time.timeScale;
-                Time.timeScale += GlobalSettings.gameActiveAsInt * _boost_speed;
+                Time.timeScale += GlobalSettings.GameActiveAsInt * _boost_speed;
 
                 foreach (var sound in FindObjectsOfType<AudioSource>())
                 {
@@ -301,9 +297,9 @@ namespace DMSH.Characters
                 _slowMotionCoroutine = StartCoroutine(DoSlowMotion());
 
                 // Enable death animation
-                if (SpriteRenderer.color.a < 0.9f)
+                if (Animator.SpriteRenderer.color.a < 0.9f)
                 {
-                    _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(SpriteRenderer));
+                    _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(Animator.SpriteRenderer));
                 }
 
                 audioSourceMusic.Play();
@@ -357,7 +353,7 @@ namespace DMSH.Characters
                 // GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weapon.weaponEnabled}");
                 GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
                 GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
-                GUI.Label(new Rect(100, 320, 500, 500), $"gameActive: {GlobalSettings.gameActiveAsBool}");
+                GUI.Label(new Rect(100, 320, 500, 500), $"gamePaused: {GlobalSettings.IsPaused}");
                 GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {Weapon.weaponBoostGain}");
                 // GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {weapon.weaponType}");
             }
@@ -398,7 +394,7 @@ namespace DMSH.Characters
             Life = PLAYER_MIN_LIFE;
 
             _isDead = true;
-            SpriteRenderer.enabled = false;
+            Animator.SpriteRenderer.enabled = false;
             Collider2D.enabled = false;
             RigidBody2D.isKinematic = true;
             PlayerControl.Get.Input.enabled = false;
@@ -440,7 +436,7 @@ namespace DMSH.Characters
             }
             else
             {
-                _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(SpriteRenderer));
+                _deathAwakeCoroutine = StartCoroutine(BasicAnimationsPack.SmoothAwakeSprite(Animator.SpriteRenderer));
 
                 // Make everything slow
                 // Slow motion gameplay kekw

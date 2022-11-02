@@ -143,11 +143,11 @@ namespace DMSH.Objects
         internal void FixedUpdate()
         {
             // Basic effect of rotation
-            RigidBody2D.MoveRotation(RigidBody2D.rotation + _graphicRotationSpeed * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt);
+            RigidBody2D.MoveRotation(RigidBody2D.rotation + _graphicRotationSpeed * Time.fixedDeltaTime * GlobalSettings.GameActiveAsInt);
 
             if (IsMovesItself)
             {
-                MoveDirection = _bulletDirection * speed * GlobalSettings.gameActiveAsInt;
+                MoveDirection = _bulletDirection * speed * GlobalSettings.GameActiveAsInt;
                 RigidBody2D.velocity = MoveDirection;
             }
         }
@@ -181,6 +181,7 @@ namespace DMSH.Objects
         // It's just destroy effect for boost or player death
         private IEnumerator SqueezeAnimation()
         {
+            // TODO ! remove this Coroutine, it cause of multiple bugs with trail and scale
             var sizeBefore = transform.localScale;
             var trailStartSizeWidthBefore = _trailRenderer.startWidth;
             var trailEndSizeWidthBefore = _trailRenderer.endWidth;
@@ -241,6 +242,8 @@ namespace DMSH.Objects
                         new GradientColorKey[] {new(stepBulletSpriteColor, 0.0f)},
                         new GradientAlphaKey[] {new(1, 0.0f), new(0, 0.3f), new(0, 0.4f)}
                     );
+
+                    GradientCache.Add(stepBulletSpriteColor, gradient);
                 }
 
                 _trailRenderer.colorGradient = gradient;

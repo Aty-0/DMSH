@@ -4,8 +4,6 @@ using DMSH.Path;
 
 using Scripts.Utils;
 
-using System;
-
 using UnityEngine;
 
 namespace DMSH.Characters.Animation
@@ -23,11 +21,13 @@ namespace DMSH.Characters.Animation
 
         [SerializeField]
         private SpriteRenderer m_renderer;
+        public SpriteRenderer SpriteRenderer => m_renderer;
 
         private DirectionUtils.DirectionEnum _prevFrameDirection;
         private float _beforeNextFrame;
         private int _spriteIndex;
         private bool _shootState;
+        private bool _isPaused;
 
         // unity
 
@@ -46,7 +46,7 @@ namespace DMSH.Characters.Animation
 
         protected void Update()
         {
-            if (!GlobalSettings.gameActiveAsBool)
+            if (GlobalSettings.IsPaused || _isPaused)
                 return;
             
             _beforeNextFrame -= Time.deltaTime;
@@ -65,9 +65,14 @@ namespace DMSH.Characters.Animation
             SetNextFrame(0);
         }
 
+        public void SetPause(bool isPaused)
+        {
+            _isPaused = isPaused;
+        }
+
         // private
 
-        private void SetNextFrame(int index)
+        private void SetNextFrame(int index, bool recalcFps = true)
         {
             var moveDirection = m_owner.MoveDirection;
             var newFrameDirection = moveDirection.ToDirectionOnlySides();
@@ -91,8 +96,17 @@ namespace DMSH.Characters.Animation
                     _spriteIndex = index;
                 }
 
-                _beforeNextFrame = 1 / animationDataStruct.FPS;
+                if (recalcFps)
+                {
+                    _beforeNextFrame = 1 / animationDataStruct.FPS;
+                }
+
                 m_renderer.sprite = animationDataStruct.Sprites[_spriteIndex];
+            }
+            else if(_shootState)
+            {
+                _shootState = false;
+                SetNextFrame(_spriteIndex, false);
             }
         }
 

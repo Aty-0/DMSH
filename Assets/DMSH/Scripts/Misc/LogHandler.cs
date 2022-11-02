@@ -23,7 +23,7 @@ namespace DMSH.Misc.Log
         private int _fontSize;
 
         [SerializeField]
-        private bool _savedGameActiveState;
+        private bool _savedGamePauseState;
 
         [SerializeField]
         private bool _Resume = true;
@@ -46,16 +46,16 @@ namespace DMSH.Misc.Log
             Konsole.OnKonsoleVisibleStateChanged += isConsoleVisible =>
             {
                 drawConsole = isConsoleVisible;
-                Cursor.visible = !_Resume || (drawConsole || !GlobalSettings.gameActiveAsBool);
+                Cursor.visible = !_Resume || (drawConsole || GlobalSettings.IsPaused);
 
                 if (_Resume)
                 {
                     if (drawConsole)
                     {
-                        _savedGameActiveState = GlobalSettings.gameActiveAsBool;
+                        _savedGamePauseState = GlobalSettings.IsPaused;
                     }
 
-                    GlobalSettings.SetGameActive(_savedGameActiveState == true && !drawConsole);
+                    GlobalSettings.SetGameActive(!_savedGamePauseState && !drawConsole);
                 }
             };
 

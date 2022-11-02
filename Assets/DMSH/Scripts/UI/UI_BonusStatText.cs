@@ -58,7 +58,7 @@ namespace DMSH.UI
             Vector2 initPos = m_textTMP.transform.position;
             while (initPos.y < initPos.y + 2.0f)
             {
-                initPos.y += 0.02f * GlobalSettings.gameActiveAsInt;
+                initPos.y += 0.02f * GlobalSettings.GameActiveAsInt;
                 m_textTMP.transform.position = initPos;
                 yield return new WaitForSeconds(0.01f);
             }
@@ -69,7 +69,7 @@ namespace DMSH.UI
             float alpha = 1.0f;
             while (alpha > 0.0f)
             {
-                alpha -= 0.01f * GlobalSettings.gameActiveAsInt;
+                alpha -= 0.01f * GlobalSettings.GameActiveAsInt;
                 m_textTMP.color = new Color(1, 1, 1, alpha);
                 yield return new WaitForSeconds(0.01f);
             }
