@@ -143,11 +143,11 @@ namespace DMSH.Objects
         internal void FixedUpdate()
         {
             // Basic effect of rotation
-            RigidBody2D.MoveRotation(RigidBody2D.rotation + _graphicRotationSpeed * Time.fixedDeltaTime * GlobalSettings.gameActiveAsInt);
+            RigidBody2D.MoveRotation(RigidBody2D.rotation + _graphicRotationSpeed * Time.fixedDeltaTime * GlobalSettings.GameActiveAsInt);
 
             if (IsMovesItself)
             {
-                MoveDirection = _bulletDirection * speed * GlobalSettings.gameActiveAsInt;
+                MoveDirection = _bulletDirection * speed * GlobalSettings.GameActiveAsInt;
                 RigidBody2D.velocity = MoveDirection;
             }
         }

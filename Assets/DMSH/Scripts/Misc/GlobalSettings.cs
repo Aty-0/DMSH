@@ -1,5 +1,3 @@
-using DMSH.Characters;
-
 using System;
 
 // TODO: 1. Make functions to stop non DMSH Game elements 
@@ -8,7 +6,6 @@ using System;
 
 namespace DMSH.Misc
 {
-    [Serializable]
     public static class GlobalSettings
     {
         // TODO:
@@ -26,30 +23,17 @@ namespace DMSH.Misc
         public static bool musicPlay = true;
         public static bool mainMenuAwakeAnimation = true;
 
-        // It's non serilized cuz we are constatly save the false state on pause
-        // And on game load it's just stuck
-        [NonSerialized]
-        private static bool _gameActive = true;
-
-        public static int gameActiveAsInt => _gameActive ? 1 : 0;
-        public static bool gameActiveAsBool => _gameActive;
-
+        public static bool IsPaused { get; private set; }
+        public static int GameActiveAsInt => IsPaused ? 0 : 1;
 
         public static void SetGameActive(bool gameActive)
         {
-            if (_gameActive == gameActive)
+            var wantedToSetPauseState = !gameActive;
+            
+            if (IsPaused == wantedToSetPauseState)
                 return;
 
-            _gameActive = gameActive;
-
-            if (_gameActive)
-            {
-                PlayerController.Player.Animator.StopPlayback();
-            }
-            else
-            {
-                PlayerController.Player.Animator.StartPlayback();
-            }
+            IsPaused = wantedToSetPauseState;
         }
     }
 }

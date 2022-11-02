@@ -81,7 +81,7 @@ namespace DMSH.Objects.Bonuses
 
         protected void Update()
         {
-            if (_directionChangeLerp < 1 && GlobalSettings.gameActiveAsBool)
+            if (_directionChangeLerp < 1 && !GlobalSettings.IsPaused)
             {
                 _directionChangeLerp += Time.deltaTime * m_initialSpeedModifier;
             }
@@ -89,7 +89,7 @@ namespace DMSH.Objects.Bonuses
 
         protected void FixedUpdate()
         {
-            if (!GlobalSettings.gameActiveAsBool)
+            if (GlobalSettings.IsPaused)
             {
                 Rigidbody.velocity = Vector2.zero;
                 return;

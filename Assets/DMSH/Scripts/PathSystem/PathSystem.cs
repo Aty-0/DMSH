@@ -402,7 +402,7 @@ namespace DMSH.Path
                 }
 
                 // Calculate final speed 
-                currentPathObject.FinalSpeed = (currentPathObject.speed * Time.deltaTime * currentPathObject.ReduceSpeed * currentPathObject.AugmentSpeed) * GlobalSettings.gameActiveAsInt;
+                currentPathObject.FinalSpeed = (currentPathObject.speed * Time.deltaTime * currentPathObject.ReduceSpeed * currentPathObject.AugmentSpeed) * GlobalSettings.GameActiveAsInt;
 
             
                 // What's mode we need to use 

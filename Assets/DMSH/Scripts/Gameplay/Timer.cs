@@ -91,7 +91,7 @@ namespace DMSH.Gameplay
                 StartEvent?.Invoke();
                 while (_currentTime >= 0)
                 {
-                    _currentTime -= tick * GlobalSettings.gameActiveAsInt;
+                    _currentTime -= tick * GlobalSettings.GameActiveAsInt;
 
                     UpdateEvent?.Invoke();
                     yield return new WaitForSeconds(tick);

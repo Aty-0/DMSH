@@ -48,7 +48,7 @@ namespace DMSH.Scripts.Controls
         /// <summary>Call from <c>PlayerInput</c></summary>
         public void On_UseBoost(InputAction.CallbackContext context)
         {
-            if (m_player != null && GlobalSettings.gameActiveAsBool)
+            if (m_player != null && !GlobalSettings.IsPaused)
             {
                 m_player.UseBoost();
             }
@@ -57,7 +57,7 @@ namespace DMSH.Scripts.Controls
         /// <summary>Call from <c>PlayerInput</c></summary>
         public void On_Shot(InputAction.CallbackContext context)
         {
-            if (GlobalSettings.gameActiveAsBool && context.action.IsPressed())
+            if (!GlobalSettings.IsPaused && context.action.IsPressed())
             {
                 m_player.Weapon.Shot();
             }
