@@ -73,8 +73,8 @@ namespace DMSH.Characters
 
         [Header("Graphics")]
         [SerializeField]
-        private DmshAnimator m_animator;
-        public DmshAnimator Animator => m_animator;
+        private FrameAnimator m_animator;
+        public FrameAnimator Animator => m_animator;
         
         [SerializeField] 
         private Vector2 _moveDirection = Vector2.zero;
