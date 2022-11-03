@@ -31,9 +31,6 @@ namespace DMSH.Misc.Screen
         private GameObject[] _wallsList = new GameObject[4];      
 
         [SerializeField]
-        private float resultPoint = 0.0f;
-
-        [SerializeField]
         private float screenDistanceWidth; // It's width to someImage
 
         [SerializeField]
@@ -42,6 +39,10 @@ namespace DMSH.Misc.Screen
         [SerializeField]
         [HideInInspector]
         private List<Tuple<string,Vector3>> initialPositionPS = new List<Tuple<string, Vector3>>();
+
+        [SerializeField]
+        [HideInInspector]
+        private List<Tuple<string, Vector3>> initialPositionPointsPS = new List<Tuple<string, Vector3>>();
 
         [SerializeField]
         [HideInInspector]
@@ -64,15 +65,8 @@ namespace DMSH.Misc.Screen
         {
             if (GlobalSettings.debugDrawInvWallSI)
             {
-                Debug.DrawLine(new Vector3(resultPoint, -resolutionInWorldPoint.y, 0), new Vector3(resultPoint, resolutionInWorldPoint.y, 0));
+                Debug.DrawLine(new Vector3(resolutionInWorldPoint.z, -resolutionInWorldPoint.y, 0), new Vector3(resolutionInWorldPoint.z, resolutionInWorldPoint.y, 0));
             }
-        }
-
-        public static Rect GetWorldRect(RectTransform rectTransform)
-        {
-            Vector3[] corners = new Vector3[4];
-            rectTransform.GetWorldCorners(corners);
-            return new Rect(corners[0], corners[2] - corners[0]);
         }
 
         public void Initialize()
@@ -96,6 +90,12 @@ namespace DMSH.Misc.Screen
             foreach (var system in FindObjectsOfType<PathSystem>())
             {
                 initialPositionPS.Add(Tuple.Create(system.ID, system.transform.position));
+
+                // Save initial position of curve points
+                foreach (var point in system.pathPointsList)
+                {
+                    initialPositionPointsPS.Add(Tuple.Create(point.ID, point.transform.position));
+                }
 
                 // Save initial position of curve points
                 foreach (var point in system.pathPointsList)
@@ -156,15 +156,13 @@ namespace DMSH.Misc.Screen
             UpdateResolutionInWorldPoint();
 
             // Try to translate rectTransform to world coords            
-            float imageRectWInWp = GetWorldRect(_uiSomeImage.rectTransform).width;
+            var offset = _uiSomeImage.rectTransform.rect.width;
+            var bottomLeft = gameCamera.ScreenToWorldPoint(Vector3.zero);
+            var topRight = gameCamera.ScreenToWorldPoint(new Vector3(gameCamera.pixelWidth - offset, gameCamera.pixelHeight));
+            var cameraRect = new Rect(bottomLeft.x, bottomLeft.y,
+                topRight.x - bottomLeft.x, topRight.y - bottomLeft.y);
 
-            // TODO:
-            //float imageRectHInWp = GetWorldRect(_uiSomeImage.rectTransform).height;
-
-            resultPoint = (resolutionInWorldPoint.x - (imageRectWInWp * 0.01f) * 1.3f);
-
-            // Calculate point beetwen screen width and uiSomeImage width 
-            resolutionInWorldPoint = new Vector3(resolutionInWorldPoint.x, resolutionInWorldPoint.y, resultPoint);
+            resolutionInWorldPoint = new Vector3(resolutionInWorldPoint.x, resolutionInWorldPoint.y, cameraRect.xMax);
             // Set new position 
             UpdateInvisibleWallsPosition(resolutionInWorldPoint);
             // Restretch for new resolution
@@ -172,41 +170,47 @@ namespace DMSH.Misc.Screen
 
             // Set screen middle position for respawn point
             respawnPoint.transform.position = new Vector2(-resolutionInWorldPoint.z / 2, -resolutionInWorldPoint.y / 1.2f);
-            screenDistanceWidth = Vector3.Distance(-new Vector3(resolutionInWorldPoint.x, 0, 0), new Vector3(resultPoint, 0, 0)) * 0.1f;
+            screenDistanceWidth = Vector3.Distance(-new Vector3(resolutionInWorldPoint.x, 0, 0), new Vector3(cameraRect.xMax, 0, 0)) * 0.1f;
             screenDistanceHeight = Vector3.Distance(-new Vector3(0, resolutionInWorldPoint.y, 0), new Vector3(0, resolutionInWorldPoint.y, 0)) * 0.1f;
 
-            // --
-            // Kucha parsa, mb eto plohaya idea
-            // --
+            // Dumaem nad etim ...............................
 
             // Rescale pathSystem and change position for all points
-            foreach (var system in FindObjectsOfType<PathSystem>())
-            {
-                system.transform.localScale = new Vector3(screenDistanceWidth, screenDistanceHeight, 1);
-
-                foreach (var point in system.pathPointsList)
-                {
-                    foreach (var curvePos in initialPositionCurvePointsPS)
-                    {
-                        if (curvePos.Item1 == point.ID)
-                        {
-                            //Debug.Log($"ResizableGameElements: New pos [Point] curve ! object {point.name} id {point.ID} {point.curvePoint} -> {curvePos.Item2}");
-                            point.curvePoint = new Vector3(curvePos.Item2.x - screenDistanceWidth * 0.1f, curvePos.Item2.y + screenDistanceHeight * 0.1f, 1);
-                            break;
-                        }
-                    }
-                }
-
-                //foreach (var pos in initialPositionPS)
-                //{
-                //    if (pos.Item1 == system.ID)
-                //    {
-                //        //Debug.Log($"ResizableGameElements: New pos [PathSystem] object {system.name} id {system.ID} {system.transform.position} -> {pos.Item2}");
-                //        system.transform.localPosition = new Vector3(pos.Item2.x + screenDistanceWidth * 0.1f, pos.Item2.y + screenDistanceHeight * 0.1f, 1);
-                //        break;
-                //    }
-                //}           
-            }
+            //foreach (var system in FindObjectsOfType<PathSystem>())
+            //{
+            //    foreach (var point in system.pathPointsList)
+            //    {
+            //        foreach (var pointPos in initialPositionPointsPS)
+            //        {
+            //            if (pointPos.Item1 == point.ID)
+            //            {
+            //                //Debug.Log($"ResizableGameElements: New pos [Point] curve ! object {point.name} id {point.ID} {point.curvePoint} -> {curvePos.Item2}");
+            //                point.transform.localPosition = new Vector3(pointPos.Item2.x * (screenDistanceWidth * 0.1f), Mathf.Clamp(pointPos.Item2.y, pointPos.Item2.y, pointPos.Item2.y * (screenDistanceHeight * 0.1f)), 1);
+            //                break;
+            //            }
+            //        }
+            //
+            //        foreach (var curvePos in initialPositionCurvePointsPS)
+            //        {
+            //            if (curvePos.Item1 == point.ID)
+            //            {
+            //                //Debug.Log($"ResizableGameElements: New pos [Point] curve ! object {point.name} id {point.ID} {point.curvePoint} -> {curvePos.Item2}");
+            //                point.curvePoint = new Vector3(Mathf.Clamp(curvePos.Item2.x, curvePos.Item2.x, curvePos.Item2.x * (screenDistanceWidth)), Mathf.Clamp(curvePos.Item2.y, curvePos.Item2.y, curvePos.Item2.y * (screenDistanceHeight)), 1);
+            //                break;
+            //            }
+            //        }
+            //    }
+            //
+            //    foreach (var pos in initialPositionPS)
+            //    {
+            //        if (pos.Item1 == system.ID)
+            //        {
+            //            //Debug.Log($"ResizableGameElements: New pos [PathSystem] object {system.name} id {system.ID} {system.transform.position} -> {pos.Item2}");
+            //            system.transform.localPosition = new Vector3(pos.Item2.x + screenDistanceWidth * 0.1f, pos.Item2.y + screenDistanceHeight * 0.1f, 1);
+            //            break;
+            //        }
+            //    }           
+            //}
 
             // Rescale MovableObjects
             foreach (var mo in FindObjectsOfType<MovableObject>())
@@ -215,7 +219,6 @@ namespace DMSH.Misc.Screen
                 {
                     if (scale.Item1 == mo.ID)
                     {
-                        //Debug.Log($"ResizableGameElements: Rescale [MovableObject] object {mo.name} id {mo.ID} {mo.transform.localScale} -> {scale.Item2}");
                         mo.transform.localScale = new Vector3(scale.Item2.x + screenDistanceWidth * 0.1f, scale.Item2.y + screenDistanceHeight * 0.1f, 1);
                         break;
                     }
