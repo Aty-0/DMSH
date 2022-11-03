@@ -1,9 +1,5 @@
 using System;
 
-// TODO: 1. Make functions to stop non DMSH Game elements 
-//       2. Read settings from game.json or something like that
-//       3. Save the current settings [Save volume, graphics preset, max scores]
-
 namespace DMSH.Misc
 {
     public static class GlobalSettings
