@@ -4,6 +4,7 @@ using DMSH.Path;
 using DMSH.Gameplay;
 
 using Scripts.Objects.Bonuses;
+using Scripts.Utils;
 using Scripts.Utils.Pools;
 
 using Random = UnityEngine.Random;
@@ -18,7 +19,7 @@ namespace DMSH.Characters
     {
         public const int MAX_RANDOM_DROP_SCORE_BONUS = 4;
         public const int MAX_RANDOM_DROP_WEAPON_BONUS = 4;
-        
+
         [Header("Weapon")]
         public Weapon Weapon;
 
@@ -248,6 +249,9 @@ namespace DMSH.Characters
 
         public void DropBonus()
         {
+            var bonusEnumValues = System.Enum.GetValues(typeof(BonusDropTypeEnum));
+            m_bonusDropType = (BonusDropTypeEnum)bonusEnumValues.GetValue(Random.Range(0, bonusEnumValues.Length));
+
             switch (m_bonusDropType)
             {
                 case BonusDropTypeEnum.Score:
@@ -255,7 +259,7 @@ namespace DMSH.Characters
                     {
                         BonusPool
                             .GetOrCreate()
-                            .SpawnAt(transform.position, BonusPool.Get.Score1000Bonus);
+                            .SpawnAt(transform.position + MathUtils.Vec2RandomInVec3(-0.6f, 0.6f), BonusPool.Get.Score1000Bonus);
                     }
 
                     break;
@@ -265,7 +269,7 @@ namespace DMSH.Characters
                     {
                         BonusPool
                             .GetOrCreate()
-                            .SpawnAt(transform.position, BonusPool.Get.WeaponBonus);
+                            .SpawnAt(transform.position + MathUtils.Vec2RandomInVec3(-0.6f, 0.6f), BonusPool.Get.WeaponBonus);
                     }
 
                     break;
