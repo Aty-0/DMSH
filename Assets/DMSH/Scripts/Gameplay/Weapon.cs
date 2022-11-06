@@ -16,7 +16,11 @@ namespace DMSH.Gameplay
     {
         [Header("Weapon base")]
         [SerializeField]
+        private List<BulletSpawnPatternScriptableObject> _firePatterns;
+
+        [SerializeField]
         private BulletSpawnPatternScriptableObject m_firePattern;
+
         public FireStateStruct PatternFireState;
 
         [SerializeField]
@@ -73,6 +77,12 @@ namespace DMSH.Gameplay
         {
             PatternFireState = FireStateStruct.CreateEmpty();
 
+            // To avoid breaking old prefabs
+            if(m_firePattern != null)
+            {
+                _firePatterns.Insert(0, m_firePattern);
+            }
+
             // If point is null then start point will be game object
             if (ShotPoint == null)
             {
@@ -109,6 +119,22 @@ namespace DMSH.Gameplay
 #endif
 
         // public API
+        public void GoToNextWeaponType()
+        {            
+            if (m_firePattern == null || _firePatterns.Count <= 1)
+            {
+                return;
+            }
+
+            var index = _firePatterns.IndexOf(m_firePattern) + 1;
+
+            if (index >= _firePatterns.Count)
+            {
+                return;
+            }
+
+            m_firePattern = _firePatterns[index];
+        }
 
         public void AddWeaponBoost(float gain)
         {
@@ -116,7 +142,7 @@ namespace DMSH.Gameplay
             if (weaponBoostGain >= 100.0f)
             {
                 weaponBoostGain = 0.0f;
-                // _weaponType += 1;
+                GoToNextWeaponType();
             }
         }
 
@@ -163,6 +189,7 @@ namespace DMSH.Gameplay
 
             target._useOwner = _useOwner;
             target._weaponEnabled = _weaponEnabled;
+            target._firePatterns = _firePatterns;
             target.m_firePattern = m_firePattern;
             target.m_isEnemy = m_isEnemy;
             target.shotFrequency = shotFrequency;

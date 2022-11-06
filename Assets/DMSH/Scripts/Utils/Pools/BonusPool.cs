@@ -11,7 +11,7 @@ namespace Scripts.Utils.Pools
         public IBonusBehaviour Score1000Bonus => m_1000ScoreBonus;
         
         [SerializeField]
-        private IBonusBehaviour m_wewaponBonus;
-        public IBonusBehaviour WeaponBonus => m_1000ScoreBonus;
+        private IBonusBehaviour m_weaponBonus;
+        public IBonusBehaviour WeaponBonus => m_weaponBonus;
     }
 }
