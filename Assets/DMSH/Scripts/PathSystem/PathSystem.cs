@@ -270,7 +270,7 @@ namespace DMSH.Path
                         Vector3 convertedPos = Camera.main.WorldToScreenPoint(new Vector3(move_object.transform.position.x, -move_object.transform.position.y, 0));
                         GUI.Label(new Rect(convertedPos.x, convertedPos.y, 400, 400),
                             $"iObj: {movablePathObjectsList.IndexOf(move_object)}\n" +
-                            $"iPnt: {move_object.CurrentPoint}\n" +
+                            $"icurP: {move_object.CurrentPoint}\n" +
                             $"S: {move_object.speed}\n" +
                             $"fS:{move_object.FinalSpeed}\n" +
                             $"aS: {move_object.AugmentSpeed}\n" +
@@ -347,9 +347,15 @@ namespace DMSH.Path
         protected void Update()
         {
             // Check both lists on object exist
-            if (pathPointsList.Count == 0 || movablePathObjectsList.Count == 0)
+
+            if (pathPointsList.Count == 0 || (movablePathObjectsList.Count == 0 
+                && (spawnedObjectCount != 0 && objectCount != 0)))
+            {
+                Debug.Log($"{name} is done or have zero points or movable objects! It will be destroyed");
+                Destroy(gameObject);
                 return;
-          
+            }
+
             MovableObject futurePathObject = null;
             // TODO: Slip movement
             foreach (var mO in movablePathObjectsList.ToList())
