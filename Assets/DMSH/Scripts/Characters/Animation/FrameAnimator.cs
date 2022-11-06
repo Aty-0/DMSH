@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace DMSH.Characters.Animation
 {
-    public class DmshAnimator : MonoBehaviour
+    public class FrameAnimator : MonoBehaviour
     {
         [SerializeField]
         private AnimationData m_data;

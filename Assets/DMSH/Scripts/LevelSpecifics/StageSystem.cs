@@ -6,7 +6,10 @@ using UnityEngine;
 using DMSH.Gameplay;
 using DMSH.Path;
 
+using DMSH.Scripts.Objects.Projectiles;
+
 using Scripts.Utils;
+using Scripts.Utils.Pools;
 
 namespace DMSH.LevelSpecifics.Stage
 {
@@ -46,20 +49,28 @@ namespace DMSH.LevelSpecifics.Stage
 
         protected void Start()
         {
-            Debug.Log($"[StageSystem] Stage system is started...");
+            WorldInitialize();
+        }
 
-            // Disable all path system
+        // Here we are prepare some components when game is started 
+        public void WorldInitialize()
+        {
+            Debug.Log($"World Initialize...");
+
+            GenericReusableList<ProjectileModificatorStateStruct>.CreatePool(32, 4);
+
+            // Disable all path systems
             foreach (var go in GetComponents<PathSystem>())
             {
                 go.gameObject.SetActive(false);
             }
 
-            // Get timer, set events
+            // Set events for timer
             timer = GetComponent<Timer>();
             timer.StartEvent += OnTimerStart;
             timer.EndEvent += OnTimerEnd;
 
-            // Game scenario logic start...
+            // Start game 
             timer.StartTimer();
         }
 

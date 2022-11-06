@@ -12,7 +12,6 @@ namespace DMSH.Misc.Log
     public class LogHandler : MonoBehaviour
     {
         [Header("Draw")]
-        public bool drawLogMessages = false;
         public bool drawConsole = false;
 
         [Header("Misc")]
@@ -105,9 +104,6 @@ namespace DMSH.Misc.Log
                 plCollider.enabled = newPlCollider;
                 context.Log($" is {(!newPlCollider ? "Enabled" : "Disabled")}");
             });
-
-            // ?
-            Konsole.RegisterCommand("tm", _ => drawLogMessages = !drawLogMessages);
 
             Konsole.RegisterCommand("testLog", _ => Debug.Log("Hi"));
             Konsole.RegisterCommand("testassert", _ => Debug.Assert(false, "Assert Hi"));

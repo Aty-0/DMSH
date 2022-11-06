@@ -11,7 +11,6 @@ using DMSH.Objects;
 using DMSH.LevelSpecifics.Stage;
 using DMSH.Gameplay;
 using DMSH.Scripts.Controls;
-using DMSH.Scripts.Objects.Projectiles;
 using DMSH.UI;
 
 using Scripts.Utils;
@@ -73,8 +72,8 @@ namespace DMSH.Characters
 
         [Header("Graphics")]
         [SerializeField]
-        private DmshAnimator m_animator;
-        public DmshAnimator Animator => m_animator;
+        private FrameAnimator m_animator;
+        public FrameAnimator Animator => m_animator;
         
         [SerializeField] 
         private Vector2 _moveDirection = Vector2.zero;
@@ -147,10 +146,7 @@ namespace DMSH.Characters
         }
 
         protected void Start()
-        {
-            // TODO move it to better place, like "world initializer"
-            GenericReusableList<ProjectileModificatorStateStruct>.CreatePool(32, 4);
-            
+        {            
             // First initialize
             PrepareComponents();
             UpdateHUD();
