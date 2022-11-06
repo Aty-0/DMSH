@@ -1,11 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-using DMSH.Path;
-
-using System;
-using System.Collections.Generic;
-
 namespace DMSH.Misc.Screen
 {
     public class ResizableGameElements : MonoBehaviour
@@ -36,23 +31,6 @@ namespace DMSH.Misc.Screen
         [SerializeField]
         private float screenDistanceHeight;
 
-        [SerializeField]
-        [HideInInspector]
-        private List<Tuple<string,Vector3>> initialPositionPS = new List<Tuple<string, Vector3>>();
-
-        [SerializeField]
-        [HideInInspector]
-        private List<Tuple<string, Vector3>> initialPositionPointsPS = new List<Tuple<string, Vector3>>();
-
-        [SerializeField]
-        [HideInInspector]
-        private List<Tuple<string, Vector3>> initialPositionCurvePointsPS = new List<Tuple<string, Vector3>>();
-
-
-        [SerializeField]
-        [HideInInspector]
-        private List<Tuple<string,Vector3>> initialScale = new List<Tuple<string, Vector3>>();
-
         protected void Update()
         {
             OnDrawDebug();
@@ -79,36 +57,8 @@ namespace DMSH.Misc.Screen
 
             // first 
             UpdateResolutionInWorldPoint();
-            GetInitialData();
             // Do last
             OnResolutionScreenChange();
-        }
-
-        private void GetInitialData()
-        {
-            // Save initial position of PathSystems
-            foreach (var system in FindObjectsOfType<PathSystem>())
-            {
-                initialPositionPS.Add(Tuple.Create(system.ID, system.transform.position));
-
-                // Save initial position of curve points
-                foreach (var point in system.pathPointsList)
-                {
-                    initialPositionPointsPS.Add(Tuple.Create(point.ID, point.transform.position));
-                }
-
-                // Save initial position of curve points
-                foreach (var point in system.pathPointsList)
-                {
-                    initialPositionCurvePointsPS.Add(Tuple.Create(point.ID, point.curvePoint));
-                }
-            }
-
-            // Save initial scale of MovableObjects
-            foreach (var mo in FindObjectsOfType<MovableObject>())
-            {
-                initialScale.Add(Tuple.Create(mo.ID, mo.transform.localScale));
-            }
         }
 
         private bool CheckComponentsOnExist()
@@ -172,58 +122,6 @@ namespace DMSH.Misc.Screen
             respawnPoint.transform.position = new Vector2(-resolutionInWorldPoint.z / 2, -resolutionInWorldPoint.y / 1.2f);
             screenDistanceWidth = Vector3.Distance(-new Vector3(resolutionInWorldPoint.x, 0, 0), new Vector3(cameraRect.xMax, 0, 0)) * 0.1f;
             screenDistanceHeight = Vector3.Distance(-new Vector3(0, resolutionInWorldPoint.y, 0), new Vector3(0, resolutionInWorldPoint.y, 0)) * 0.1f;
-
-            // Dumaem nad etim ...............................
-
-            // Rescale pathSystem and change position for all points
-            //foreach (var system in FindObjectsOfType<PathSystem>())
-            //{
-            //    foreach (var point in system.pathPointsList)
-            //    {
-            //        foreach (var pointPos in initialPositionPointsPS)
-            //        {
-            //            if (pointPos.Item1 == point.ID)
-            //            {
-            //                //Debug.Log($"ResizableGameElements: New pos [Point] curve ! object {point.name} id {point.ID} {point.curvePoint} -> {curvePos.Item2}");
-            //                point.transform.localPosition = new Vector3(pointPos.Item2.x * (screenDistanceWidth * 0.1f), Mathf.Clamp(pointPos.Item2.y, pointPos.Item2.y, pointPos.Item2.y * (screenDistanceHeight * 0.1f)), 1);
-            //                break;
-            //            }
-            //        }
-            //
-            //        foreach (var curvePos in initialPositionCurvePointsPS)
-            //        {
-            //            if (curvePos.Item1 == point.ID)
-            //            {
-            //                //Debug.Log($"ResizableGameElements: New pos [Point] curve ! object {point.name} id {point.ID} {point.curvePoint} -> {curvePos.Item2}");
-            //                point.curvePoint = new Vector3(Mathf.Clamp(curvePos.Item2.x, curvePos.Item2.x, curvePos.Item2.x * (screenDistanceWidth)), Mathf.Clamp(curvePos.Item2.y, curvePos.Item2.y, curvePos.Item2.y * (screenDistanceHeight)), 1);
-            //                break;
-            //            }
-            //        }
-            //    }
-            //
-            //    foreach (var pos in initialPositionPS)
-            //    {
-            //        if (pos.Item1 == system.ID)
-            //        {
-            //            //Debug.Log($"ResizableGameElements: New pos [PathSystem] object {system.name} id {system.ID} {system.transform.position} -> {pos.Item2}");
-            //            system.transform.localPosition = new Vector3(pos.Item2.x + screenDistanceWidth * 0.1f, pos.Item2.y + screenDistanceHeight * 0.1f, 1);
-            //            break;
-            //        }
-            //    }           
-            //}
-
-            // Rescale MovableObjects
-            foreach (var mo in FindObjectsOfType<MovableObject>())
-            {
-                foreach (var scale in initialScale)
-                {
-                    if (scale.Item1 == mo.ID)
-                    {
-                        mo.transform.localScale = new Vector3(scale.Item2.x + screenDistanceWidth * 0.1f, scale.Item2.y + screenDistanceHeight * 0.1f, 1);
-                        break;
-                    }
-                }
-            }
         }
 
         private void UpdateBackgroundPosAndScale()
