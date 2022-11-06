@@ -3,6 +3,7 @@ using DMSH.Characters;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using System.Collections;
 
 using UnityEngine;
 
@@ -33,6 +34,8 @@ namespace DMSH.Path
         public float spawnerTimerTime = 0.5f;
         public float spawnerTimerTick = 0.5f;
         private Timer _spawnerTimer = null;
+
+        private Coroutine _spawnCoroutine;
 
         [Header("Misc")]
         public float distanceBetweenObjects = 2.0f;
@@ -104,13 +107,28 @@ namespace DMSH.Path
             // ? spawnedEnemy.transform.parent = transform.parent;
             
             movablePathObjectsList.Add(spawnedEnemy);
+
             if (spawnedObjectCount == objectCount)
             {
-                _spawnerTimer.EndTimer();
+                StopCoroutine(_spawnCoroutine);
+                Destroy(_spawnerTimer);
             }
             else
             {
                 _spawnerTimer.ResetTimer();
+            }
+        }
+        private IEnumerator StartSpawning()
+        {
+            while (spawnedObjectCount <= objectCount)
+            {
+                if (_spawnerTimer.isEnded == true ||
+                    _spawnerTimer.isStarted == false)
+                {
+                    _spawnerTimer.StartTimer();                    
+                }
+      
+                yield return null;
             }
         }
 
@@ -126,10 +144,7 @@ namespace DMSH.Path
                 _spawnerTimer.EndEvent += SpawnObject;
                 if (objectPrefab != null)
                 {
-                    for (int i = 1; i <= objectCount && !_spawnerTimer.isEnded; i++)
-                    {
-                        _spawnerTimer.StartTimer();
-                    }
+                    _spawnCoroutine = StartCoroutine(StartSpawning());
                 }
             }
 

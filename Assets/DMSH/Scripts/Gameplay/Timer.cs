@@ -15,23 +15,40 @@ namespace DMSH.Gameplay
             get => _isEnded;
         }
 
+        public float CurrentTime
+        {
+            private set => _currentTime = value;
+            get => _currentTime;
+        }
+
         [Header("Time")]
-        public float time;
+        public float time = 0.0f;
 
         [Tooltip("In seconds")]
         public float tick = 1.0f;
+        public bool selfDestroyOnEnd = false;
 
         [Header("Debug")]
         [SerializeField]
-        private bool _isEnded;
+        private bool _isEnded = false;
         [SerializeField]
-        private float _currentTime;
+        private float _currentTime = 0.0f;
 
         public event Action StartEvent;
         public event Action UpdateEvent;
         public event Action EndEvent;
 
         private Coroutine _tickCoroutine;
+
+        public bool isStarted
+        {
+            get => _tickCoroutine != null;
+            private set
+            {
+
+            }
+        }
+
 
         protected void Start()
         {
@@ -99,6 +116,11 @@ namespace DMSH.Gameplay
 
                 _isEnded = true;
                 EndEvent?.Invoke();
+
+                if(selfDestroyOnEnd)
+                {
+                    Destroy(this);
+                }
             }
             finally
             {
