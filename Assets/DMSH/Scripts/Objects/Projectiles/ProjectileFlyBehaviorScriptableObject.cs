@@ -3,8 +3,6 @@ using DMSH.Scripts.Controls;
 using DMSH.Scripts.Objects.Projectiles;
 using DMSH.UI;
 
-using GD.MinMaxSlider;
-
 using Scripts.Utils;
 using Scripts.Utils.Unity;
 
@@ -357,9 +355,7 @@ namespace DMSH.Objects.Projectiles
             public float Angle;
 
             // DirectAngle_WithRandomFactor
-            [MinMaxSlider(0, 180)]
             public Vector2Int RandomFactorLeft;
-            [MinMaxSlider(0, 180)]
             public Vector2Int RandomFactorRight;
 
             public ProjectileRelaunchTypeEnum RelaunchType;
