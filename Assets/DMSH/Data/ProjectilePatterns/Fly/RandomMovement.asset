@@ -43,7 +43,7 @@ MonoBehaviour:
       m_PreInfinity: 2
       m_PostInfinity: 2
       m_RotationOrder: 4
-    AngleConverter: 3
+    AngleConverter: 4
     SwitchOnMask:
       m_layer: 3
     Angle: 90

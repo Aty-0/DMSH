@@ -289,6 +289,7 @@ namespace DMSH.Characters
             target._reduceHealth = _reduceHealth;
             target._showDamageStatusText = _showDamageStatusText;
             target.m_bonusDropType = m_bonusDropType;
+            target._isDead = _isDead;
 
             Weapon.CopyTo(target.Weapon);
         }

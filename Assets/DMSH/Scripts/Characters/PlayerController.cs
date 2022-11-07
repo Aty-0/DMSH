@@ -168,7 +168,7 @@ namespace DMSH.Characters
             if (_stageSystem == null)
                 Debug.LogError("No stage system in scene");
 
-            if (TryGetComponent(out resizableGameElements))
+            if (TryGetComponent(out resizableGameElements) && resizableGameElements.enabled)
             {
                 resizableGameElements.gameCamera = GameCamera.Get.Camera;
                 resizableGameElements.Initialize();
@@ -192,7 +192,7 @@ namespace DMSH.Characters
 #if PREFFER_A_T_RESIZABLE_GAME_ELEMENTS
             _rigidBody2D.velocity = velocity;
  #else
-            _rigidBody2D.MoveRigidbodyInsideScreen(velocity, gameCamera, UI_Root.Get.SidePanelRect.sizeDelta.x);
+            _rigidBody2D.MoveRigidbodyInsideScreen(velocity, GameCamera.Get.Camera);
 #endif
         }
 

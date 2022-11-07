@@ -1,4 +1,5 @@
 using UnityEngine;
+
 using DMSH.Characters;
 using DMSH.Misc.Screen;
 
@@ -6,10 +7,10 @@ namespace DMSH.LevelSpecifics
 {
     public class EnemyActiveField : MonoBehaviour
     {
-        [SerializeField] 
+        [SerializeField]
         private PlayerController _playerController;
 
-        [SerializeField] 
+        [SerializeField]
         private ResizableGameElements _resizableGameElements;
 
         protected void Start()
@@ -17,7 +18,7 @@ namespace DMSH.LevelSpecifics
             _playerController = FindObjectOfType<PlayerController>();
 
             _resizableGameElements = _playerController.resizableGameElements;
-            if (_resizableGameElements != null)
+            if (_resizableGameElements != null && _resizableGameElements.enabled && _resizableGameElements.screenHandler != null)
             {
                 _resizableGameElements.screenHandler.onScreenResolutionChange.Add(OnResolutionChange);
             }
@@ -46,8 +47,6 @@ namespace DMSH.LevelSpecifics
             {
                 enemy.ignoreHits = true;
             }
-
         }
-    
     }
 }
