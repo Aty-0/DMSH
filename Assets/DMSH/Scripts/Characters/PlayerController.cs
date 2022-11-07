@@ -168,7 +168,7 @@ namespace DMSH.Characters
             if (_stageSystem == null)
                 Debug.LogError("No stage system in scene");
 
-            if (TryGetComponent(out resizableGameElements))
+            if (TryGetComponent(out resizableGameElements) && resizableGameElements.enabled)
             {
                 resizableGameElements.gameCamera = GameCamera.Get.Camera;
                 resizableGameElements.Initialize();
