@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace DMSH.Misc.Screen
 {
@@ -7,17 +6,13 @@ namespace DMSH.Misc.Screen
     {
         public GameObject respawnPoint = null;
 
-        // X - Width, Y - Height, Z - Width to right image
-        public Vector3    resolutionInWorldPoint = Vector3.zero;
+        public Rect cameraRect;
 
         [HideInInspector]
         public ScreenHandler screenHandler = null;
 
         [SerializeField]
         private GameObject _background = null;
-
-        [SerializeField]
-        private Image _uiSomeImage = null; // Image on the right screen corner
 
         [HideInInspector]
         public Camera gameCamera = null;
@@ -26,27 +21,17 @@ namespace DMSH.Misc.Screen
         private GameObject[] _wallsList = new GameObject[4];      
 
         [SerializeField]
-        private float screenDistanceWidth; // It's width to someImage
+        private float screenDistanceWidth; 
 
         [SerializeField]
         private float screenDistanceHeight;
 
         protected void Update()
         {
-            OnDrawDebug();
-
             UpdateBackgroundPosAndScale();
             CheckBounds();
         }
-
-        private void OnDrawDebug()
-        {
-            if (GlobalSettings.debugDrawInvWallSI)
-            {
-                Debug.DrawLine(new Vector3(resolutionInWorldPoint.z, -resolutionInWorldPoint.y, 0), new Vector3(resolutionInWorldPoint.z, resolutionInWorldPoint.y, 0));
-            }
-        }
-
+        
         public void Initialize()
         {
             screenHandler = gameObject.AddComponent<ScreenHandler>();
@@ -55,9 +40,6 @@ namespace DMSH.Misc.Screen
             if (!CheckComponentsOnExist())
                 return;
 
-            // first 
-            UpdateResolutionInWorldPoint();
-            // Do last
             OnResolutionScreenChange();
         }
 
@@ -68,12 +50,6 @@ namespace DMSH.Misc.Screen
             if (_background == null)
             {
                 Debug.LogWarning("ResizableGameElements: Background is null", this);
-                isFine = false;
-            }
-
-            if (_uiSomeImage == null)
-            {
-                Debug.LogWarning("ResizableGameElements: SomeImage is null", this);
                 isFine = false;
             }
 
@@ -91,37 +67,28 @@ namespace DMSH.Misc.Screen
             return isFine;
         }
 
-        private void UpdateResolutionInWorldPoint()
-        {
-            resolutionInWorldPoint = new Vector3(gameCamera.ViewportToWorldPoint(new Vector2(1, 0)).x,
-                    gameCamera.ViewportToWorldPoint(new Vector2(0, 1)).y, 0);
-        }
-
         private void OnResolutionScreenChange()
         {
             if (!enabled)
                 return;
             
-            // Get actual resolution in world points
-            UpdateResolutionInWorldPoint();
+            // Try to translate rectTransform to world coords  
+            var bottomLeft = gameCamera.ScreenToWorldPoint(new Vector3(gameCamera.pixelRect.x, gameCamera.pixelRect.y, 0));
+            var topRight = gameCamera.ScreenToWorldPoint(new Vector3(gameCamera.pixelRect.x + gameCamera.pixelRect.width, gameCamera.pixelRect.y + gameCamera.pixelRect.height));
 
-            // Try to translate rectTransform to world coords            
-            var offset = _uiSomeImage.rectTransform.rect.width;
-            var bottomLeft = gameCamera.ScreenToWorldPoint(Vector3.zero);
-            var topRight = gameCamera.ScreenToWorldPoint(new Vector3(gameCamera.pixelWidth - offset, gameCamera.pixelHeight));
-            var cameraRect = new Rect(bottomLeft.x, bottomLeft.y,
+            cameraRect = new Rect(bottomLeft.x, bottomLeft.y,
                 topRight.x - bottomLeft.x, topRight.y - bottomLeft.y);
 
-            resolutionInWorldPoint = new Vector3(resolutionInWorldPoint.x, resolutionInWorldPoint.y, cameraRect.xMax);
+            
             // Set new position 
-            UpdateInvisibleWallsPosition(resolutionInWorldPoint);
+            UpdateInvisibleWallsPosition();
             // Restretch for new resolution
             RestretchInvisibleWalls();
 
-            // Set screen middle position for respawn point
-            respawnPoint.transform.position = new Vector2(-resolutionInWorldPoint.z / 2, -resolutionInWorldPoint.y / 1.2f);
-            screenDistanceWidth = Vector3.Distance(-new Vector3(resolutionInWorldPoint.x, 0, 0), new Vector3(cameraRect.xMax, 0, 0)) * 0.1f;
-            screenDistanceHeight = Vector3.Distance(-new Vector3(0, resolutionInWorldPoint.y, 0), new Vector3(0, resolutionInWorldPoint.y, 0)) * 0.1f;
+            //respawnPoint.transform.position = new Vector2(cameraRect.xMin / 8, cameraRect.yMin / 1.5f);
+
+            screenDistanceWidth = Vector3.Distance(new Vector3(cameraRect.xMin, 0, 0), new Vector3(cameraRect.xMax, 0, 0)) * 0.1f;
+            screenDistanceHeight = Vector3.Distance(new Vector3(0, cameraRect.yMin, 0), new Vector3(0, cameraRect.yMax, 0)) * 0.1f;
         }
 
         private void UpdateBackgroundPosAndScale()
@@ -138,21 +105,21 @@ namespace DMSH.Misc.Screen
             // Check player is still in screen coords
             var playerPosition = transform.position;
             
-            if ((playerPosition.x > resolutionInWorldPoint.z || playerPosition.x < -resolutionInWorldPoint.x) ||
-                (playerPosition.y > resolutionInWorldPoint.y || playerPosition.y < -resolutionInWorldPoint.y))
+            if ((playerPosition.x > cameraRect.xMax || playerPosition.x < cameraRect.xMin) ||
+                (playerPosition.y > cameraRect.yMax || playerPosition.y < cameraRect.yMin))
             {
-                var point = new Vector3(resolutionInWorldPoint.z / 2, resolutionInWorldPoint.y / 2, 0);
+                var point = new Vector3(cameraRect.xMax / 2, cameraRect.yMax / 2, 0);
                 var speed = Time.deltaTime * 2 * Vector3.Distance(playerPosition, point);
                 gameObject.transform.position = Vector3.Lerp(playerPosition, point, speed);
             }
         }
 
-        private void UpdateInvisibleWallsPosition(Vector3 resolutionInWorldPoint)
+        private void UpdateInvisibleWallsPosition()
         {
-            _wallsList[0].transform.position = new Vector3(0, resolutionInWorldPoint.y, 0);
-            _wallsList[1].transform.position = new Vector3(0, -resolutionInWorldPoint.y, 0);
-            _wallsList[2].transform.position = new Vector3(resolutionInWorldPoint.z, 0, 0);
-            _wallsList[3].transform.position = new Vector3(-resolutionInWorldPoint.x, 0, 0);
+            _wallsList[0].transform.position = new Vector3(0, cameraRect.yMax, 0);
+            _wallsList[1].transform.position = new Vector3(0, cameraRect.yMin, 0);
+            _wallsList[2].transform.position = new Vector3(cameraRect.xMax, 0, 0);
+            _wallsList[3].transform.position = new Vector3(cameraRect.xMin, 0, 0);
         }
 
         private void RestretchInvisibleWalls()
