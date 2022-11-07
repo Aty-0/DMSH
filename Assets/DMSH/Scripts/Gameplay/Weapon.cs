@@ -38,7 +38,9 @@ namespace DMSH.Gameplay
         public List<Action> onShot = new List<Action>();
 
         [Header("Weapon upgrage")]
-        public float weaponBoostGain = 0.0f;
+        public float weaponUpgradeGain = 0.0f;
+        [SerializeField]
+        private bool _weaponMaxUpgrade = false;
 
         // When we are not set the shot point 
         // Then we are going to use owner game object and his BoxCollider2D size
@@ -123,6 +125,8 @@ namespace DMSH.Gameplay
         {            
             if (m_firePattern == null || _firePatterns.Count <= 1)
             {
+                // We don't have any patterns then we don't need to upgrade
+                _weaponMaxUpgrade = true;
                 return;
             }
 
@@ -130,18 +134,24 @@ namespace DMSH.Gameplay
 
             if (index >= _firePatterns.Count)
             {
+                _weaponMaxUpgrade = true;
                 return;
             }
 
             m_firePattern = _firePatterns[index];
         }
 
-        public void AddWeaponBoost(float gain)
+        public void AddWeaponUpgradeGain(float gain)
         {
-            weaponBoostGain += gain;
-            if (weaponBoostGain >= 100.0f)
+            if(_weaponMaxUpgrade == true)
             {
-                weaponBoostGain = 0.0f;
+                return;
+            }
+
+            weaponUpgradeGain += gain;
+            if (weaponUpgradeGain >= 100.0f)
+            {
+                weaponUpgradeGain = 0.0f;
                 GoToNextWeaponType();
             }
         }
@@ -194,7 +204,7 @@ namespace DMSH.Gameplay
             target.m_isEnemy = m_isEnemy;
             target.shotFrequency = shotFrequency;
             target.canBeUsed = canBeUsed;
-            target.weaponBoostGain = weaponBoostGain;
+            target.weaponUpgradeGain = weaponUpgradeGain;
             target.PatternFireState = PatternFireState;
             if (target.ShotPoint != null)
             {

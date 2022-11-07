@@ -26,7 +26,7 @@ namespace DMSH.LevelSpecifics
 
         private void OnResolutionChange()
         {
-            gameObject.transform.localScale = new Vector3(_resizableGameElements.resolutionInWorldPoint.x * 2, _resizableGameElements.resolutionInWorldPoint.y * 2, 1);
+            gameObject.transform.localScale = new Vector3(_resizableGameElements.cameraRect.xMin * 2, _resizableGameElements.cameraRect.yMax * 2, 1);
         }
 
         protected void OnTriggerEnter2D(Collider2D collider)

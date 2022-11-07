@@ -23,7 +23,7 @@ namespace DMSH.Objects.Bonuses
             Debug.Assert(player);
             caller.AudioSource.Play();
 
-            player.Weapon.AddWeaponBoost(Random.Range(m_addBoostFrom, m_addBoostTo));
+            player.Weapon.AddWeaponUpgradeGain(Random.Range(m_addBoostFrom, m_addBoostTo));
             caller.Rigidbody.isKinematic = true;
             caller.Renderer.enabled = false;
             caller.Collider.enabled = false;

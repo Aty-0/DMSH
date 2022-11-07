@@ -346,12 +346,10 @@ namespace DMSH.Characters
                 GUI.Label(new Rect(100, 80, 500, 500),  $"DeltaTime: {Time.deltaTime}");
                 GUI.Label(new Rect(100, 120, 500, 500), $"Position: {RigidBody2D.position}");
                 GUI.Label(new Rect(100, 140, 500, 500), $"Velocity: {RigidBody2D.velocity}");
-                // GUI.Label(new Rect(100, 200, 500, 500), $"WeaponEnabled: {weapon.weaponEnabled}");
                 GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
                 GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
                 GUI.Label(new Rect(100, 320, 500, 500), $"gamePaused: {GlobalSettings.IsPaused}");
-                GUI.Label(new Rect(100, 340, 500, 500), $"WeaponBoostGain: {Weapon.weaponBoostGain}");
-                // GUI.Label(new Rect(100, 360, 500, 500), $"WeaponType: {weapon.weaponType}");
+                GUI.Label(new Rect(100, 340, 500, 500), $"weaponUpgradeGain: {Weapon.weaponUpgradeGain}");
             }
         }
 #endif
