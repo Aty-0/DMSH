@@ -138,9 +138,9 @@ namespace DMSH.Objects.Projectiles
                     case ProjectileModificatorEnum.BounceFromWalls:
                         if (modState.BounceCount > 0)
                         {
-                            if (World2DUtils.IsOutOfGameView(projectilePos, gameCamera, rightPanelSizeInPixels, out var inScreenPos, 0.5f))
+                            if (World2DUtils.IsOutOfGameView(projectilePos, gameCamera, out var inScreenPos, 0.5f))
                             {
-                                var collidedWith = World2DUtils.GetCollidedWall(projectilePos, gameCamera, rightPanelSizeInPixels);
+                                var collidedWith = World2DUtils.GetCollidedWall(projectilePos, gameCamera);
 
                                 if ((collidedWith & modState.AffectedWalls) != 0)
                                 {

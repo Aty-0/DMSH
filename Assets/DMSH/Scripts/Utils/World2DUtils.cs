@@ -6,11 +6,11 @@ namespace Scripts.Utils
 {
     public static class World2DUtils
     {
-        public static void MoveRigidbodyInsideScreen(this Rigidbody2D src, Vector2 velocity, Camera camera, float removeFromRight)
+        public static void MoveRigidbodyInsideScreen(this Rigidbody2D src, Vector2 velocity, Camera camera)
         {
             src.velocity = velocity;
 
-            if (IsOutOfGameView(src.position, camera, removeFromRight, out var insidePosition))
+            if (IsOutOfGameView(src.position, camera, out var insidePosition))
             {
                 src.position = insidePosition;
             }
@@ -19,14 +19,14 @@ namespace Scripts.Utils
         /// <summary>Is current position out of the game screen?</summary>
         /// <param name="currentPosition">object position in world</param>
         /// <param name="camera">game camera</param>
-        /// <param name="removeFromRight">right panel size in pixels</param>
         /// <param name="positionInWorld">updated position in game screen</param>
         /// <param name="collidePositionOffset">move positionInWorld to center by this value offset</param>
         /// <returns>true - if game object out of the game screen</returns>
-        public static bool IsOutOfGameView(Vector2 currentPosition, Camera camera, float removeFromRight, out Vector2 positionInWorld, float collidePositionOffset = 0)
+        public static bool IsOutOfGameView(Vector2 currentPosition, Camera camera, out Vector2 positionInWorld, float collidePositionOffset = 0)
         {
-            var bottomLeft = camera.ScreenToWorldPoint(Vector3.zero);
-            var topRight = camera.ScreenToWorldPoint(new Vector3(camera.pixelWidth - removeFromRight, camera.pixelHeight));
+            var cameraPixelRect = camera.pixelRect;
+            var bottomLeft = camera.ScreenToWorldPoint(new Vector3(cameraPixelRect.x, cameraPixelRect.y, 0));
+            var topRight = camera.ScreenToWorldPoint(new Vector3(cameraPixelRect.x + cameraPixelRect.width, cameraPixelRect.y + cameraPixelRect.height));
 
             var cameraRect = new Rect(
                 bottomLeft.x,
@@ -70,10 +70,11 @@ namespace Scripts.Utils
             return false;
         }
 
-        public static WallsFlags GetCollidedWall(Vector2 currentPosition, Camera camera, float removeFromRight)
+        public static WallsFlags GetCollidedWall(Vector2 currentPosition, Camera camera)
         {
-            var bottomLeft = camera.ScreenToWorldPoint(Vector3.zero);
-            var topRight = camera.ScreenToWorldPoint(new Vector3(camera.pixelWidth - removeFromRight, camera.pixelHeight));
+            var cameraPixelRect = camera.pixelRect;
+            var bottomLeft = camera.ScreenToWorldPoint(new Vector3(cameraPixelRect.x, cameraPixelRect.y, 0));
+            var topRight = camera.ScreenToWorldPoint(new Vector3(cameraPixelRect.x + cameraPixelRect.width, cameraPixelRect.y + cameraPixelRect.height));
 
             var cameraRect = new Rect(
                 bottomLeft.x,
