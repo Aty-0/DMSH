@@ -11,7 +11,7 @@ namespace DMSH.Objects.Projectiles
     {
         [TextArea, SerializeField]
         private string m_description;
-        
+
         [SerializeField]
         private ProjectileSpawnStepStruct[] m_steps;
 
@@ -78,6 +78,11 @@ namespace DMSH.Objects.Projectiles
         private static void StartNewStep(Weapon weapon, ref FireStateStruct state, ProjectileSpawnStepStruct step)
         {
             var firedBullet = weapon.FireBullet();
+            if (step.SpawnOffset != Vector2.zero)
+            {
+                var transform = firedBullet.transform;
+                transform.position += (Vector3)step.SpawnOffset;
+            }
 
             // set Mono properties
             firedBullet.Pattern = step.bulletFlyPattern;
@@ -119,6 +124,7 @@ namespace DMSH.Objects.Projectiles
             public int RepeatCount;
 
             public float AngleOffset;
+            public Vector2 SpawnOffset;
         }
 
         public enum RepeatEnumType

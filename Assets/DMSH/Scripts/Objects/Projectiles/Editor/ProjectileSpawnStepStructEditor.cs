@@ -11,7 +11,7 @@ namespace DMSH.Objects.Projectiles.Editor
     {
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
-            var fieldsCount = 5;
+            var fieldsCount = 6;
 
 #pragma warning disable CS0618
             var angleConverterProperty = property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.RepeatType));
@@ -52,6 +52,7 @@ namespace DMSH.Objects.Projectiles.Editor
             var angleOffsetRect = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16);
             var spriteRect = new Rect(position.x, position.y + offset * ++labelCount, position.width - 60, 16);
             var spriteColorRect = new Rect(position.x + position.width - 50, position.y + offset * labelCount, 50, 16);
+            var spawnOffsetRect = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16);
 
             var repeatTypeRect = new Rect(position.x, position.y + offset * ++labelCount, position.width, 16);
 
@@ -59,6 +60,7 @@ namespace DMSH.Objects.Projectiles.Editor
             EditorGUI.PropertyField(toNextStepRect, property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.ToNextStepAfter)));
             EditorGUI.PropertyField(patternRect, property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.bulletFlyPattern)));
             EditorGUI.PropertyField(angleOffsetRect, property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.AngleOffset)));
+            EditorGUI.PropertyField(spawnOffsetRect, property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.SpawnOffset)));
             EditorGUI.PropertyField(spriteRect, property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.BulletSprite)));
             EditorGUI.PropertyField(spriteColorRect, property.FindPropertyRelative(nameof(BulletSpawnPatternScriptableObject.ProjectileSpawnStepStruct.BulletSpriteColor)), GUIContent.none);
 

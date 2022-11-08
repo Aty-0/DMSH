@@ -110,6 +110,7 @@ namespace DMSH.Characters
         private float _saved_time_scale;
 
         public Weapon                   Weapon { get; private set; }
+        public PlayerWeaponLevelImprover PlayerWeaponLevelImprover { get; private set; }
 
         [Header("Sounds")]
         [SerializeField] 
@@ -163,6 +164,7 @@ namespace DMSH.Characters
             RigidBody2D = GetComponent<Rigidbody2D>();
             Collider2D = GetComponent<Collider2D>();
             Weapon = GetComponent<Weapon>();
+            PlayerWeaponLevelImprover = GetComponent<PlayerWeaponLevelImprover>();
 
             _stageSystem = StageSystem.Get;
             if (_stageSystem == null)
@@ -349,7 +351,7 @@ namespace DMSH.Characters
                 GUI.Label(new Rect(100, 280, 500, 500), $"Time scale: {Time.timeScale}");
                 GUI.Label(new Rect(100, 300, 500, 500), $"Saved time scale: {_saved_time_scale}");
                 GUI.Label(new Rect(100, 320, 500, 500), $"gamePaused: {GlobalSettings.IsPaused}");
-                GUI.Label(new Rect(100, 340, 500, 500), $"weaponUpgradeGain: {Weapon.weaponUpgradeGain}");
+                GUI.Label(new Rect(100, 340, 500, 500), $"weaponUpgradeGain: {PlayerWeaponLevelImprover.WeaponUpgradeGain}");
             }
         }
 #endif

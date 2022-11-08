@@ -258,6 +258,7 @@ GameObject:
   - component: {fileID: 6051415769956023266}
   - component: {fileID: 5188588155356166229}
   - component: {fileID: 6603675545262591022}
+  - component: {fileID: 1040322144191431147}
   m_Layer: 9
   m_Name: PlayerBody
   m_TagString: Player
@@ -373,15 +374,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8a6eddfee8d4bfa4e9d04377ab51c2de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_firePattern: {fileID: 11400000, guid: 54d2358ebc5db2d44a54063bd44c4642, type: 2}
+  m_firePattern: {fileID: 0}
   m_isEnemy: 0
   shotFrequency: 0.07
   canBeUsed: 1
   _weaponEnabled: 0
   _audioSource: {fileID: 5971732964917514378}
-  weaponBoostGain: 0
   ShotPoint: {fileID: 0}
-  _useOwner: 0
   _Collider2D: {fileID: 0}
 --- !u!114 &5188588155356166229
 MonoBehaviour:
@@ -396,17 +395,20 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   respawnPoint: {fileID: 0}
-  resolutionInWorldPoint: {x: 0, y: 0, z: 0}
+  cameraRect:
+    serializedVersion: 2
+    x: 0
+    y: 0
+    width: 0
+    height: 0
   screenHandler: {fileID: 0}
   _background: {fileID: 0}
-  _uiSomeImage: {fileID: 0}
   gameCamera: {fileID: 0}
   _wallsList:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  resultPoint: 0
   screenDistanceWidth: 0
   screenDistanceHeight: 0
 --- !u!114 &6603675545262591022
@@ -425,6 +427,23 @@ MonoBehaviour:
   m_owner: {fileID: 5158097134412944854}
   m_ownerWeapon: {fileID: 6051415769956023266}
   m_renderer: {fileID: 2248565759597279465}
+--- !u!114 &1040322144191431147
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158097134412944873}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a23855b3b5a4978bc5248c297077358, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_weaponLevels:
+  - {fileID: 11400000, guid: 54d2358ebc5db2d44a54063bd44c4642, type: 2}
+  - {fileID: 11400000, guid: 3e5a9371a736b5d4eb1f2e2270311f3a, type: 2}
+  - {fileID: 11400000, guid: 94a370e14fdcafa4eba7d5a790b290e9, type: 2}
+  - {fileID: 11400000, guid: e81dadc38ca3f594dbb5f7334fe81b8b, type: 2}
 --- !u!1 &5158097134975063080
 GameObject:
   m_ObjectHideFlags: 0

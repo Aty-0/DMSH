@@ -16,10 +16,8 @@ namespace DMSH.Gameplay
     {
         [Header("Weapon base")]
         [SerializeField]
-        private List<BulletSpawnPatternScriptableObject> _firePatterns;
-
-        [SerializeField]
         private BulletSpawnPatternScriptableObject m_firePattern;
+        public BulletSpawnPatternScriptableObject CurrentFirePattern => m_firePattern; 
 
         public FireStateStruct PatternFireState;
 
@@ -37,18 +35,10 @@ namespace DMSH.Gameplay
 
         public List<Action> onShot = new List<Action>();
 
-        [Header("Weapon upgrage")]
-        public float weaponUpgradeGain = 0.0f;
-        [SerializeField]
-        private bool _weaponMaxUpgrade = false;
-
         // When we are not set the shot point 
         // Then we are going to use owner game object and his BoxCollider2D size
         [Header("Shot Point")]
         public Transform ShotPoint = null;
-
-        [SerializeField]
-        private bool _useOwner;
 
         [SerializeField]
         private Collider2D _Collider2D;
@@ -57,9 +47,6 @@ namespace DMSH.Gameplay
         {
             get
             {
-                if (_useOwner == false)
-                    return ShotPoint.transform.position;
-
                 switch (_Collider2D)
                 {
                     case BoxCollider2D boxCollider:
@@ -79,16 +66,9 @@ namespace DMSH.Gameplay
         {
             PatternFireState = FireStateStruct.CreateEmpty();
 
-            // To avoid breaking old prefabs
-            if(m_firePattern != null)
-            {
-                _firePatterns.Insert(0, m_firePattern);
-            }
-
             // If point is null then start point will be game object
             if (ShotPoint == null)
             {
-                _useOwner = true;
                 ShotPoint = transform;
                 if (_Collider2D == null)
                 {
@@ -121,41 +101,6 @@ namespace DMSH.Gameplay
 #endif
 
         // public API
-        public void GoToNextWeaponType()
-        {            
-            if (m_firePattern == null || _firePatterns.Count <= 1)
-            {
-                // We don't have any patterns then we don't need to upgrade
-                _weaponMaxUpgrade = true;
-                return;
-            }
-
-            var index = _firePatterns.IndexOf(m_firePattern) + 1;
-
-            if (index >= _firePatterns.Count)
-            {
-                _weaponMaxUpgrade = true;
-                return;
-            }
-
-            m_firePattern = _firePatterns[index];
-        }
-
-        public void AddWeaponUpgradeGain(float gain)
-        {
-            if(_weaponMaxUpgrade == true)
-            {
-                return;
-            }
-
-            weaponUpgradeGain += gain;
-            if (weaponUpgradeGain >= 100.0f)
-            {
-                weaponUpgradeGain = 0.0f;
-                GoToNextWeaponType();
-            }
-        }
-
         [ContextMenu("DebugShoot_Start")]
         public void Shot()
         {
@@ -197,14 +142,11 @@ namespace DMSH.Gameplay
         {
             StopShooting();
 
-            target._useOwner = _useOwner;
             target._weaponEnabled = _weaponEnabled;
-            target._firePatterns = _firePatterns;
-            target.m_firePattern = m_firePattern;
+            target.SetFirePattern(m_firePattern);
             target.m_isEnemy = m_isEnemy;
             target.shotFrequency = shotFrequency;
             target.canBeUsed = canBeUsed;
-            target.weaponUpgradeGain = weaponUpgradeGain;
             target.PatternFireState = PatternFireState;
             if (target.ShotPoint != null)
             {
@@ -212,6 +154,12 @@ namespace DMSH.Gameplay
                     ? ShotPoint.localPosition
                     : Vector3.zero;
             }
+        }
+
+        public void SetFirePattern(BulletSpawnPatternScriptableObject newBulletSpawnPattern)
+        {
+            m_firePattern = newBulletSpawnPattern;
+            PatternFireState = FireStateStruct.CreateEmpty();
         }
 
         // private

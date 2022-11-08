@@ -104,6 +104,12 @@ namespace DMSH.Misc.Log
                 plCollider.enabled = newPlCollider;
                 context.Log($" is {(!newPlCollider ? "Enabled" : "Disabled")}");
             });
+            
+            Konsole.RegisterCommand("add_gain", context =>
+            {
+                PlayerController.Player.PlayerWeaponLevelImprover.AddWeaponUpgradeGain(100);
+                context.Log($" Level: {TextTags.Bold(PlayerController.Player.PlayerWeaponLevelImprover.CurrentWeaponLevel.ToString())}");
+            });
 
             Konsole.RegisterCommand("testLog", _ => Debug.Log("Hi"));
             Konsole.RegisterCommand("testassert", _ => Debug.Assert(false, "Assert Hi"));
